@@ -21,9 +21,14 @@ import javax.swing.JScrollPane;
 
 public class PaymentWindow {
 
-	private JFrame frmWhyIsThis;
+	private JFrame POFrame;
 	private JTextField textField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JTextField textField_1;
+	private JTextField textField_2;
+	private JTextField textField_3;
+	private JTextField textField_4;
+	private JTextField textField_5;
 
 	/**
 	 * Launch the application.
@@ -33,7 +38,7 @@ public class PaymentWindow {
 			public void run() {
 				try {
 					PaymentWindow window = new PaymentWindow();
-					window.frmWhyIsThis.setVisible(true);
+					window.POFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -58,16 +63,16 @@ public class PaymentWindow {
 		catch(Exception e){
 			
 		}
-		frmWhyIsThis = new JFrame();
-		frmWhyIsThis.getContentPane().setBackground(Color.WHITE);
-		frmWhyIsThis.setTitle("P-O-System");
-		frmWhyIsThis.setForeground(Color.WHITE);
-		frmWhyIsThis.setBounds(100, 100, 700, 460);
-		frmWhyIsThis.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		POFrame = new JFrame();
+		POFrame.getContentPane().setBackground(Color.WHITE);
+		POFrame.setTitle("P-O-System");
+		POFrame.setForeground(Color.WHITE);
+		POFrame.setBounds(100, 100, 700, 460);
+		POFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBackground(Color.WHITE);
-		frmWhyIsThis.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		POFrame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JLayeredPane layeredPane = new JLayeredPane();
 		layeredPane.setBackground(Color.WHITE);
@@ -125,5 +130,73 @@ public class PaymentWindow {
 		JLabel lblPaymentOrderNumbers = new JLabel("Payment Order Numbers:");
 		lblPaymentOrderNumbers.setBounds(10, 322, 122, 14);
 		layeredPane_1.add(lblPaymentOrderNumbers);
+		
+		JLayeredPane layeredPane_2 = new JLayeredPane();
+		tabbedPane.addTab("Edit/Remove User", null, layeredPane_2, null);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(260, 11, 154, 20);
+		layeredPane_2.add(textField_1);
+		textField_1.setColumns(10);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(28, 64, 621, 180);
+		layeredPane_2.add(scrollPane_1);
+		
+		JTextArea textArea = new JTextArea();
+		textArea.setEditable(false);
+		scrollPane_1.setViewportView(textArea);
+		textArea.setBackground(Color.LIGHT_GRAY);
+		
+		JLabel lblCurrentUserInformation = new JLabel("Current User Information");
+		scrollPane_1.setColumnHeaderView(lblCurrentUserInformation);
+		
+		JLabel lblNewLabel = new JLabel("User E-mail:");
+		lblNewLabel.setBounds(193, 14, 57, 14);
+		layeredPane_2.add(lblNewLabel);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(124, 259, 86, 20);
+		layeredPane_2.add(textField_2);
+		textField_2.setColumns(10);
+		
+		textField_3 = new JTextField();
+		textField_3.setBounds(124, 290, 86, 20);
+		layeredPane_2.add(textField_3);
+		textField_3.setColumns(10);
+		
+		textField_4 = new JTextField();
+		textField_4.setBounds(328, 259, 86, 20);
+		layeredPane_2.add(textField_4);
+		textField_4.setColumns(10);
+		
+		textField_5 = new JTextField();
+		textField_5.setBounds(328, 290, 86, 20);
+		layeredPane_2.add(textField_5);
+		textField_5.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("New E-mail:");
+		lblNewLabel_1.setBounds(57, 262, 57, 14);
+		layeredPane_2.add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("New Password: ");
+		lblNewLabel_2.setBounds(37, 293, 77, 14);
+		layeredPane_2.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("New First Name:");
+		lblNewLabel_3.setBounds(239, 262, 86, 14);
+		layeredPane_2.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_4 = new JLabel("New Last Name:");
+		lblNewLabel_4.setBounds(239, 293, 79, 14);
+		layeredPane_2.add(lblNewLabel_4);
+		
+		JButton btnNewButton_3 = new JButton("Make Changes");
+		btnNewButton_3.setBounds(215, 338, 103, 23);
+		layeredPane_2.add(btnNewButton_3);
+		
+		JButton btnNewButton_4 = new JButton("Remove User");
+		btnNewButton_4.setBounds(493, 258, 126, 52);
+		layeredPane_2.add(btnNewButton_4);
 	}
 }
