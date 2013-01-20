@@ -19,7 +19,7 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 
 
-public class PaymentWindow {
+public class AdminMainWindow {
 
 	private JFrame POFrame;
 	private JTextField textField;
@@ -37,7 +37,7 @@ public class PaymentWindow {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PaymentWindow window = new PaymentWindow();
+					AdminMainWindow window = new AdminMainWindow();
 					window.POFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +49,7 @@ public class PaymentWindow {
 	/**
 	 * Create the application.
 	 */
-	public PaymentWindow() {
+	public AdminMainWindow() {
 		initialize();
 	}
 

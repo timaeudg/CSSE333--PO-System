@@ -9,6 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 
 public class CreateUserWindow extends JFrame {
@@ -41,7 +44,7 @@ public class CreateUserWindow extends JFrame {
 	public CreateUserWindow() {
 		setTitle("Create New User");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 245, 280);
+		setBounds(100, 100, 271, 280);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -51,22 +54,22 @@ public class CreateUserWindow extends JFrame {
 		contentPane.add(layeredPane, BorderLayout.CENTER);
 		
 		textField = new JTextField();
-		textField.setBounds(88, 61, 110, 20);
+		textField.setBounds(88, 61, 134, 20);
 		layeredPane.add(textField);
 		textField.setColumns(10);
 		
 		textField_1 = new JTextField();
-		textField_1.setBounds(88, 92, 110, 20);
+		textField_1.setBounds(88, 92, 134, 20);
 		layeredPane.add(textField_1);
 		textField_1.setColumns(10);
 		
 		textField_2 = new JTextField();
-		textField_2.setBounds(88, 30, 110, 20);
+		textField_2.setBounds(88, 30, 134, 20);
 		layeredPane.add(textField_2);
 		textField_2.setColumns(10);
 		
 		textField_3 = new JTextField();
-		textField_3.setBounds(88, 123, 110, 20);
+		textField_3.setBounds(88, 123, 134, 20);
 		layeredPane.add(textField_3);
 		textField_3.setColumns(10);
 		
@@ -89,5 +92,14 @@ public class CreateUserWindow extends JFrame {
 		JButton btnAddAsUser = new JButton("Add as User");
 		btnAddAsUser.setBounds(54, 198, 110, 23);
 		layeredPane.add(btnAddAsUser);
+		
+		JCheckBox chckbxChairperson = new JCheckBox("Chairperson");
+		chckbxChairperson.setBounds(6, 168, 83, 23);
+		layeredPane.add(chckbxChairperson);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Accounting", "Public Relations", "Human Resources", "Administration"}));
+		comboBox.setBounds(107, 169, 115, 20);
+		layeredPane.add(comboBox);
 	}
 }
