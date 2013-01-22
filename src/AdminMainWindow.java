@@ -19,6 +19,8 @@ import java.awt.Font;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.border.BevelBorder;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 
 public class AdminMainWindow {
@@ -34,6 +36,9 @@ public class AdminMainWindow {
 	private JTextField textField_6;
 	private JTextField textField_7;
 	private JTextField textField_8;
+	private JTable table;
+	private JTable table_1;
+	private JTable table_2;
 
 	/**
 	 * Launch the application.
@@ -76,13 +81,15 @@ public class AdminMainWindow {
 		POFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBackground(Color.WHITE);
+		tabbedPane.setBackground(Color.LIGHT_GRAY);
 		POFrame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 		
 		JLayeredPane layeredPane = new JLayeredPane();
-		layeredPane.setBackground(Color.WHITE);
+		layeredPane.setBackground(Color.LIGHT_GRAY);
 		layeredPane.setForeground(Color.BLACK);
 		tabbedPane.addTab("Create New Objects", null, layeredPane, null);
+		tabbedPane.setForegroundAt(0, Color.BLACK);
+		tabbedPane.setBackgroundAt(0, Color.LIGHT_GRAY);
 		
 		JButton btnNewButton_2 = new JButton("Create!");
 		btnNewButton_2.setBounds(263, 334, 141, 49);
@@ -206,18 +213,6 @@ public class AdminMainWindow {
 		JLayeredPane layeredPane_3 = new JLayeredPane();
 		tabbedPane.addTab("User Lookup", null, layeredPane_3, null);
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 11, 659, 260);
-		layeredPane_3.add(scrollPane_2);
-		
-		JTextArea textArea_1 = new JTextArea();
-		textArea_1.setEditable(false);
-		scrollPane_2.setViewportView(textArea_1);
-		textArea_1.setBackground(Color.LIGHT_GRAY);
-		
-		JLabel lblUserInformation = new JLabel("User Information");
-		scrollPane_2.setColumnHeaderView(lblUserInformation);
-		
 		textField_6 = new JTextField();
 		textField_6.setBounds(89, 282, 86, 20);
 		layeredPane_3.add(textField_6);
@@ -249,6 +244,37 @@ public class AdminMainWindow {
 		btnSearch.setBounds(291, 342, 89, 23);
 		layeredPane_3.add(btnSearch);
 		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 11, 657, 224);
+		layeredPane_3.add(scrollPane_2);
+		
+		table = new JTable();
+		table.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		scrollPane_2.setViewportView(table);
+		table.setBackground(Color.LIGHT_GRAY);
+		table.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+				{null, null, null, null, null, null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column", "New column", "New column", "New column"
+			}
+		));
+		table.getColumnModel().getColumn(0).setResizable(false);
+		
 		JLayeredPane layeredPane_4 = new JLayeredPane();
 		tabbedPane.addTab("Department Overview", null, layeredPane_4, null);
 		
@@ -256,13 +282,37 @@ public class AdminMainWindow {
 		scrollPane_3.setBounds(10, 11, 659, 372);
 		layeredPane_4.add(scrollPane_3);
 		
-		JTextArea textArea_2 = new JTextArea();
-		textArea_2.setEditable(false);
-		scrollPane_3.setViewportView(textArea_2);
-		textArea_2.setBackground(Color.LIGHT_GRAY);
-		
-		JLabel lblDepartmentOverviewInformation = new JLabel("Department Overview Information");
-		scrollPane_3.setColumnHeaderView(lblDepartmentOverviewInformation);
+		table_1 = new JTable();
+		table_1.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		table_1.setBackground(Color.LIGHT_GRAY);
+		table_1.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+			},
+			new String[] {
+				"Department name", "Budget", "New column", "New column"
+			}
+		));
+		scrollPane_3.setViewportView(table_1);
 		
 		JLayeredPane layeredPane_5 = new JLayeredPane();
 		tabbedPane.addTab("New tab", null, layeredPane_5, null);
@@ -271,11 +321,26 @@ public class AdminMainWindow {
 		scrollPane_4.setBounds(10, 11, 659, 372);
 		layeredPane_5.add(scrollPane_4);
 		
-		JTextArea textArea_3 = new JTextArea();
-		scrollPane_4.setViewportView(textArea_3);
-		textArea_3.setBackground(Color.LIGHT_GRAY);
-		
-		JLabel lblOwnedPaymentOrders = new JLabel("Owned Payment Orders");
-		scrollPane_4.setColumnHeaderView(lblOwnedPaymentOrders);
+		table_2 = new JTable();
+		table_2.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+			},
+			new String[] {
+				"Reason", "Cost", "Status", "New column", "New column"
+			}
+		));
+		scrollPane_4.setViewportView(table_2);
 	}
 }
