@@ -17,6 +17,8 @@ import javax.swing.JTextArea;
 import javax.swing.ButtonGroup;
 import java.awt.Font;
 import javax.swing.JScrollPane;
+import javax.swing.JList;
+import javax.swing.border.BevelBorder;
 
 
 public class AdminMainWindow {
@@ -29,6 +31,9 @@ public class AdminMainWindow {
 	private JTextField textField_3;
 	private JTextField textField_4;
 	private JTextField textField_5;
+	private JTextField textField_6;
+	private JTextField textField_7;
+	private JTextField textField_8;
 
 	/**
 	 * Launch the application.
@@ -93,7 +98,7 @@ public class AdminMainWindow {
 		rdbtnNewRadioButton_1.setBounds(35, 88, 109, 23);
 		layeredPane.add(rdbtnNewRadioButton_1);
 		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("New radio button");
+		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Something Else?");
 		buttonGroup.add(rdbtnNewRadioButton_2);
 		rdbtnNewRadioButton_2.setBounds(35, 130, 109, 23);
 		layeredPane.add(rdbtnNewRadioButton_2);
@@ -121,7 +126,6 @@ public class AdminMainWindow {
 		
 		JTextArea txtrThisIsStarting = new JTextArea();
 		scrollPane.setViewportView(txtrThisIsStarting);
-		txtrThisIsStarting.setText("This is starting text, I'm going to try and fill it in such a way to make things clear that I am testing them, so now it is time to do silly things\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n65r1b9685e1rb981er9b81\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n");
 		txtrThisIsStarting.setEditable(false);
 		txtrThisIsStarting.setFont(new Font("Courier New", Font.PLAIN, 12));
 		txtrThisIsStarting.setLineWrap(true);
@@ -198,5 +202,80 @@ public class AdminMainWindow {
 		JButton btnNewButton_4 = new JButton("Remove User");
 		btnNewButton_4.setBounds(493, 258, 126, 52);
 		layeredPane_2.add(btnNewButton_4);
+		
+		JLayeredPane layeredPane_3 = new JLayeredPane();
+		tabbedPane.addTab("User Lookup", null, layeredPane_3, null);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 11, 659, 260);
+		layeredPane_3.add(scrollPane_2);
+		
+		JTextArea textArea_1 = new JTextArea();
+		textArea_1.setEditable(false);
+		scrollPane_2.setViewportView(textArea_1);
+		textArea_1.setBackground(Color.LIGHT_GRAY);
+		
+		JLabel lblUserInformation = new JLabel("User Information");
+		scrollPane_2.setColumnHeaderView(lblUserInformation);
+		
+		textField_6 = new JTextField();
+		textField_6.setBounds(89, 282, 86, 20);
+		layeredPane_3.add(textField_6);
+		textField_6.setColumns(10);
+		
+		textField_7 = new JTextField();
+		textField_7.setBounds(294, 282, 86, 20);
+		layeredPane_3.add(textField_7);
+		textField_7.setColumns(10);
+		
+		textField_8 = new JTextField();
+		textField_8.setBounds(495, 282, 86, 20);
+		layeredPane_3.add(textField_8);
+		textField_8.setColumns(10);
+		
+		JLabel lblFirstName = new JLabel("First Name:");
+		lblFirstName.setBounds(18, 285, 61, 14);
+		layeredPane_3.add(lblFirstName);
+		
+		JLabel lblLastName = new JLabel("Last Name:");
+		lblLastName.setBounds(223, 285, 61, 14);
+		layeredPane_3.add(lblLastName);
+		
+		JLabel lblEmail = new JLabel("E-mail:");
+		lblEmail.setBounds(442, 285, 43, 14);
+		layeredPane_3.add(lblEmail);
+		
+		JButton btnSearch = new JButton("Search");
+		btnSearch.setBounds(291, 342, 89, 23);
+		layeredPane_3.add(btnSearch);
+		
+		JLayeredPane layeredPane_4 = new JLayeredPane();
+		tabbedPane.addTab("Department Overview", null, layeredPane_4, null);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(10, 11, 659, 372);
+		layeredPane_4.add(scrollPane_3);
+		
+		JTextArea textArea_2 = new JTextArea();
+		textArea_2.setEditable(false);
+		scrollPane_3.setViewportView(textArea_2);
+		textArea_2.setBackground(Color.LIGHT_GRAY);
+		
+		JLabel lblDepartmentOverviewInformation = new JLabel("Department Overview Information");
+		scrollPane_3.setColumnHeaderView(lblDepartmentOverviewInformation);
+		
+		JLayeredPane layeredPane_5 = new JLayeredPane();
+		tabbedPane.addTab("New tab", null, layeredPane_5, null);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(10, 11, 659, 372);
+		layeredPane_5.add(scrollPane_4);
+		
+		JTextArea textArea_3 = new JTextArea();
+		scrollPane_4.setViewportView(textArea_3);
+		textArea_3.setBackground(Color.LIGHT_GRAY);
+		
+		JLabel lblOwnedPaymentOrders = new JLabel("Owned Payment Orders");
+		scrollPane_4.setColumnHeaderView(lblOwnedPaymentOrders);
 	}
 }

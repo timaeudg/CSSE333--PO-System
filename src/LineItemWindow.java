@@ -6,17 +6,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
-import javax.swing.JPasswordField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import java.awt.Font;
 
 
-public class LoginWindow extends JFrame {
+public class LineItemWindow extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
-	private JPasswordField passwordField;
+	private JTextField textField_1;
 
 	/**
 	 * Launch the application.
@@ -25,7 +23,7 @@ public class LoginWindow extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginWindow frame = new LoginWindow();
+					LineItemWindow frame = new LineItemWindow();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,9 +35,9 @@ public class LoginWindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LoginWindow() {
+	public LineItemWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 280, 360);
+		setBounds(100, 100, 185, 305);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -49,29 +47,26 @@ public class LoginWindow extends JFrame {
 		contentPane.add(layeredPane, BorderLayout.CENTER);
 		
 		textField = new JTextField();
-		textField.setBounds(95, 116, 86, 20);
+		textField.setBounds(34, 62, 86, 20);
 		layeredPane.add(textField);
 		textField.setColumns(10);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(95, 160, 86, 20);
-		layeredPane.add(passwordField);
+		textField_1 = new JTextField();
+		textField_1.setBounds(34, 130, 86, 20);
+		layeredPane.add(textField_1);
+		textField_1.setColumns(10);
 		
-		JLabel lblUsername = new JLabel("Username:");
-		lblUsername.setBounds(15, 119, 70, 14);
-		layeredPane.add(lblUsername);
+		JLabel lblName = new JLabel("Name:");
+		lblName.setBounds(55, 37, 46, 14);
+		layeredPane.add(lblName);
 		
-		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setBounds(15, 166, 70, 14);
-		layeredPane.add(lblPassword);
+		JLabel lblCost = new JLabel("Cost:");
+		lblCost.setBounds(55, 105, 46, 14);
+		layeredPane.add(lblCost);
 		
-		JButton btnLogin = new JButton("Login");
-		btnLogin.setBounds(92, 236, 89, 23);
-		layeredPane.add(btnLogin);
-		
-		JLabel lblNewLabel = new JLabel("Payment-Order\r\n System!");
-		lblNewLabel.setFont(new Font("Thames", Font.PLAIN, 23));
-		lblNewLabel.setBounds(10, 22, 234, 83);
-		layeredPane.add(lblNewLabel);
+		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.setBounds(31, 185, 89, 23);
+		layeredPane.add(btnSubmit);
 	}
+
 }
