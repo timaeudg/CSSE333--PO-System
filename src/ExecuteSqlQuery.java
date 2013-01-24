@@ -180,7 +180,7 @@ class ExecuteSqlQuery {
 				rs = statement.executeQuery();
 				
 				
-				statement.close();
+//				statement.close();
 			}
 			catch(Exception e){
 				System.out.println("Derp\n");
