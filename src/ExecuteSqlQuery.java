@@ -131,6 +131,8 @@ class ExecuteSqlQuery {
 //			else{
 //				System.out.println("Login Failed!");
 //			}
+				
+				statement.close();
 		} catch (SQLException e) {
 			login = false;
 			e.printStackTrace();
@@ -178,7 +180,7 @@ class ExecuteSqlQuery {
 				rs = statement.executeQuery();
 				
 				
-				
+				statement.close();
 			}
 			catch(Exception e){
 				System.out.println("Derp\n");
@@ -206,6 +208,7 @@ class ExecuteSqlQuery {
 			statement.setString(5, email);
 			
 			statement.execute();
+			statement.close();
 			}
 		catch(Exception e){
 			added = false;

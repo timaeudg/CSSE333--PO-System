@@ -327,7 +327,7 @@ public class AdminMainWindow {
 						for(int k =0;k<numberOfRows;k++){
 							data[k] = rows.get(k);
 						}
-						
+						rs.close();
 						String [] columns = new String[] { "Username", "First Name", "Last Name", "E-mail" };
 						
 						JTable updateTable = new JTable(data, columns);
