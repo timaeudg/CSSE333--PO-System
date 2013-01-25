@@ -3,6 +3,8 @@
  */
 import java.sql.*;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type;
+
 class ExecuteSqlQuery {
 
 	public static void main(String[] args) {
@@ -88,9 +90,12 @@ class ExecuteSqlQuery {
 	public static Connection connectToWhale(){
 		
 		Connection connection = null;
-		String connectionURL = "jdbc:jtds:sqlserver://whale.csse.rose-hulman.edu/POSystem";
+		String connectionURL = "jdbc:sqlserver://whale.csse.rose-hulman.edu;databaseName=POSystem";
+		
 		
 		try {
+			DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
+			System.out.println("Driver Registered");
 			connection = DriverManager.getConnection(connectionURL, "timaeudg",
 					"KirisuteG0m3n");
 			
@@ -109,16 +114,16 @@ class ExecuteSqlQuery {
 //		String part1 = "SELECT CASE WHEN EXISTS (SELECT * FROM [Users] WHERE Email= '";
 //		String part2 = "' AND Password = '";
 //		String part3 = "' ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END";
-		String piecedString = "EXEC AttemptLogin ?,?";
+		String piecedString = "{ ? = call attemptlogin ( ? , ? ) }";
 		ResultSet rs = null;
-		PreparedStatement statement = null;
+		CallableStatement statement = null;
 		
 		boolean login = false;
 		try {
-			statement = connect.prepareStatement(piecedString);
-			
-			statement.setString(1, email);
-			statement.setString(2, password);
+			statement = connect.prepareCall(piecedString);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, email);
+			statement.setString(3, password);
 			
 			boolean derp = statement.execute();
 			
@@ -145,42 +150,66 @@ class ExecuteSqlQuery {
 
 	public static ResultSet lookupUsers(String firstName, String lastName,
 			String email, String username , Connection connect) {
-			String query = "Exec lookupuser ?,?,?,?";
+			String query = " { ? = call lookupuser (? , ? , ? , ? ) }";
 			ResultSet rs = null;
 			try{
-				PreparedStatement statement =null;
-				statement = connect.prepareStatement(query);
+				CallableStatement statement =null;
+				statement = connect.prepareCall(query);
 				statement.setQueryTimeout(1);
+				
+				statement.registerOutParameter(1, Types.INTEGER);
+				
 				if(username!=null && username.compareTo("")!=0){
-					statement.setString(1, username);
-				}
-				else{
-					statement.setString(1, "default");
-				}
-				if(firstName!=null && firstName.compareTo("")!=0){
-					statement.setString(2, firstName);
+					statement.setString(2, username);
 				}
 				else{
 					statement.setString(2, "default");
 				}
-				if(lastName!=null && lastName.compareTo("")!=0){
-					statement.setString(3, lastName);
+				if(firstName!=null && firstName.compareTo("")!=0){
+					statement.setString(3, firstName);
 				}
 				else{
 					statement.setString(3, "default");
 				}
-				if(email!=null && email.compareTo("")!=0){
-					statement.setString(4, email);
+				if(lastName!=null && lastName.compareTo("")!=0){
+					statement.setString(4, lastName);
 				}
 				else{
 					statement.setString(4, "default");
+				}
+				if(email!=null && email.compareTo("")!=0){
+					statement.setString(5, email);
+				}
+				else{
+					statement.setString(5, "default");
 				}
 
 
 				rs = statement.executeQuery();
 				
+//				for(int j = 0; j<10000; j++){
+//					if(!rs.next()){
+//						System.out.println("empty");
+//					}
+////					rs.close();
+//					rs = statement.getResultSet();
+//				}
+				
+				
 				
 //				statement.close();
+				
+//				while(!rs.next()){
+//					System.out.println("nada");
+//					//statement.getResultSet();
+//						statement.getMoreResults();
+//						rs.close();
+//						rs = statement.getResultSet();
+//						System.out.println("still RS");
+//					
+//				}
+				
+				
 			}
 			catch(Exception e){
 				System.out.println("Derp\n");
@@ -195,22 +224,24 @@ class ExecuteSqlQuery {
 			String password, String username, Connection connect) {
 		// TODO Auto-generated method stub
 		
-		String query = "EXEC newuser ?,?,?,?,?";
-		PreparedStatement statement = null;
+		String query = "{ ? = call newuser ( ? , ? , ? , ? , ? ) }";
+		CallableStatement statement = null;
 		boolean added = true;
 		
 		try{
-			statement = connect.prepareStatement(query);
-			statement.setString(1, firstName);
-			statement.setString(2, lastName);
-			statement.setString(3, username);
-			statement.setString(4, password);
-			statement.setString(5, email);
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1,Types.INTEGER);
+			statement.setString(2, firstName);
+			statement.setString(3, lastName);
+			statement.setString(4, username);
+			statement.setString(5, password);
+			statement.setString(6, email);
 			
 			statement.execute();
 			statement.close();
 			}
 		catch(Exception e){
+			e.printStackTrace();
 			added = false;
 		}
 		

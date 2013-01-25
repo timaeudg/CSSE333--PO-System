@@ -26,6 +26,7 @@ public class CreateUserWindow extends JFrame {
 	private JTextField passwordField;
 	private static Connection SQLConnect;
 	private JTextField usernameField;
+	private static JFrame createWindow;
 	
 	private JLabel userInfoLabel;
 	/**
@@ -47,8 +48,8 @@ public class CreateUserWindow extends JFrame {
 	
 	public static void newCreateUserWindow(Connection connect){
 		SQLConnect = connect;
-		JFrame window = new CreateUserWindow();
-		window.setVisible(true);
+		createWindow = new CreateUserWindow();
+		createWindow.setVisible(true);
 	}
 
 	/**
@@ -136,6 +137,9 @@ public class CreateUserWindow extends JFrame {
 				
 				if(!ExecuteSqlQuery.addUser(firstName, lastName, email, password, username, SQLConnect)){
 					userInfoLabel.setVisible(true);
+				}
+				else{
+					createWindow.dispose();
 				}
 			}
 		});
