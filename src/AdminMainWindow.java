@@ -1,3 +1,4 @@
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -9,6 +10,9 @@ import javax.swing.JLabel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
+
+import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
 import javax.swing.UIManager;
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
@@ -21,6 +25,12 @@ import javax.swing.JList;
 import javax.swing.border.BevelBorder;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+
+import connection.ExecuteSqlQuery;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
@@ -44,7 +54,7 @@ public class AdminMainWindow {
 	private JTable lookupTable;
 	private JTable table_1;
 	private JTable table_2;
-	
+
 	private JRadioButton createUser;
 	private JRadioButton createPO;
 	private JRadioButton createOther;
@@ -122,18 +132,17 @@ public class AdminMainWindow {
 		buttonGroup.add(createOther);
 		createOther.setBounds(35, 130, 109, 23);
 		layeredPane.add(createOther);
-		
-		
-				JButton btnNewButton_2 = new JButton("Create!");
-				btnNewButton_2.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						if(createUser.isSelected()){
-							CreateUserWindow.newCreateUserWindow(SQLConnect);
-						}
-					}
-				});
-				btnNewButton_2.setBounds(263, 334, 141, 49);
-				layeredPane.add(btnNewButton_2);
+
+		JButton btnNewButton_2 = new JButton("Create!");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (createUser.isSelected()) {
+					CreateUserWindow.newCreateUserWindow(SQLConnect);
+				}
+			}
+		});
+		btnNewButton_2.setBounds(263, 334, 141, 49);
+		layeredPane.add(btnNewButton_2);
 
 		JLayeredPane layeredPane_1 = new JLayeredPane();
 		layeredPane_1.setBackground(Color.WHITE);
@@ -240,33 +249,60 @@ public class AdminMainWindow {
 		tabbedPane.addTab("User Lookup", null, layeredPane_3, null);
 
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 11, 657, 224);
+		scrollPane_2.setBounds(10, 11, 660, 224);
 		layeredPane_3.add(scrollPane_2);
 
-		lookupTable = new JTable();
-		lookupTable.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
-				null));
+		Object data[][] = { { null, null, null, null },
+				{ null, null, null, null }, { null, null, null, null },
+				{ null, null, null, null }, { null, null, null, null },
+				{ null, null, null, null }, { null, null, null, null },
+				{ null, null, null, null }, { null, null, null, null },
+				{ null, null, null, null }, { null, null, null, null },
+				{ null, null, null, null }, { null, null, null, null },
+				{ null, null, null, null }, };
+		String col[] = { "Username", "First Name", "Last Name", "E-mail" };
+		DefaultTableModel model = new DefaultTableModel(data, col) {
+			Class[] columnTypes = { String.class, String.class, String.class,
+					String.class };
+
+			public Class getColumnClass(int column) {
+				return columnTypes[column];
+			}
+		};
+		lookupTable = new JTable(model) {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+
+			public Component prepareRenderer(TableCellRenderer renderer,
+					int index_row, int index_col) {
+				Component comp = super.prepareRenderer(renderer, index_row,
+						index_col);
+				// even index, selected or not selected
+
+				if (index_row % 2 == 0) {
+					comp.setBackground(Color.LIGHT_GRAY);
+				} else {
+					comp.setBackground(Color.white);
+				}
+				if (isCellSelected(index_row, index_col)) {
+					// Light Blue
+					comp.setBackground(new Color(142, 207, 255));
+				}
+				return comp;
+			}
+		};
+		lookupTable.setBorder(new BevelBorder(BevelBorder.LOWERED,
+				Color.LIGHT_GRAY, Color.LIGHT_GRAY, Color.LIGHT_GRAY,
+				Color.LIGHT_GRAY));
+//		RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+//		lookupTable.setRowSorter(sorter);
 		scrollPane_2.setViewportView(lookupTable);
 		lookupTable.setBackground(Color.LIGHT_GRAY);
-		lookupTable.setModel(new DefaultTableModel(
-				new Object[][] { { null, null, null, null },
-						{ null, null, null, null }, { null, null, null, null },
-						{ null, null, null, null }, { null, null, null, null },
-						{ null, null, null, null }, { null, null, null, null },
-						{ null, null, null, null }, { null, null, null, null },
-						{ null, null, null, null }, { null, null, null, null },
-						{ null, null, null, null }, { null, null, null, null },
-						{ null, null, null, null }, },
-				new String[] { "Username", "First Name", "Last Name", "E-mail" }) {
-			Class[] columnTypes = new Class[] { String.class, String.class,
-					String.class, String.class };
-
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
 
 		lookupTable.getColumnModel().getColumn(0).setResizable(false);
+		lookupTable.getTableHeader().setReorderingAllowed(false);
+		lookupTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		userLookupFirstNameField = new JTextField();
 		userLookupFirstNameField.setBounds(85, 282, 86, 20);
@@ -308,32 +344,32 @@ public class AdminMainWindow {
 					rs = ExecuteSqlQuery.lookupUsers(firstName, lastName,
 							email, username, SQLConnect);
 					if (rs != null) {
-						
+
 						ArrayList<String[]> rows = new ArrayList<String[]>();
-						String [] row = new String[4];
-						while(rs.next()){
-							for(int j=1; j<5;j++){
-								row[j-1]=rs.getString(j);
+						String[] row = new String[4];
+						while (rs.next()) {
+							for (int j = 1; j < 5; j++) {
+								row[j - 1] = rs.getString(j);
 							}
 							rows.add(row);
 							row = new String[4];
 						}
-						
+
 						int numberOfRows = rows.size();
 						String[][] data = new String[numberOfRows][4];
-						
-//						System.out.println(rows.toString());
-						
-						for(int k =0;k<numberOfRows;k++){
+
+						// System.out.println(rows.toString());
+
+						for (int k = 0; k < numberOfRows; k++) {
 							data[k] = rows.get(k);
 						}
 						rs.close();
-						String [] columns = new String[] { "Username", "First Name", "Last Name", "E-mail" };
-						
+						String[] columns = new String[] { "Username",
+								"First Name", "Last Name", "E-mail" };
+
 						JTable updateTable = new JTable(data, columns);
 						lookupTable.setModel(updateTable.getModel());
 						lookupTable.repaint();
-						
 
 					} else {
 						System.out.println("Herp Derp");

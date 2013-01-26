@@ -13,6 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+
+import connection.ExecuteSqlQuery;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -57,7 +60,7 @@ public class CreateUserWindow extends JFrame {
 	 */
 	public CreateUserWindow() {
 		setTitle("Create New User");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 271, 341);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

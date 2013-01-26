@@ -9,6 +9,9 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+
+import connection.*;
+
 import java.awt.Font;
 import java.sql.Connection;
 import java.awt.event.ActionListener;
