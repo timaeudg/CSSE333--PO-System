@@ -85,5 +85,13 @@ public class CreatePaymentOrder extends JFrame {
 		JLabel lblDescription = new JLabel("Description");
 		lblDescription.setBounds(47, 65, 60, 14);
 		layeredPane.add(lblDescription);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(235, 34, 136, 20);
+		layeredPane.add(comboBox_1);
+		
+		JLabel lblAffiliatedDepartment = new JLabel("Affiliated Department:");
+		lblAffiliatedDepartment.setBounds(235, 11, 136, 14);
+		layeredPane.add(lblAffiliatedDepartment);
 	}
 }

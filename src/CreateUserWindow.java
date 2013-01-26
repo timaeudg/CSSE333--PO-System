@@ -125,7 +125,6 @@ public class CreateUserWindow extends JFrame {
 		layeredPane.add(chckbxChairperson);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Accounting", "Public Relations", "Human Resources", "Administration"}));
 		comboBox.setBounds(111, 216, 115, 20);
 		layeredPane.add(comboBox);
 		
