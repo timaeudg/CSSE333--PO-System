@@ -334,10 +334,10 @@ public class AdminMainWindow {
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String firstName = userLookupFirstNameField.getText();
-				String lastName = userLookupLastNameField.getText();
-				String email = userLookupEmailField.getText();
-				String username = userLookupUsernameField.getText();
+				String firstName = userLookupFirstNameField.getText().replaceAll("\\*", "%");
+				String lastName = userLookupLastNameField.getText().replaceAll("\\*", "%");
+				String email = userLookupEmailField.getText().replaceAll("\\*", "%");
+				String username = userLookupUsernameField.getText().replaceAll("\\*", "%");
 				ResultSet rs = null;
 
 				try {
