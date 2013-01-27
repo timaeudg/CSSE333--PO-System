@@ -57,7 +57,7 @@ public class AdminMainWindow {
 
 	private JRadioButton createUser;
 	private JRadioButton createPO;
-	private JRadioButton createOther;
+	private JRadioButton createDepartment;
 
 	private static Connection SQLConnect;
 	private JTextField userLookupUsernameField;
@@ -128,16 +128,22 @@ public class AdminMainWindow {
 		createPO.setBounds(35, 88, 109, 23);
 		layeredPane.add(createPO);
 
-		createOther = new JRadioButton("Something Else?");
-		buttonGroup.add(createOther);
-		createOther.setBounds(35, 130, 109, 23);
-		layeredPane.add(createOther);
+		createDepartment = new JRadioButton("Department");
+		buttonGroup.add(createDepartment);
+		createDepartment.setBounds(35, 130, 109, 23);
+		layeredPane.add(createDepartment);
 
 		JButton btnNewButton_2 = new JButton("Create!");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (createUser.isSelected()) {
 					CreateUserWindow.newCreateUserWindow(SQLConnect);
+				}
+				else if(createPO.isSelected()){
+					CreatePaymentOrder.setVisible(SQLConnect);
+				}
+				else{
+					
 				}
 			}
 		});
@@ -165,12 +171,41 @@ public class AdminMainWindow {
 		scrollPane.setBounds(10, 11, 659, 304);
 		layeredPane_1.add(scrollPane);
 
-		JTextArea txtrThisIsStarting = new JTextArea();
-		scrollPane.setViewportView(txtrThisIsStarting);
-		txtrThisIsStarting.setEditable(false);
-		txtrThisIsStarting.setFont(new Font("Courier New", Font.PLAIN, 12));
-		txtrThisIsStarting.setLineWrap(true);
-		txtrThisIsStarting.setBackground(Color.LIGHT_GRAY);
+		JTable PendingTable = new JTable();
+		PendingTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+				{null, null, null, null, null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column", "New column", "New column"
+			}
+		));
+		scrollPane.setViewportView(PendingTable);
+		PendingTable.setFont(new Font("Courier New", Font.PLAIN, 12));
+		PendingTable.setBackground(Color.LIGHT_GRAY);
 
 		JLabel lblPaymentOrderNumbers = new JLabel("Payment Order Numbers:");
 		lblPaymentOrderNumbers.setBounds(10, 322, 122, 14);
@@ -188,14 +223,34 @@ public class AdminMainWindow {
 		scrollPane_1.setBounds(28, 64, 621, 180);
 		layeredPane_2.add(scrollPane_1);
 
-		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		scrollPane_1.setViewportView(textArea);
-		textArea.setBackground(Color.LIGHT_GRAY);
-
-		JLabel lblCurrentUserInformation = new JLabel(
-				"Current User Information");
-		scrollPane_1.setColumnHeaderView(lblCurrentUserInformation);
+		JTable EditRemoveTable = new JTable();
+		EditRemoveTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+				{null, null, null, null, null},
+			},
+			new String[] {
+				"New column", "New column", "New column", "New column", "New column"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, true, true, true, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_1.setViewportView(EditRemoveTable);
+		EditRemoveTable.setBackground(Color.LIGHT_GRAY);
 
 		JLabel lblNewLabel = new JLabel("User E-mail:");
 		lblNewLabel.setBounds(193, 14, 57, 14);
@@ -396,7 +451,7 @@ public class AdminMainWindow {
 		tabbedPane.addTab("Department Overview", null, layeredPane_4, null);
 
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(10, 11, 659, 372);
+		scrollPane_3.setBounds(10, 11, 659, 309);
 		layeredPane_4.add(scrollPane_3);
 
 		table_1 = new JTable();
@@ -417,9 +472,20 @@ public class AdminMainWindow {
 				new String[] { "Department name", "Budget", "New column",
 						"New column" }));
 		scrollPane_3.setViewportView(table_1);
+		
+		JButton btnEditDepartments = new JButton("Edit Departments");
+		btnEditDepartments.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EditDepartmentsWindow.setVisible(SQLConnect);
+				
+				
+			}
+		});
+		btnEditDepartments.setBounds(274, 360, 115, 23);
+		layeredPane_4.add(btnEditDepartments);
 
 		JLayeredPane layeredPane_5 = new JLayeredPane();
-		tabbedPane.addTab("New tab", null, layeredPane_5, null);
+		tabbedPane.addTab("Your Payment Orders", null, layeredPane_5, null);
 
 		JScrollPane scrollPane_4 = new JScrollPane();
 		scrollPane_4.setBounds(10, 11, 659, 372);
