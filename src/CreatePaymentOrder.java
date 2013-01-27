@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.sql.Connection;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,12 +13,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class CreatePaymentOrder extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	private static Connection SQLConnect;
 
 	/**
 	 * Launch the application.
@@ -33,6 +37,12 @@ public class CreatePaymentOrder extends JFrame {
 				}
 			}
 		});
+	}
+	
+	public static void setVisible(Connection connect) {
+		CreatePaymentOrder window = new CreatePaymentOrder();
+		window.setVisible(true);
+		SQLConnect = connect;
 	}
 
 	/**
@@ -71,6 +81,12 @@ public class CreatePaymentOrder extends JFrame {
 		layeredPane.add(lblReimbursmentAmountdont);
 		
 		JButton btnAddItem = new JButton("Add Item");
+		btnAddItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				LineItemWindow.setVisible(SQLConnect);
+			}
+		});
 		btnAddItem.setBounds(47, 218, 89, 23);
 		layeredPane.add(btnAddItem);
 		

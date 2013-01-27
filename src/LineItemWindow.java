@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.sql.Connection;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -18,7 +19,7 @@ public class LineItemWindow extends JFrame {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTextField textField_4;
-
+	private static Connection SQLConnect;
 	/**
 	 * Launch the application.
 	 */
@@ -35,6 +36,13 @@ public class LineItemWindow extends JFrame {
 		});
 	}
 
+	public static void setVisible(Connection connect) {
+		LineItemWindow window = new LineItemWindow();
+		window.setVisible(true);
+		SQLConnect = connect;
+	}
+	
+	
 	/**
 	 * Create the frame.
 	 */

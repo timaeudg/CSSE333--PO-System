@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.sql.Connection;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +17,8 @@ public class CreateDepartment extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JTextField textField_2;
+	private static Connection SQLConnect;
+//	private static JFrame createWindow;
 
 	/**
 	 * Launch the application.
@@ -31,6 +34,12 @@ public class CreateDepartment extends JFrame {
 				}
 			}
 		});
+	}
+	
+	public static void setVisible(Connection connect) {
+		CreateDepartment window = new CreateDepartment();
+		window.setVisible(true);
+		SQLConnect = connect;
 	}
 
 	/**

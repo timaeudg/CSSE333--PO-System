@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.sql.Connection;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,6 +13,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class EditDepartmentsWindow extends JFrame {
@@ -20,6 +23,7 @@ public class EditDepartmentsWindow extends JFrame {
 	private JTextField textField;
 	private JComboBox textField_1;
 	private JTextField textField_2;
+	private static Connection SQLConnect;
 
 	/**
 	 * Launch the application.
@@ -37,6 +41,14 @@ public class EditDepartmentsWindow extends JFrame {
 		});
 	}
 
+	
+	public static void setVisible(Connection connect) {
+		EditDepartmentsWindow window = new EditDepartmentsWindow();
+		window.setVisible(true);
+		SQLConnect = connect;
+	}
+	
+	
 	/**
 	 * Create the frame.
 	 */
@@ -90,6 +102,11 @@ public class EditDepartmentsWindow extends JFrame {
 		layeredPane.add(btnMakeEdits);
 		
 		JButton btnAddDepartment = new JButton("Add Department");
+		btnAddDepartment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CreateDepartment.setVisible(SQLConnect);
+			}
+		});
 		btnAddDepartment.setBounds(40, 233, 111, 23);
 		layeredPane.add(btnAddDepartment);
 	}

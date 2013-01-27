@@ -139,6 +139,12 @@ public class AdminMainWindow {
 				if (createUser.isSelected()) {
 					CreateUserWindow.newCreateUserWindow(SQLConnect);
 				}
+				else if(createPO.isSelected()){
+					CreatePaymentOrder.setVisible(SQLConnect);
+				}
+				else{
+					
+				}
 			}
 		});
 		btnNewButton_2.setBounds(263, 334, 141, 49);
@@ -468,6 +474,13 @@ public class AdminMainWindow {
 		scrollPane_3.setViewportView(table_1);
 		
 		JButton btnEditDepartments = new JButton("Edit Departments");
+		btnEditDepartments.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				EditDepartmentsWindow.setVisible(SQLConnect);
+				
+				
+			}
+		});
 		btnEditDepartments.setBounds(274, 360, 115, 23);
 		layeredPane_4.add(btnEditDepartments);
 
