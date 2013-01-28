@@ -30,6 +30,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import connection.ExecuteSqlQuery;
+import connection.LoggedInUserWrapper;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -43,7 +44,7 @@ public class AdminMainWindow {
 	private JFrame POFrame;
 	private JTextField PONumberField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JTextField EdirRemoveLookupField;
+	private JTextField EditRemoveLookupField;
 	private JTextField newEmailField;
 	private JTextField newPasswordField;
 	private JTextField NewFirstNameField;
@@ -60,7 +61,9 @@ public class AdminMainWindow {
 	private JRadioButton createDepartment;
 
 	private static Connection SQLConnect;
+	private static LoggedInUserWrapper user;
 	private JTextField userLookupUsernameField;
+	private JTextField newUsernameField;
 
 	/**
 	 * Launch the application.
@@ -78,10 +81,11 @@ public class AdminMainWindow {
 		});
 	}
 
-	public static void setVisible(Connection connect) {
+	public static void setVisible(Connection connect, LoggedInUserWrapper userInfo) {
 		AdminMainWindow window = new AdminMainWindow();
 		window.POFrame.setVisible(true);
 		SQLConnect = connect;
+		user = userInfo;
 	}
 
 	/**
@@ -214,45 +218,46 @@ public class AdminMainWindow {
 		JLayeredPane layeredPane_2 = new JLayeredPane();
 		tabbedPane.addTab("Edit/Remove User", null, layeredPane_2, null);
 
-		EdirRemoveLookupField = new JTextField();
-		EdirRemoveLookupField.setBounds(260, 11, 154, 20);
-		layeredPane_2.add(EdirRemoveLookupField);
-		EdirRemoveLookupField.setColumns(10);
+		EditRemoveLookupField = new JTextField();
+		EditRemoveLookupField.setBounds(260, 11, 154, 20);
+		layeredPane_2.add(EditRemoveLookupField);
+		EditRemoveLookupField.setColumns(10);
 
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(28, 64, 621, 180);
-		layeredPane_2.add(scrollPane_1);
+//		JScrollPane scrollPane_1 = new JScrollPane();
+//		scrollPane_1.setBounds(28, 64, 621, 180);
+//		layeredPane_2.add(scrollPane_1);
+//
+//		JTable EditRemoveTable = new JTable();
+//		EditRemoveTable.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+//		EditRemoveTable.setModel(new DefaultTableModel(
+//			new Object[][] {
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//				{null, null, null, null, null},
+//			},
+//			new String[] {
+//				"New column", "New column", "New column", "New column", "New column"
+//			}
+//		) {
+//			boolean[] columnEditables = new boolean[] {
+//				false, true, true, true, true
+//			};
+//			public boolean isCellEditable(int row, int column) {
+//				return columnEditables[column];
+//			}
+//		});
+//		scrollPane_1.setViewportView(EditRemoveTable);
+//		EditRemoveTable.setBackground(Color.LIGHT_GRAY);
 
-		JTable EditRemoveTable = new JTable();
-		EditRemoveTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
-			},
-			new String[] {
-				"New column", "New column", "New column", "New column", "New column"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, true, true, true, true
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		scrollPane_1.setViewportView(EditRemoveTable);
-		EditRemoveTable.setBackground(Color.LIGHT_GRAY);
-
-		JLabel lblNewLabel = new JLabel("User E-mail:");
+		JLabel lblNewLabel = new JLabel("Username:");
 		lblNewLabel.setBounds(193, 14, 57, 14);
 		layeredPane_2.add(lblNewLabel);
 
@@ -293,12 +298,41 @@ public class AdminMainWindow {
 		layeredPane_2.add(lblNewLabel_4);
 
 		JButton btnNewButton_3 = new JButton("Make Changes");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String oldUsername = EditRemoveLookupField.getText();
+				String newEmail = newEmailField.getText();
+				String newFirstName = NewFirstNameField.getText();
+				String newLastName = newLastNameField.getText();
+				String newPassword = newPasswordField.getText();
+				String newUsername = newUsernameField.getText();
+				
+				ExecuteSqlQuery.editUser(oldUsername, newUsername, newFirstName, newLastName, newEmail, newPassword, SQLConnect);
+				
+				
+			}
+		});
 		btnNewButton_3.setBounds(215, 338, 103, 23);
 		layeredPane_2.add(btnNewButton_3);
 
 		JButton btnNewButton_4 = new JButton("Remove User");
-		btnNewButton_4.setBounds(493, 258, 126, 52);
+		btnNewButton_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String deletee = EditRemoveLookupField.getText();
+				ExecuteSqlQuery.removeUser(user.getUsername(), deletee, SQLConnect);
+			}
+		});
+		btnNewButton_4.setBounds(487, 323, 126, 52);
 		layeredPane_2.add(btnNewButton_4);
+		
+		newUsernameField = new JTextField();
+		newUsernameField.setBounds(487, 290, 126, 20);
+		layeredPane_2.add(newUsernameField);
+		newUsernameField.setColumns(10);
+		
+		JLabel lblNewUsername = new JLabel("New Username: ");
+		lblNewUsername.setBounds(487, 262, 86, 14);
+		layeredPane_2.add(lblNewUsername);
 
 		JLayeredPane layeredPane_3 = new JLayeredPane();
 		tabbedPane.addTab("User Lookup", null, layeredPane_3, null);

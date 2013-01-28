@@ -3,99 +3,11 @@ package connection;
  * Execute sql queries with java application.
  */
 import java.sql.*;
+import java.util.ArrayList;
 
 
 public class ExecuteSqlQuery {
-	public static void main(String[] args) {
-		try {
-			/*
-			 * Create string of connection url within specified format with
-			 * machine name, port number and database name. Here machine name id
-			 * localhost and database name is usermaster.
-			 */
-			String connectionURL = "jdbc:jtds:sqlserver://whale.csse.rose-hulman.edu/POSystem";
-			ConnectionInfo cricket = new ConnectionInfo("moorejm", "crikket007");
-			DatabaseAdapter.registerSQLServerDriver();
-			
-			// declare a connection by using Connection interface
-			Connection connection = null;
-			
-			connection = DatabaseAdapter.getConnection(null, cricket);
-			
-			// declare object of Statement interface that uses for executing sql
-			// statements.
-			PreparedStatement statement = null;
-			String queryString = null;
-
-			// declare a resultset that uses as a table for output data from that
-			// table.
-			ResultSet rs = null;
-			int updateQuery = 0;
-			queryString = "SELECT * FROM Users";
-
-			// Load JBBC driver "com.mysql.jdbc.Driver". JTDS: net.sourceforge.jtds.jdbc.Driver
-//			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			
-
-			/*
-			 * Create a connection by using getConnection() method that takes
-			 * parameters of string type connection url, user name and password
-			 * to connect to database.
-			 */
-//			connection = DriverManager.getConnection(connectionURL, "timaeudg",
-//					"KirisuteG0m3n");
-			
-			System.out.println("Connection Successful!\n");
-
-			/*
-			 * createStatement() is used for create statement object that is
-			 * used for sending sql statements to the specified database.
-			 */
-			statement = connection.prepareStatement(queryString);
-
-			// sql query of string type to create a data base.
-//			String QueryString =
-//			"CREATE TABLE user_master1(User_Id INTEGER NOT NULL AUTO_INCREMENT, "
-//			+
-//			"User_Name VARCHAR(25), UserId VARCHAR(20), User_Pwd VARCHAR(15), primary key(User_Id))";
-//
-//			updateQuery = statement.executeUpdate(QueryString);
-
-			// sql query to insert values in the specified table.
-			// queryString =
-			// "INSERT INTO User(ID, FirstName, LastName, Password, Email) VALUES ('1', 'guest','user','testing','steve@example.com')";
-			// updateQuery = statement.executeUpdate(queryString);
-			//
-			// if (updateQuery != 0) {
-			// System.out.println("table is created successfully and " +
-			// updateQuery + " row is inserted.");
-			// }
-
-			// sql query to retrieve values from the specified table.
-			
-			statement.execute();
-			
-//			JDBC.processRows(statement);
-			
-			rs = lookupUsers("Alex", "", "", "", connection);
-			
-			
-//			rs = statement.executeQuery();
-			while (rs.next()) {
-			System.out.println(rs.getString(1) + "     " + rs.getString(2)
-			+ "      " + rs.getString(3) + "      "
-			+ rs.getString(4) + "\n");
-			}
-
-			// close all the connections.
-//			rs.close();
-			statement.close();
-			connection.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			System.out.println("Unable to connect to database.");
-		}
-	}
+	
 	
 	public static Connection connectToWhale(){
 		Connection connection = null;	
@@ -116,42 +28,53 @@ public class ExecuteSqlQuery {
 		return connection;
 	}
 	
-	public static boolean login(String email, String password, Connection connection){
+	public static LoggedInUserWrapper login(String email, String password, Connection connection){
 		
-//		String part1 = "SELECT CASE WHEN EXISTS (SELECT * FROM [Users] WHERE Email= '";
-//		String part2 = "' AND Password = '";
-//		String part3 = "' ) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END";
+
 		String piecedString = "{ ? = call attemptlogin ( ? , ? ) }";
+		String chairsString = "{ ? = call chairlist (?)} ";
 		ResultSet rs = null;
 		CallableStatement statement = null;
-		
+		CallableStatement secondStatment = null;
 		boolean login = false;
+		Integer[] departmentIDs =  new Integer[10];
+		LoggedInUserWrapper user;
+		ArrayList<Integer> departments = new ArrayList<Integer>();
 		try {
 			statement = connection.prepareCall(piecedString);
+			secondStatment = connection.prepareCall(chairsString);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, email);
 			statement.setString(3, password);
+			secondStatment.registerOutParameter(1, Types.INTEGER);
+			secondStatment.setString(2, email);
 			
-			boolean connected = statement.execute();
 			
-			
-			//rs.next();
-//			if(derp){
+			statement.execute();
+			rs = secondStatment.executeQuery();
+
 				login = true;
 				System.out.println("Login Successful!");
-//			}
-//			else{
-//				System.out.println("Login Failed!");
-//			}
+				while(rs.next()){
+					departments.add(rs.getInt(1));
+				}
+				
+//				departmentIDs=departments.toArray(departmentIDs);
+				
+				user = new LoggedInUserWrapper(email, departments, login);
+				
+				
+				System.out.println(departmentIDs);
+				
 				
 				statement.close();
 		} catch (SQLException e) {
 			login = false;
-			e.printStackTrace();
+			user = new LoggedInUserWrapper(email, departments, login);
 		}
 		
 		
-		return login;
+		return user;
 		
 	}
 
@@ -192,29 +115,7 @@ public class ExecuteSqlQuery {
 				}
 				
 				rs = statement.executeQuery();
-				
-//				for(int j = 0; j<10000; j++){
-//					if(!rs.next()){
-//						System.out.println("empty");
-//					}
-////					rs.close();
-//					rs = statement.getResultSet();
-//				}
-				
-				
-				
-//				statement.close();
-				
-//				while(!rs.next()){
-//					System.out.println("nada");
-//					//statement.getResultSet();
-//						statement.getMoreResults();
-//						rs.close();
-//						rs = statement.getResultSet();
-//						System.out.println("still RS");
-//					
-//				}
-				
+								
 				
 			}
 			catch(Exception e){
@@ -250,6 +151,92 @@ public class ExecuteSqlQuery {
 		}
 		
 		return added;
+	}
+	
+	public static boolean removeUser(String deleter, String deletee, Connection connection){
+		boolean removed = false;
+		
+		String query = "{ ? = call deleteuser (?, ?)}";
+		CallableStatement statement = null;
+		
+		try{
+			statement = connection.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, deleter);
+			statement.setString(3, deletee);
+			
+			statement.execute();
+			statement.close();
+			removed= true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			removed=false;
+		}
+		
+		return removed;
+	}
+	
+	
+	public static boolean editUser(String oldUsername, String newUsername, String newFirstName, String newLastName, String newEmail, String newPassword, Connection connection){
+		boolean removed = false;
+		
+		String query = "{ ? = call modifyuser (?, ?, ?, ?, ?, ?)}";
+		CallableStatement statement = null;
+		
+		try{
+			statement = connection.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			if((oldUsername==null || oldUsername.isEmpty())){
+				throw new IllegalArgumentException();
+			}
+			else{
+				statement.setString(2, oldUsername);
+			}
+			if((newUsername==null || newUsername.isEmpty())){
+				throw new IllegalArgumentException();
+			}
+			else{
+				statement.setString(3, newUsername);
+			}
+			
+			if((newFirstName==null || newFirstName.isEmpty())){
+				statement.setString(4, null);
+			}
+			else{
+				statement.setString(4, newFirstName);
+			}
+			if((newLastName==null || newLastName.isEmpty())){
+				statement.setString(5, null);
+			}
+			else{
+				statement.setString(5, newLastName);
+			}
+			if((newEmail==null || newEmail.isEmpty())){
+				statement.setString(6, newEmail);
+			}
+			else{
+				statement.setString(6, newEmail);
+			}
+			
+			if((newPassword==null || newPassword.isEmpty())){
+				statement.setString(7, null);
+			}
+			else{
+				statement.setString(7, newPassword);
+			}
+			
+			
+			statement.execute();
+			statement.close();
+			removed= true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			removed=false;
+		}
+		
+		return removed;
 	}
 	
 	

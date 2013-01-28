@@ -8,16 +8,23 @@ import javax.swing.JTabbedPane;
 import javax.swing.JLayeredPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
+import java.sql.Connection;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 
+import connection.LoggedInUserWrapper;
+
 
 public class NormalUserWindow extends JFrame {
 
+	
 	private JPanel contentPane;
 	private JTable table;
 	private JTable table_1;
@@ -26,6 +33,9 @@ public class NormalUserWindow extends JFrame {
 	private JTextField textField_2;
 	private JTextField textField_3;
 	private JTable table_2;
+	
+	private static Connection SQLConnect;
+	private static LoggedInUserWrapper user;
 
 	/**
 	 * Launch the application.
@@ -47,6 +57,13 @@ public class NormalUserWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public NormalUserWindow() {
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 521, 377);
 		contentPane = new JPanel();
@@ -154,5 +171,14 @@ public class NormalUserWindow extends JFrame {
 		
 		table_2 = new JTable();
 		scrollPane_2.setViewportView(table_2);
+	}
+
+	public static void setVisible(Connection whaleConnect,
+			LoggedInUserWrapper userInfo) {
+		user = userInfo;
+		SQLConnect = whaleConnect;
+		NormalUserWindow window = new NormalUserWindow();
+		window.setVisible(true);
+		
 	}
 }

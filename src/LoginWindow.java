@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.UIManager;
 
 import connection.*;
 
@@ -31,16 +32,6 @@ public class LoginWindow extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					LoginWindow frame = new LoginWindow();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
 		
 		login = new LoginWindow();
 		login.setVisible(true);
@@ -50,6 +41,12 @@ public class LoginWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginWindow() {
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 		
 		whaleConnect = ExecuteSqlQuery.connectToWhale();
 		
@@ -91,9 +88,14 @@ public class LoginWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String email = textField.getText();
 				String password = new String(passwordField.getPassword());
-								
-				if(ExecuteSqlQuery.login(email, password, whaleConnect)){
-					AdminMainWindow.setVisible(whaleConnect);
+				LoggedInUserWrapper user = ExecuteSqlQuery.login(email, password, whaleConnect);			
+				if(user.getLogged()){
+					if(user.getChairs().size()>0){
+						AdminMainWindow.setVisible(whaleConnect, user);
+					}
+					else{
+						NormalUserWindow.setVisible(whaleConnect, user);
+					}
 					login.dispose();
 				}
 				else{
