@@ -40,14 +40,15 @@ import java.util.ArrayList;
 
 public class AdminMainWindow {
 
-	private JFrame POFrame;
-	private JTextField PONumberField;
+	private JFrame poFrame;
+	private JTextField poNumberField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JTextField EdirRemoveLookupField;
+	private JTextField editRemoveLookupField;
 	private JTextField newEmailField;
 	private JTextField newPasswordField;
-	private JTextField NewFirstNameField;
+	private JTextField newFirstNameField;
 	private JTextField newLastNameField;
+	private JTextField userLookupUsernameField;
 	private JTextField userLookupFirstNameField;
 	private JTextField userLookupLastNameField;
 	private JTextField userLookupEmailField;
@@ -59,8 +60,7 @@ public class AdminMainWindow {
 	private JRadioButton createPO;
 	private JRadioButton createDepartment;
 
-	private static Connection SQLConnect;
-	private JTextField userLookupUsernameField;
+	private static Connection sqlConnect;
 
 	/**
 	 * Launch the application.
@@ -70,7 +70,7 @@ public class AdminMainWindow {
 			public void run() {
 				try {
 					AdminMainWindow window = new AdminMainWindow();
-					window.POFrame.setVisible(true);
+					window.poFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -79,9 +79,9 @@ public class AdminMainWindow {
 	}
 
 	public static void setVisible(Connection connect) {
+		sqlConnect = connect;
 		AdminMainWindow window = new AdminMainWindow();
-		window.POFrame.setVisible(true);
-		SQLConnect = connect;
+		window.poFrame.setVisible(true);
 	}
 
 	/**
@@ -98,18 +98,18 @@ public class AdminMainWindow {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-
 		}
-		POFrame = new JFrame();
-		POFrame.getContentPane().setBackground(Color.WHITE);
-		POFrame.setTitle("P-O-System");
-		POFrame.setForeground(Color.WHITE);
-		POFrame.setBounds(100, 100, 700, 460);
-		POFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		poFrame = new JFrame();
+		poFrame.getContentPane().setBackground(Color.WHITE);
+		poFrame.setTitle("P-O-System");
+		poFrame.setForeground(Color.WHITE);
+		poFrame.setBounds(100, 100, 700, 460);
+		poFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBackground(Color.LIGHT_GRAY);
-		POFrame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		poFrame.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
 		JLayeredPane layeredPane = new JLayeredPane();
 		layeredPane.setBackground(Color.LIGHT_GRAY);
@@ -137,10 +137,10 @@ public class AdminMainWindow {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (createUser.isSelected()) {
-					CreateUserWindow.newCreateUserWindow(SQLConnect);
+					CreateUserWindow.newCreateUserWindow(sqlConnect);
 				}
 				else if(createPO.isSelected()){
-					CreatePaymentOrder.setVisible(SQLConnect);
+					CreatePaymentOrder.setVisible(sqlConnect);
 				}
 				else{
 					
@@ -154,10 +154,10 @@ public class AdminMainWindow {
 		layeredPane_1.setBackground(Color.WHITE);
 		tabbedPane.addTab("Pending Reimbursements", null, layeredPane_1, null);
 
-		PONumberField = new JTextField();
-		PONumberField.setBounds(10, 347, 168, 20);
-		layeredPane_1.add(PONumberField);
-		PONumberField.setColumns(10);
+		poNumberField = new JTextField();
+		poNumberField.setBounds(10, 347, 168, 20);
+		layeredPane_1.add(poNumberField);
+		poNumberField.setColumns(10);
 
 		JButton btnNewButton = new JButton("Accept Reimbursement");
 		btnNewButton.setBounds(219, 346, 159, 23);
@@ -214,10 +214,10 @@ public class AdminMainWindow {
 		JLayeredPane layeredPane_2 = new JLayeredPane();
 		tabbedPane.addTab("Edit/Remove User", null, layeredPane_2, null);
 
-		EdirRemoveLookupField = new JTextField();
-		EdirRemoveLookupField.setBounds(260, 11, 154, 20);
-		layeredPane_2.add(EdirRemoveLookupField);
-		EdirRemoveLookupField.setColumns(10);
+		editRemoveLookupField = new JTextField();
+		editRemoveLookupField.setBounds(260, 11, 154, 20);
+		layeredPane_2.add(editRemoveLookupField);
+		editRemoveLookupField.setColumns(10);
 
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(28, 64, 621, 180);
@@ -266,10 +266,10 @@ public class AdminMainWindow {
 		layeredPane_2.add(newPasswordField);
 		newPasswordField.setColumns(10);
 
-		NewFirstNameField = new JTextField();
-		NewFirstNameField.setBounds(328, 259, 86, 20);
-		layeredPane_2.add(NewFirstNameField);
-		NewFirstNameField.setColumns(10);
+		newFirstNameField = new JTextField();
+		newFirstNameField.setBounds(328, 259, 86, 20);
+		layeredPane_2.add(newFirstNameField);
+		newFirstNameField.setColumns(10);
 
 		newLastNameField = new JTextField();
 		newLastNameField.setBounds(328, 290, 86, 20);
@@ -397,7 +397,7 @@ public class AdminMainWindow {
 
 				try {
 					rs = ExecuteSqlQuery.lookupUsers(firstName, lastName,
-							email, username, SQLConnect);
+							email, username, sqlConnect);
 					if (rs != null) {
 
 						ArrayList<String[]> rows = new ArrayList<String[]>();
@@ -430,7 +430,6 @@ public class AdminMainWindow {
 						System.out.println("Herp Derp");
 					}
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -476,7 +475,7 @@ public class AdminMainWindow {
 		JButton btnEditDepartments = new JButton("Edit Departments");
 		btnEditDepartments.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				EditDepartmentsWindow.setVisible(SQLConnect);
+				EditDepartmentsWindow.setVisible(sqlConnect);
 				
 				
 			}

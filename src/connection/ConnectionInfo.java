@@ -11,8 +11,8 @@ import java.util.Scanner;
  */
 public class ConnectionInfo {
 
-	private String user = "";
-	private String pwd = "";
+	private String user = null;
+	private String pwd = null;
 	
 	public ConnectionInfo(String user, String pwd) {
 		this.user = user;
@@ -30,14 +30,31 @@ public class ConnectionInfo {
 	}
 	
 	public boolean wasCancelled() {
-		return user.isEmpty() || pwd.isEmpty();
+		return (user == null && pwd == null) || (user.isEmpty() && pwd.isEmpty());
 	}
 	
 	public static void prompt(ConnectionInfo pwd) {
-			System.out.println("Username: ");
-			Scanner in = new Scanner(System.in);
-			pwd.user = in.nextLine();
-			System.out.println("Password: ");
-			pwd.pwd = in.nextLine();
+		Scanner in = new Scanner(System.in);
+		String user = null; 
+		String pass = null;
+		while (pwd.wasCancelled()) {
+			System.out.println("Username: (c to cancel)");
+			user = in.nextLine();
+			if (user.equalsIgnoreCase("c")) {
+				pwd.user = null;
+				pwd.pwd = null;
+				break;
+			}
+			System.out.println("Password: (c to cancel)");
+			pass = in.nextLine();
+			if (pass.equalsIgnoreCase("c")) {
+				pwd.user = null;
+				pwd.pwd = null;
+				break;
+			}
+			pwd.user = user;
+			pwd.pwd = pass;
+		}
+		in.close();	
 	}
 }

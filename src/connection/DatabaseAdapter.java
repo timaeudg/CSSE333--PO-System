@@ -34,66 +34,41 @@ public class DatabaseAdapter {
 	private static final int PORT = 1433;
 
 	/**
-	 * Exercises the JDBC interface.
+	 * Establishes a connection to the server at the given URL using the given
+	 * username and password. Requires: !pwd.wasCancelled()
 	 * 
-	 * @param args
-	 *            ignored
+	 * @param url
+	 * @param pwd
+	 *            ConnectionInfo containing the username and passward
+	 * @return a connection to the server
+	 * @throws SQLException
 	 */
-	public static void main(String[] args) {
-		try {
-			registerSQLServerDriver();
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-			return;
-		}
-		System.out.println("Driver registration successful.");
+	public static Connection getConnection(String url, ConnectionInfo pwd)
+			throws SQLException {
+		if (url == null)
+			url = getConnectionURL() + ";DatabaseName=" + DATABASE + ";";
+		if (pwd.wasCancelled())
+			return null;
+		Connection connection = DriverManager.getConnection(url,
+				pwd.getUsername(), new String(pwd.getPassword()));
+		return connection;
+	}
 
-		// -------------------------------------------------------------------
-		// Prompts user for username and password
-		ConnectionInfo pwd = new ConnectionInfo();
-		ConnectionInfo.prompt(pwd);
+	/**
+	 * Gets a UserName and Password used to connect to the database 
+	 * @return an object containing user login information
+	 */
+	public static ConnectionInfo getConnectionInfo() {
+		return new ConnectionInfo("timaeudg", "KirisuteG0m3n");
+	}
 
-		if (pwd.wasCancelled()) {
-			System.out.println("Request for username and password cancelled.");
-			return;
-		}
-
-		// -------------------------------------------------------------------
-		// Tests connection to server
-		try {
-			testConnection(pwd);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return; // aborts execution if this stage didn't work
-		}
-		System.out.println("Connection successful.");
-		printSeparatorLine();
-		printSeparatorLine();
-
-		// -------------------------------------------------------------------
-		// Runs a simple query
-		try {
-			testQuery(pwd);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return; // aborts execution if this stage didn'twork
-		}
-		System.out.println("Simple query did not throw an exception.");
-		printSeparatorLine();
-		printSeparatorLine();
-
-		// -------------------------------------------------------------------
-		// Runs a stored procedure
-		try {
-			executeStoredProcedure(pwd);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return; // aborts execution if this stage didn'twork
-		}
-		System.out
-				.println("Stored procedure did not throw an exception (on the Java side anyway).");
-		printSeparatorLine();
-		printSeparatorLine();
+	/**
+	 * Gets the connectionURL this adapter connects to
+	 * 
+	 * @return the connectionURL this apater connects to
+	 */
+	public static String getConnectionURL() {
+		return CONNECTION_PROTOCOL + "://" + SERVER + ":" + PORT;
 	}
 
 	/**
@@ -109,26 +84,6 @@ public class DatabaseAdapter {
 	}
 
 	/**
-	 * Establishes a connection to the server at the given URL using the given
-	 * username and password. Requires: !pwd.wasCancelled()
-	 * 
-	 * @param url
-	 * @param pwd
-	 *            ConnectionInfo containing the username and passward
-	 * @return a connection to the server
-	 * @throws SQLException
-	 */
-	public static Connection getConnection(String url, ConnectionInfo pwd)
-			throws SQLException {
-		if (url == null)
-			url = CONNECTION_PROTOCOL + "://" + SERVER + ":" + PORT + ";"
-					+ "databaseName=" + DATABASE + ";";
-		Connection connection = DriverManager.getConnection(url,
-				pwd.getUsername(), new String(pwd.getPassword()));
-		return connection;
-	}
-
-	/**
 	 * Opens a connection to the server.
 	 * 
 	 * @param pwd
@@ -139,21 +94,11 @@ public class DatabaseAdapter {
 	 */
 	public static void testConnection(ConnectionInfo pwd) throws SQLException {
 		// Set connection parameters (change servername, username, and password
-		String url = CONNECTION_PROTOCOL + "://" + SERVER + ":" + PORT + ";";
-		Connection conn = getConnection(url, pwd);
+		Connection conn = getConnection(getConnectionURL(), pwd);
 		if (conn == null) {
 			throw new SQLException("Null connection returned.");
 		}
 		conn.close();
-	}
-
-	/**
-	 * Gets the connectionURL this adapter connects to
-	 * 
-	 * @return the connectionURL this apater connects to
-	 */
-	public static String getConnectionURL() {
-		return CONNECTION_PROTOCOL + "://" + SERVER + ":" + PORT;
 	}
 
 	/**
@@ -167,15 +112,15 @@ public class DatabaseAdapter {
 	 */
 	public static void testQuery(ConnectionInfo pwd) throws SQLException {
 		// Connects to specific database
-		String url = CONNECTION_PROTOCOL + "://" + SERVER + ":" + PORT
-				+ ";DatabaseName=" + DATABASE + ";SelectMethod=cursor;";
+		String url = getConnectionURL() + ";DatabaseName=" + DATABASE
+				+ ";SelectMethod=cursor;";
 		Connection conn = getConnection(url, pwd);
 
 		// Performs a simple query on the database to demonstrate the technique.
 		// Typically you should call a stored procedure instead, but this serves
 		// to demonstrate the initial technique of sending an SQL command.
 		String query = "SELECT * FROM Users";
-		PreparedStatement stmt = conn.prepareStatement(query);
+		CallableStatement stmt = conn.prepareCall(query);
 		// Replaces the question mark in the query string with a parameter,
 		// while avoid SQL injection attacks
 		// stmt.setString(1, "Germany");
@@ -206,8 +151,8 @@ public class DatabaseAdapter {
 	private static void executeStoredProcedure(ConnectionInfo pwd)
 			throws SQLException {
 		// Connects to specific database
-		String url = CONNECTION_PROTOCOL + "://" + SERVER + ":" + PORT
-				+ ";DatabaseName=" + DATABASE + ";SelectMethod=cursor;";
+		String url = DatabaseAdapter.getConnectionURL() + ";DatabaseName=" + DATABASE
+				+ ";SelectMethod=cursor;";
 		Connection conn = getConnection(url, pwd);
 
 		// Calls a stored procedure using parameters for the arguments and for
@@ -219,7 +164,7 @@ public class DatabaseAdapter {
 		// parameters that we can read from after executing the procedure.
 		// while avoid SQL injection attacks
 		cstmt.registerOutParameter(1, Types.INTEGER); // return code
-		cstmt.setString(2, null); // customerID, input parameter
+		cstmt.setString(2, null); 
 		cstmt.setString(3, "Jo%");
 		cstmt.setString(4, null);
 		cstmt.setString(5, null);
@@ -324,5 +269,68 @@ public class DatabaseAdapter {
 	private static void printSeparatorLine() {
 		System.out
 				.println("=================================================================");
+	}
+
+	/**
+	 * Exercises the JDBC interface.
+	 * 
+	 * @param args
+	 *            ignored
+	 */
+	public static void main(String[] args) {
+		try {
+			registerSQLServerDriver();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return;
+		}
+		System.out.println("Driver registration successful.");
+
+		// -------------------------------------------------------------------
+		// Prompts user for username and password
+		ConnectionInfo pwd = new ConnectionInfo();
+		ConnectionInfo.prompt(pwd);
+
+		if (pwd.wasCancelled()) {
+			System.out.println("Request for username and password cancelled.");
+			return;
+		}
+
+		// -------------------------------------------------------------------
+		// Tests connection to server
+		try {
+			testConnection(pwd);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return; // aborts execution if this stage didn't work
+		}
+		System.out.println("Connection successful.");
+		printSeparatorLine();
+		printSeparatorLine();
+
+		// -------------------------------------------------------------------
+		// Runs a simple query
+		try {
+			testQuery(pwd);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return; // aborts execution if this stage didn'twork
+		}
+		System.out.println("Simple query did not throw an exception.");
+		printSeparatorLine();
+		printSeparatorLine();
+
+		// -------------------------------------------------------------------
+		// Runs a stored procedure
+		try {
+			executeStoredProcedure(pwd);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return; // aborts execution if this stage didn'twork
+		}
+		System.out
+				.println("Stored procedure did not throw an exception (on the Java side anyway).");
+		printSeparatorLine();
+		printSeparatorLine();
 	}
 }
