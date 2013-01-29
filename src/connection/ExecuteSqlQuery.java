@@ -138,6 +138,9 @@ public class ExecuteSqlQuery {
 		try{
 			statement = connection.prepareCall(query);
 			statement.registerOutParameter(1,Types.INTEGER);
+			if(firstName.isEmpty() || lastName.isEmpty()|| email.isEmpty()||password.isEmpty()|| username.isEmpty()){
+				throw new IllegalArgumentException();
+			}
 			statement.setString(2, firstName);
 			statement.setString(3, lastName);
 			statement.setString(4, username);
