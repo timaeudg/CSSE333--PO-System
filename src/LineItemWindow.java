@@ -1,3 +1,5 @@
+
+
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
@@ -9,7 +11,6 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.UIManager;
 
 
 public class LineItemWindow extends JFrame {
@@ -48,13 +49,7 @@ public class LineItemWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public LineItemWindow() {
-		
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 300, 256);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -119,3 +114,4 @@ public class LineItemWindow extends JFrame {
 	}
 
 }
+

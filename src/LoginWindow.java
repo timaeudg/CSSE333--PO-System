@@ -15,6 +15,7 @@ import connection.*;
 
 import java.awt.Font;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -39,9 +40,11 @@ public class LoginWindow extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
 	public LoginWindow() {
 		
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
@@ -50,6 +53,7 @@ public class LoginWindow extends JFrame {
 		
 		whaleConnect = ExecuteSqlQuery.connectToWhale();
 		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 280, 360);
 		contentPane = new JPanel();
@@ -59,6 +63,17 @@ public class LoginWindow extends JFrame {
 		
 		JLayeredPane layeredPane = new JLayeredPane();
 		contentPane.add(layeredPane, BorderLayout.CENTER);
+		
+		try {
+			whaleConnect = DatabaseAdapter.getConnection(null, DatabaseAdapter.getConnectionInfo());
+		} catch (SQLException e) {
+			lblUsernameOrPassword = new JLabel("Unable to connect");
+			lblUsernameOrPassword.setVisible(true);
+			lblUsernameOrPassword.setBounds(15, 202, 211, 14);
+			layeredPane.add(lblUsernameOrPassword);
+			e.printStackTrace();
+		}
+		
 		
 		lblUsernameOrPassword = new JLabel("Username or Password incorrect");
 		lblUsernameOrPassword.setVisible(false);

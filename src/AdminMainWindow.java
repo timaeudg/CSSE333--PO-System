@@ -44,11 +44,16 @@ public class AdminMainWindow {
 	private JFrame POFrame;
 	private JTextField PONumberField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+
 	private JTextField EditRemoveLookupField;
+
+	private JTextField editRemoveLookupField;
+
 	private JTextField newEmailField;
 	private JTextField newPasswordField;
-	private JTextField NewFirstNameField;
+	private JTextField newFirstNameField;
 	private JTextField newLastNameField;
+	private JTextField userLookupUsernameField;
 	private JTextField userLookupFirstNameField;
 	private JTextField userLookupLastNameField;
 	private JTextField userLookupEmailField;
@@ -60,9 +65,9 @@ public class AdminMainWindow {
 	private JRadioButton createPO;
 	private JRadioButton createDepartment;
 
+
 	private static Connection SQLConnect;
 	private static LoggedInUserWrapper user;
-	private JTextField userLookupUsernameField;
 	private JTextField newUsernameField;
 
 //	/**
@@ -88,6 +93,7 @@ public class AdminMainWindow {
 		user = userInfo;
 	}
 
+
 	/**
 	 * Create the application.
 	 */
@@ -103,8 +109,8 @@ public class AdminMainWindow {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
-
 		}
+		
 		POFrame = new JFrame();
 		POFrame.getContentPane().setBackground(Color.WHITE);
 		POFrame.setTitle("P-O-System");
@@ -259,6 +265,7 @@ public class AdminMainWindow {
 //		EditRemoveTable.setBackground(Color.LIGHT_GRAY);
 
 		JLabel lblNewLabel = new JLabel("Username:");
+
 		lblNewLabel.setBounds(193, 14, 57, 14);
 		layeredPane_2.add(lblNewLabel);
 
@@ -272,10 +279,10 @@ public class AdminMainWindow {
 		layeredPane_2.add(newPasswordField);
 		newPasswordField.setColumns(10);
 
-		NewFirstNameField = new JTextField();
-		NewFirstNameField.setBounds(328, 259, 86, 20);
-		layeredPane_2.add(NewFirstNameField);
-		NewFirstNameField.setColumns(10);
+		newFirstNameField = new JTextField();
+		newFirstNameField.setBounds(328, 259, 86, 20);
+		layeredPane_2.add(newFirstNameField);
+		newFirstNameField.setColumns(10);
 
 		newLastNameField = new JTextField();
 		newLastNameField.setBounds(328, 290, 86, 20);
@@ -303,7 +310,7 @@ public class AdminMainWindow {
 			public void actionPerformed(ActionEvent arg0) {
 				String oldUsername = EditRemoveLookupField.getText();
 				String newEmail = newEmailField.getText();
-				String newFirstName = NewFirstNameField.getText();
+				String newFirstName = newFirstNameField.getText();
 				String newLastName = newLastNameField.getText();
 				String newPassword = newPasswordField.getText();
 				String newUsername = newUsernameField.getText();
@@ -424,10 +431,10 @@ public class AdminMainWindow {
 		JButton btnSearch = new JButton("Search");
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String firstName = userLookupFirstNameField.getText();
-				String lastName = userLookupLastNameField.getText();
-				String email = userLookupEmailField.getText();
-				String username = userLookupUsernameField.getText();
+				String firstName = userLookupFirstNameField.getText().replaceAll("\\*", "%");
+				String lastName = userLookupLastNameField.getText().replaceAll("\\*", "%");
+				String email = userLookupEmailField.getText().replaceAll("\\*", "%");
+				String username = userLookupUsernameField.getText().replaceAll("\\*", "%");
 				ResultSet rs = null;
 
 				try {
@@ -465,7 +472,6 @@ public class AdminMainWindow {
 						System.out.println("Herp Derp");
 					}
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

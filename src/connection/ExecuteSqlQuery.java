@@ -10,7 +10,7 @@ import javax.swing.JTable;
 
 public class ExecuteSqlQuery {
 	
-	
+
 	public static Connection connectToWhale(){
 		Connection connection = null;	
 		
@@ -154,6 +154,8 @@ public class ExecuteSqlQuery {
 		
 		return added;
 	}
+
+	
 	
 	public static boolean removeUser(String deleter, String deletee, Connection connection){
 		boolean removed = false;
@@ -196,7 +198,7 @@ public class ExecuteSqlQuery {
 				statement.setString(2, oldUsername);
 			}
 			if((newUsername==null || newUsername.isEmpty())){
-				throw new IllegalArgumentException();
+				statement.setString(3, null);
 			}
 			else{
 				statement.setString(3, newUsername);
