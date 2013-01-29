@@ -53,7 +53,7 @@ public class AdminMainWindow {
 	private JTextField userLookupLastNameField;
 	private JTextField userLookupEmailField;
 	private JTable lookupTable;
-	private JTable table_1;
+	private JTable DepartmentOverviewTable;
 	private JTable table_2;
 
 	private JRadioButton createUser;
@@ -65,33 +65,34 @@ public class AdminMainWindow {
 	private JTextField userLookupUsernameField;
 	private JTextField newUsernameField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AdminMainWindow window = new AdminMainWindow();
-					window.POFrame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	/**
+//	 * Launch the application.
+//	 */
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					AdminMainWindow window = new AdminMainWindow();
+//					window.POFrame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	public static void setVisible(Connection connect, LoggedInUserWrapper userInfo) {
-		AdminMainWindow window = new AdminMainWindow();
+		AdminMainWindow window = new AdminMainWindow(connect);
 		window.POFrame.setVisible(true);
-		SQLConnect = connect;
+//		SQLConnect = connect;
 		user = userInfo;
 	}
 
 	/**
 	 * Create the application.
 	 */
-	public AdminMainWindow() {
+	public AdminMainWindow(Connection connect) {
+		this.SQLConnect = connect;
 		initialize();
 	}
 
@@ -488,11 +489,11 @@ public class AdminMainWindow {
 		scrollPane_3.setBounds(10, 11, 659, 309);
 		layeredPane_4.add(scrollPane_3);
 
-		table_1 = new JTable();
-		table_1.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null,
+		DepartmentOverviewTable = new JTable();
+		DepartmentOverviewTable.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null,
 				null, null));
-		table_1.setBackground(Color.LIGHT_GRAY);
-		table_1.setModel(new DefaultTableModel(new Object[][] {
+		DepartmentOverviewTable.setBackground(Color.LIGHT_GRAY);
+		DepartmentOverviewTable.setModel(new DefaultTableModel(new Object[][] {
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
@@ -505,7 +506,16 @@ public class AdminMainWindow {
 				{ null, null, null, null }, { null, null, null, null }, },
 				new String[] { "Department name", "Budget", "New column",
 						"New column" }));
-		scrollPane_3.setViewportView(table_1);
+		scrollPane_3.setViewportView(DepartmentOverviewTable);
+		
+		String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
+		
+		String[] departColumns = new String[] { "Department ID",
+				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };
+		
+		JTable updateTable = new JTable(depart, departColumns);
+		DepartmentOverviewTable.setModel(updateTable.getModel());
+		DepartmentOverviewTable.repaint();
 		
 		JButton btnEditDepartments = new JButton("Edit Departments");
 		btnEditDepartments.addActionListener(new ActionListener() {
@@ -541,5 +551,7 @@ public class AdminMainWindow {
 				{ null, null, null, null, null }, }, new String[] { "Reason",
 				"Cost", "Status", "New column", "New column" }));
 		scrollPane_4.setViewportView(table_2);
+		
+		
 	}
 }
