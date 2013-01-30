@@ -165,7 +165,7 @@ public class DatabaseAdapter {
 		// while avoid SQL injection attacks
 		cstmt.registerOutParameter(1, Types.INTEGER); // return code
 		cstmt.setString(2, null); 
-		cstmt.setString(3, "Jo%");
+		cstmt.setString(3, null);
 		cstmt.setString(4, null);
 		cstmt.setString(5, null);
 

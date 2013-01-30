@@ -65,8 +65,11 @@ public class ExecuteSqlQuery {
 				
 				user = new LoggedInUserWrapper(email, departments, login);
 				
+				for (Integer id : departments) {
+					System.out.print(id + " ");
+				}
+				System.out.println();
 				
-				System.out.println(departmentIDs);
 				
 				
 				statement.close();
