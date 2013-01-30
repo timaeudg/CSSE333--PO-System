@@ -24,6 +24,7 @@ public class AlternatingColorTable extends JTable {
 		super.getColumnModel().getColumn(0).setResizable(false);
 		super.getTableHeader().setReorderingAllowed(false);
 		super.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		super.setAutoCreateRowSorter(true);
 	}
 
 	public boolean isCellEditable(int rowIndex, int colIndex) {

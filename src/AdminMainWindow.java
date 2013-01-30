@@ -529,7 +529,14 @@ public class AdminMainWindow {
 		String[] dept_cols = { "Department name", "Budget", "New column",
 		"New column" };
 		
-		DefaultTableModel dept_model = new DefaultTableModel(dept_data, dept_cols);
+		DefaultTableModel dept_model = new DefaultTableModel(dept_data, dept_cols) {
+			Class[] columnTypes = { Integer.class, String.class, Double.class,
+					Double.class, Integer.class };
+
+			public Class getColumnClass(int column) {
+				return columnTypes[column];
+			}
+		};
 		
 		departmentOverviewTable = new AlternatingColorTable(dept_model);
 		departmentOverviewTable.setBackground(Color.LIGHT_GRAY);
