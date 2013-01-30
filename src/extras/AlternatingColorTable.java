@@ -12,13 +12,15 @@ public class AlternatingColorTable extends JTable {
 
 	public AlternatingColorTable() {
 		super();
-		super.getColumnModel().getColumn(0).setResizable(false);
-		super.getTableHeader().setReorderingAllowed(false);
-		super.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		init();
 	}
 	
 	public AlternatingColorTable(DefaultTableModel model) {
 		super(model);
+		init();
+	}
+	
+	private void init() {
 		super.getColumnModel().getColumn(0).setResizable(false);
 		super.getTableHeader().setReorderingAllowed(false);
 		super.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
