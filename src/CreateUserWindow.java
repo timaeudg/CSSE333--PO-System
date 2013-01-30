@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -31,7 +32,13 @@ public class CreateUserWindow extends JFrame {
 	private JTextField usernameField;
 	private static JFrame createWindow;
 	
+	private static ArrayList<String> userChairs = new ArrayList<String>();
+	private static ArrayList<String> userDepartments;
+	
+	private static ArrayList<String> availableDepartments;
+	
 	private JLabel userInfoLabel;
+	private static JLabel departmentLabel;
 	/**
 	 * Launch the application.
 	 */
@@ -49,8 +56,9 @@ public class CreateUserWindow extends JFrame {
 	}
 	
 	
-	public static void newCreateUserWindow(Connection connect){
+	public static void newCreateUserWindow(Connection connect, ArrayList<String> departments){
 		SQLConnect = connect;
+		availableDepartments = departments;
 		createWindow = new CreateUserWindow();
 		createWindow.setVisible(true);
 	}
@@ -61,7 +69,7 @@ public class CreateUserWindow extends JFrame {
 	public CreateUserWindow() {
 		setTitle("Create New User");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 271, 341);
+		setBounds(100, 100, 271, 390);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -107,6 +115,10 @@ public class CreateUserWindow extends JFrame {
 		lblEmail.setBounds(10, 95, 46, 14);
 		layeredPane.add(lblEmail);
 		
+		departmentLabel = new JLabel("User must belong to at least one department");
+		departmentLabel.setBounds(10, 261, 225, 14);
+		layeredPane.add(departmentLabel);
+		
 		JLabel lblNewLabel = new JLabel("Password: ");
 		lblNewLabel.setBounds(10, 126, 68, 14);
 		layeredPane.add(lblNewLabel);
@@ -116,17 +128,34 @@ public class CreateUserWindow extends JFrame {
 		layeredPane.add(lblUsername);
 		
 		userInfoLabel = new JLabel("Invalid User Information");
-		userInfoLabel.setBounds(58, 268, 158, 14);
+		userInfoLabel.setBounds(64, 317, 158, 14);
 		layeredPane.add(userInfoLabel);
 		userInfoLabel.setVisible(false);
 		
-		JCheckBox chckbxChairperson = new JCheckBox("Chairperson");
-		chckbxChairperson.setBounds(10, 215, 83, 23);
+		JButton chckbxChairperson = new JButton("Add Chair Position");
+		chckbxChairperson.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				SelectChair.setVisible(SQLConnect, availableDepartments,userChairs);
+				
+				
+			}
+		});
+		chckbxChairperson.setBounds(59, 197, 126, 23);
 		layeredPane.add(chckbxChairperson);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(111, 216, 115, 20);
-		layeredPane.add(comboBox);
+		JButton addDepartmentsButton = new JButton();
+		addDepartmentsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				SelectDepartments.setVisible(SQLConnect, availableDepartments, userDepartments);
+				
+				
+			}
+		});
+		addDepartmentsButton.setText("Add Departments");
+		addDepartmentsButton.setBounds(59, 230, 126, 20);
+		layeredPane.add(addDepartmentsButton);
 		
 		JButton btnAddAsUser = new JButton("Add as User");
 		btnAddAsUser.addActionListener(new ActionListener() {
@@ -137,6 +166,10 @@ public class CreateUserWindow extends JFrame {
 				String password = passwordField.getText();
 				String username = usernameField.getText();
 				
+				if(userDepartments.isEmpty()){
+					departmentLabel.setVisible(true);
+				}
+				else{
 				if(!ExecuteSqlQuery.addUser(firstName, lastName, email, password, username, SQLConnect)){
 					userInfoLabel.setVisible(true);
 				}
@@ -144,8 +177,9 @@ public class CreateUserWindow extends JFrame {
 					createWindow.dispose();
 				}
 			}
+			}
 		});
-		btnAddAsUser.setBounds(58, 245, 110, 23);
+		btnAddAsUser.setBounds(59, 283, 126, 23);
 		layeredPane.add(btnAddAsUser);
 	}
 }

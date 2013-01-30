@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
 
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.UIManager;
@@ -69,6 +70,7 @@ public class AdminMainWindow {
 	private static Connection SQLConnect;
 	private static LoggedInUserWrapper user;
 	private JTextField newUsernameField;
+	private static ArrayList<String> departmentNames;
 
 //	/**
 //	 * Launch the application.
@@ -111,6 +113,12 @@ public class AdminMainWindow {
 		} catch (Exception e) {
 		}
 		
+		String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
+		departmentNames = new ArrayList<String>();
+		for(int i = 0; i<depart.length;i++){
+			departmentNames.add(depart[i][1]);
+		}
+		
 		POFrame = new JFrame();
 		POFrame.getContentPane().setBackground(Color.WHITE);
 		POFrame.setTitle("P-O-System");
@@ -148,7 +156,7 @@ public class AdminMainWindow {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (createUser.isSelected()) {
-					CreateUserWindow.newCreateUserWindow(SQLConnect);
+					CreateUserWindow.newCreateUserWindow(SQLConnect, departmentNames);
 				}
 				else if(createPO.isSelected()){
 					CreatePaymentOrder.setVisible(SQLConnect);
@@ -315,9 +323,17 @@ public class AdminMainWindow {
 				String newPassword = newPasswordField.getText();
 				String newUsername = newUsernameField.getText();
 				
+				if(oldUsername.equals(user.getUsername())){
+					
+					if(JOptionPane.showConfirmDialog(POFrame, "You are about to make edits to yourself, are you sure you would like to do this?")==0){
+						ExecuteSqlQuery.editUser(oldUsername, newUsername, newFirstName, newLastName, newEmail, newPassword, SQLConnect);
+					}
+				}
+				else{
+				
 				ExecuteSqlQuery.editUser(oldUsername, newUsername, newFirstName, newLastName, newEmail, newPassword, SQLConnect);
 				
-				
+				}
 			}
 		});
 		btnNewButton_3.setBounds(215, 338, 103, 23);
@@ -327,7 +343,26 @@ public class AdminMainWindow {
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String deletee = EditRemoveLookupField.getText();
-				ExecuteSqlQuery.removeUser(user.getUsername(), deletee, SQLConnect);
+				
+				if(deletee.equals(user.getUsername())){
+					
+					if(JOptionPane.showConfirmDialog(POFrame, "You are about to delete yourself\nIf you continue, you will be logged out and deleted from the database\nare you sure you would like to do this?")==0){
+						ExecuteSqlQuery.removeUser(user.getUsername(), deletee, SQLConnect);
+						try {
+							SQLConnect.close();
+						} catch (SQLException e1) {
+							e1.printStackTrace();
+						}
+						POFrame.dispose();
+					}
+				}
+				else{
+				
+					ExecuteSqlQuery.removeUser(user.getUsername(), deletee, SQLConnect);
+				
+				}
+				
+				
 			}
 		});
 		btnNewButton_4.setBounds(487, 323, 126, 52);
@@ -514,7 +549,7 @@ public class AdminMainWindow {
 						"New column" }));
 		scrollPane_3.setViewportView(DepartmentOverviewTable);
 		
-		String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
+		
 		
 		String[] departColumns = new String[] { "Department ID",
 				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };

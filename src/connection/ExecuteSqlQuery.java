@@ -220,7 +220,7 @@ public class ExecuteSqlQuery {
 				statement.setString(5, newLastName);
 			}
 			if((newEmail==null || newEmail.isEmpty())){
-				statement.setString(6, newEmail);
+				statement.setString(6, null);
 			}
 			else{
 				statement.setString(6, newEmail);

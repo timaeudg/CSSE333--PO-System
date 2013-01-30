@@ -13,13 +13,21 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Color;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 
+import com.sun.org.apache.bcel.internal.generic.LLOAD;
+
+import connection.ExecuteSqlQuery;
 import connection.LoggedInUserWrapper;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class NormalUserWindow extends JFrame {
@@ -27,11 +35,11 @@ public class NormalUserWindow extends JFrame {
 	
 	private JPanel contentPane;
 	private JTable table;
-	private JTable table_1;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTable lookupTable;
+	private JTextField lookupFirstField;
+	private JTextField lookupUserLastField;
+	private JTextField lookupEmailField;
+	private JTextField lookupUsernameField;
 	private JTable table_2;
 	
 	private static Connection SQLConnect;
@@ -81,46 +89,94 @@ public class NormalUserWindow extends JFrame {
 		scrollPane_1.setBounds(10, 11, 468, 178);
 		layeredPane.add(scrollPane_1);
 		
-		table_1 = new JTable();
-		scrollPane_1.setViewportView(table_1);
+		lookupTable = new JTable();
+		scrollPane_1.setViewportView(lookupTable);
 		
 		JLabel label = new JLabel("First Name:");
 		label.setBounds(10, 210, 61, 14);
 		layeredPane.add(label);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(85, 207, 86, 20);
-		layeredPane.add(textField);
+		lookupFirstField = new JTextField();
+		lookupFirstField.setColumns(10);
+		lookupFirstField.setBounds(85, 207, 86, 20);
+		layeredPane.add(lookupFirstField);
 		
 		JLabel label_1 = new JLabel("Last Name:");
 		label_1.setBounds(181, 210, 61, 14);
 		layeredPane.add(label_1);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(252, 207, 86, 20);
-		layeredPane.add(textField_1);
+		lookupUserLastField = new JTextField();
+		lookupUserLastField.setColumns(10);
+		lookupUserLastField.setBounds(252, 207, 86, 20);
+		layeredPane.add(lookupUserLastField);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(252, 245, 86, 20);
-		layeredPane.add(textField_2);
+		lookupEmailField = new JTextField();
+		lookupEmailField.setColumns(10);
+		lookupEmailField.setBounds(252, 245, 86, 20);
+		layeredPane.add(lookupEmailField);
 		
 		JLabel label_2 = new JLabel("E-mail:");
 		label_2.setBounds(181, 248, 43, 14);
 		layeredPane.add(label_2);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(85, 245, 86, 20);
-		layeredPane.add(textField_3);
+		lookupUsernameField = new JTextField();
+		lookupUsernameField.setColumns(10);
+		lookupUsernameField.setBounds(85, 245, 86, 20);
+		layeredPane.add(lookupUsernameField);
 		
 		JLabel label_3 = new JLabel("Username:");
 		label_3.setBounds(10, 248, 61, 14);
 		layeredPane.add(label_3);
 		
 		JButton button = new JButton("Search");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String firstName = lookupFirstField.getText().replaceAll("\\*", "%");
+				String lastName = lookupUserLastField.getText().replaceAll("\\*", "%");
+				String email = lookupEmailField.getText().replaceAll("\\*", "%");
+				String username = lookupUsernameField.getText().replaceAll("\\*", "%");
+				ResultSet rs = null;
+
+				try {
+					rs = ExecuteSqlQuery.lookupUsers(firstName, lastName,
+							email, username, SQLConnect);
+					if (rs != null) {
+
+						ArrayList<String[]> rows = new ArrayList<String[]>();
+						String[] row = new String[4];
+						while (rs.next()) {
+							for (int j = 1; j < 5; j++) {
+								row[j - 1] = rs.getString(j);
+							}
+							rows.add(row);
+							row = new String[4];
+						}
+
+						int numberOfRows = rows.size();
+						String[][] data = new String[numberOfRows][4];
+
+						// System.out.println(rows.toString());
+
+						for (int k = 0; k < numberOfRows; k++) {
+							data[k] = rows.get(k);
+						}
+						rs.close();
+						String[] columns = new String[] { "Username",
+								"First Name", "Last Name", "E-mail" };
+
+						JTable updateTable = new JTable(data, columns);
+						lookupTable.setModel(updateTable.getModel());
+						lookupTable.repaint();
+
+					} else {
+						System.out.println("Herp Derp");
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+				
+		});
 		button.setBounds(389, 226, 89, 23);
 		layeredPane.add(button);
 		
@@ -171,6 +227,15 @@ public class NormalUserWindow extends JFrame {
 		
 		table_2 = new JTable();
 		scrollPane_2.setViewportView(table_2);
+		
+		String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
+		String[] departColumns = new String[] { "Department ID",
+				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };
+		
+		JTable updateTable = new JTable(depart, departColumns);
+		table_2.setModel(updateTable.getModel());
+		table_2.repaint();
+		
 	}
 
 	public static void setVisible(Connection whaleConnect,
