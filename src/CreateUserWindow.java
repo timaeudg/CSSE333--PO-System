@@ -33,7 +33,7 @@ public class CreateUserWindow extends JFrame {
 	private static JFrame createWindow;
 	
 	private static ArrayList<String> userChairs = new ArrayList<String>();
-	private static ArrayList<String> userDepartments;
+	private static ArrayList<String> userDepartments = new ArrayList<String>();
 	
 	private static ArrayList<String> availableDepartments;
 	
@@ -118,6 +118,7 @@ public class CreateUserWindow extends JFrame {
 		departmentLabel = new JLabel("User must belong to at least one department");
 		departmentLabel.setBounds(10, 261, 225, 14);
 		layeredPane.add(departmentLabel);
+		departmentLabel.setVisible(false);
 		
 		JLabel lblNewLabel = new JLabel("Password: ");
 		lblNewLabel.setBounds(10, 126, 68, 14);
@@ -174,6 +175,10 @@ public class CreateUserWindow extends JFrame {
 					userInfoLabel.setVisible(true);
 				}
 				else{
+					if(!userChairs.isEmpty()){
+					ExecuteSqlQuery.addChairToDepartment(SQLConnect, username, userChairs);
+					}
+					ExecuteSqlQuery.addUserToDepartment(SQLConnect, username, userDepartments);
 					createWindow.dispose();
 				}
 			}

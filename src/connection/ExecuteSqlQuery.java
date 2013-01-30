@@ -246,7 +246,7 @@ public class ExecuteSqlQuery {
 		return removed;
 	}
 	
-public static String[][]  getDepartmentOverview(Connection connection){
+	public static String[][]  getDepartmentOverview(Connection connection){
 	
 	
 	String query = "{ ? = call alldepartmentinfo}";
@@ -287,6 +287,52 @@ public static String[][]  getDepartmentOverview(Connection connection){
 	
 	return data;
 }
+
+	public static boolean addUserToDepartment(Connection connect, String username, ArrayList<String> departs){
+		boolean added = false;
+		String query = "{ ? = call addusertodepartment (?, ?)}";
+		CallableStatement statement = null;
+		try{
+			
+			for(String department: departs){
+				statement = connect.prepareCall(query);
+				statement.registerOutParameter(1, Types.INTEGER);
+				statement.setString(2, username);
+				statement.setString(3, department);
+				statement.execute();
+			}
+			
+			added =true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return added;
+	}
+	
+	public static boolean addChairToDepartment(Connection connect, String username, ArrayList<String> departs){
+		boolean added = false;
+		String query = "{ ? = call addchairtodepartment (?, ?)}";
+		CallableStatement statement = null;
+		try{
+			
+			for(String department: departs){
+				statement = connect.prepareCall(query);
+				statement.registerOutParameter(1, Types.INTEGER);
+				statement.setString(2, username);
+				statement.setString(3, department);
+				statement.execute();
+			}
+			
+			added =true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return added;
+	}
 	
 	
 }
