@@ -4,6 +4,7 @@ package connection;
  */
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JTable;
 
@@ -65,8 +66,11 @@ public class ExecuteSqlQuery {
 				
 				user = new LoggedInUserWrapper(email, departments, login);
 				
+				for (Integer id : departments) {
+					System.out.print(id + " ");
+				}
+				System.out.println();
 				
-				System.out.println(departmentIDs);
 				
 				
 				statement.close();
@@ -332,6 +336,51 @@ public class ExecuteSqlQuery {
 		}
 		
 		return added;
+	}
+	
+	public static boolean addDepartment(Connection connect, String departmentName, String parent, String budget){
+		boolean added = false;
+		
+		String query = "{ ? = call newdepartment (?, ?, ?,?)}";
+		CallableStatement statement = null;
+		try{
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, departmentName);
+			statement.setDouble(3, Double.parseDouble(budget));
+			statement.setDouble(4, Double.parseDouble(budget));
+			statement.setString(5, parent);
+			
+			statement.execute();
+			added = true;
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return added;
+	}
+
+	public static void editDepartment(Connection sQLConnect,
+			String departToEdit, String parentDepart, String budget,
+			String newName) {
+		String query = "{ ? call ";
+		
+	}
+
+	public static void deleteDepartment(Connection sQLConnect, String deleted) {
+			String query = "{ ? = call deletedepartment (?)}";
+			CallableStatement statement = null;
+			try{
+				statement = sQLConnect.prepareCall(query);
+				statement.registerOutParameter(1, Types.INTEGER);
+				statement.setString(2, deleted);
+				statement.execute();
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 	}
 	
 	

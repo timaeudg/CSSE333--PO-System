@@ -7,6 +7,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLayeredPane;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.UIManager;
 
 import connection.LoggedInUserWrapper;
 
@@ -41,6 +42,13 @@ public class SelectChair extends JFrame {
 	 */
 	public SelectChair() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+		}
+		
+		
 		setBounds(100, 100, 215, 166);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

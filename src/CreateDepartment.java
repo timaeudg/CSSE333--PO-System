@@ -1,45 +1,45 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import javax.swing.UIManager;
+
+import connection.ExecuteSqlQuery;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class CreateDepartment extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_2;
+	private JTextField departmentTextField;
+	private JTextField budgetTextField;
 	private static Connection SQLConnect;
+	private static ArrayList<String> availableDepartments = new ArrayList<String>();
+	private static JComboBox comboBox;
+	private static JLabel invalidLabel;
+	private static CreateDepartment window;
 //	private static JFrame createWindow;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CreateDepartment frame = new CreateDepartment();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 	
-	public static void setVisible(Connection connect) {
-		CreateDepartment window = new CreateDepartment();
+	public static void setVisible(Connection connect, ArrayList<String> depart) {
+		availableDepartments= depart;
+		window = new CreateDepartment();
 		window.setVisible(true);
 		SQLConnect = connect;
+		System.out.println(availableDepartments.toString());
 	}
 
 	/**
@@ -47,6 +47,12 @@ public class CreateDepartment extends JFrame {
 	 */
 	public CreateDepartment() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+		}
+		
 		setBounds(100, 100, 443, 291);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -56,15 +62,20 @@ public class CreateDepartment extends JFrame {
 		JLayeredPane layeredPane = new JLayeredPane();
 		contentPane.add(layeredPane, BorderLayout.CENTER);
 		
-		textField = new JTextField();
-		textField.setBounds(227, 33, 86, 20);
-		layeredPane.add(textField);
-		textField.setColumns(10);
+		departmentTextField = new JTextField();
+		departmentTextField.setBounds(227, 33, 129, 20);
+		layeredPane.add(departmentTextField);
+		departmentTextField.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(227, 95, 86, 20);
-		layeredPane.add(textField_2);
-		textField_2.setColumns(10);
+		budgetTextField = new JTextField();
+		budgetTextField.setBounds(227, 95, 129, 20);
+		layeredPane.add(budgetTextField);
+		budgetTextField.setColumns(10);
+		
+		invalidLabel = new JLabel("Invalid Department Information");
+		invalidLabel.setBounds(118, 154, 160, 14);
+		invalidLabel.setVisible(false);
+		layeredPane.add(invalidLabel);
 		
 		JLabel lblDepartmentName = new JLabel("Department Name: ");
 		lblDepartmentName.setBounds(97, 36, 120, 14);
@@ -74,8 +85,9 @@ public class CreateDepartment extends JFrame {
 		lblNewLabel.setBounds(97, 67, 104, 14);
 		layeredPane.add(lblNewLabel);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(227, 64, 86, 20);
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(availableDepartments.toArray()));
+		comboBox.setBounds(227, 64, 129, 20);
 		layeredPane.add(comboBox);
 		
 		JLabel lblBudget = new JLabel("Budget: ");
@@ -83,6 +95,22 @@ public class CreateDepartment extends JFrame {
 		layeredPane.add(lblBudget);
 		
 		JButton btnCreateDepartment = new JButton("Create Department");
+		btnCreateDepartment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String parent = (String) comboBox.getSelectedItem();
+				String name = departmentTextField.getText();
+				String budget = budgetTextField.getText();
+				
+				if(parent.isEmpty()|| name.isEmpty() || budget.isEmpty()||parent==null){
+					invalidLabel.setVisible(true);
+				}
+				else{
+					ExecuteSqlQuery.addDepartment(SQLConnect, name, parent, budget);
+					window.dispose();
+				}
+				
+			}
+		});
 		btnCreateDepartment.setBounds(129, 179, 125, 23);
 		layeredPane.add(btnCreateDepartment);
 	}

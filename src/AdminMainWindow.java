@@ -32,6 +32,7 @@ import javax.swing.table.TableRowSorter;
 
 import connection.ExecuteSqlQuery;
 import connection.LoggedInUserWrapper;
+import extras.AlternatingColorTable;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -59,7 +60,7 @@ public class AdminMainWindow {
 	private JTextField userLookupLastNameField;
 	private JTextField userLookupEmailField;
 	private JTable lookupTable;
-	private JTable DepartmentOverviewTable;
+	private JTable departmentOverviewTable;
 	private JTable table_2;
 
 	private JRadioButton createUser;
@@ -377,6 +378,10 @@ public class AdminMainWindow {
 		lblNewUsername.setBounds(487, 262, 86, 14);
 		layeredPane_2.add(lblNewUsername);
 
+		//===================================================================
+		// User LookUp
+		//===================================================================
+
 		JLayeredPane layeredPane_3 = new JLayeredPane();
 		tabbedPane.addTab("User Lookup", null, layeredPane_3, null);
 
@@ -384,7 +389,7 @@ public class AdminMainWindow {
 		scrollPane_2.setBounds(10, 11, 660, 224);
 		layeredPane_3.add(scrollPane_2);
 
-		Object data[][] = { { null, null, null, null },
+		Object user_data[][] = { { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
@@ -392,8 +397,9 @@ public class AdminMainWindow {
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, };
-		String col[] = { "Username", "First Name", "Last Name", "E-mail" };
-		DefaultTableModel model = new DefaultTableModel(data, col) {
+		String user_col[] = { "Username", "First Name", "Last Name", "E-mail" };
+		
+		DefaultTableModel model = new DefaultTableModel(user_data, user_col) {
 			Class[] columnTypes = { String.class, String.class, String.class,
 					String.class };
 
@@ -401,29 +407,8 @@ public class AdminMainWindow {
 				return columnTypes[column];
 			}
 		};
-		lookupTable = new JTable(model) {
-			public boolean isCellEditable(int rowIndex, int colIndex) {
-				return false;
-			}
-
-			public Component prepareRenderer(TableCellRenderer renderer,
-					int index_row, int index_col) {
-				Component comp = super.prepareRenderer(renderer, index_row,
-						index_col);
-				// even index, selected or not selected
-
-				if (index_row % 2 == 0) {
-					comp.setBackground(Color.LIGHT_GRAY);
-				} else {
-					comp.setBackground(Color.white);
-				}
-				if (isCellSelected(index_row, index_col)) {
-					// Light Blue
-					comp.setBackground(new Color(142, 207, 255));
-				}
-				return comp;
-			}
-		};
+		
+		lookupTable = new AlternatingColorTable(model);
 		lookupTable.setBorder(new BevelBorder(BevelBorder.LOWERED,
 				Color.LIGHT_GRAY, Color.LIGHT_GRAY, Color.LIGHT_GRAY,
 				Color.LIGHT_GRAY));
@@ -431,10 +416,6 @@ public class AdminMainWindow {
 //		lookupTable.setRowSorter(sorter);
 		scrollPane_2.setViewportView(lookupTable);
 		lookupTable.setBackground(Color.LIGHT_GRAY);
-
-		lookupTable.getColumnModel().getColumn(0).setResizable(false);
-		lookupTable.getTableHeader().setReorderingAllowed(false);
-		lookupTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		userLookupFirstNameField = new JTextField();
 		userLookupFirstNameField.setBounds(85, 282, 86, 20);
@@ -522,6 +503,10 @@ public class AdminMainWindow {
 		JLabel lblUsername = new JLabel("Username:");
 		lblUsername.setBounds(510, 285, 61, 14);
 		layeredPane_3.add(lblUsername);
+		
+		//===================================================================
+		// Department Overview
+		//===================================================================
 
 		JLayeredPane layeredPane_4 = new JLayeredPane();
 		tabbedPane.addTab("Department Overview", null, layeredPane_4, null);
@@ -530,11 +515,7 @@ public class AdminMainWindow {
 		scrollPane_3.setBounds(10, 11, 659, 309);
 		layeredPane_4.add(scrollPane_3);
 
-		DepartmentOverviewTable = new JTable();
-		DepartmentOverviewTable.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null,
-				null, null));
-		DepartmentOverviewTable.setBackground(Color.LIGHT_GRAY);
-		DepartmentOverviewTable.setModel(new DefaultTableModel(new Object[][] {
+		Object[][] dept_data = new Object[][] {
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
@@ -544,30 +525,67 @@ public class AdminMainWindow {
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
 				{ null, null, null, null }, { null, null, null, null },
-				{ null, null, null, null }, { null, null, null, null }, },
-				new String[] { "Department name", "Budget", "New column",
-						"New column" }));
-		scrollPane_3.setViewportView(DepartmentOverviewTable);
+				{ null, null, null, null }, { null, null, null, null }, };
+		String[] dept_cols = { "Department name", "Budget", "New column",
+		"New column" };
 		
+		DefaultTableModel dept_model = new DefaultTableModel(dept_data, dept_cols) {
+			Class[] columnTypes = { Integer.class, String.class, Double.class,
+					Double.class, Integer.class };
+
+			public Class getColumnClass(int column) {
+				return columnTypes[column];
+			}
+		};
 		
+		departmentOverviewTable = new AlternatingColorTable(dept_model);
+		departmentOverviewTable.setBackground(Color.LIGHT_GRAY);
+//		DepartmentOverviewTable.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null,
+//				null, null));
+		departmentOverviewTable.setBorder(new BevelBorder(BevelBorder.LOWERED,
+				Color.LIGHT_GRAY, Color.LIGHT_GRAY, Color.LIGHT_GRAY,
+				Color.LIGHT_GRAY));
+		
+		scrollPane_3.setViewportView(departmentOverviewTable);
 		
 		String[] departColumns = new String[] { "Department ID",
 				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };
 		
 		JTable updateTable = new JTable(depart, departColumns);
-		DepartmentOverviewTable.setModel(updateTable.getModel());
-		DepartmentOverviewTable.repaint();
+		departmentOverviewTable.setModel(updateTable.getModel());
+		departmentOverviewTable.repaint();
 		
 		JButton btnEditDepartments = new JButton("Edit Departments");
 		btnEditDepartments.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				EditDepartmentsWindow.setVisible(SQLConnect);
+				EditDepartmentsWindow.setVisible(SQLConnect, departmentNames);
 				
+				}
+		});
+		btnEditDepartments.setBounds(109, 360, 115, 23);
+		layeredPane_4.add(btnEditDepartments);
+		
+		JButton btnAddDepartment = new JButton("Add Department");
+		btnAddDepartment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				CreateDepartment.setVisible(SQLConnect, departmentNames);
 				
 			}
 		});
-		btnEditDepartments.setBounds(274, 360, 115, 23);
-		layeredPane_4.add(btnEditDepartments);
+		
+		JButton btnRemoveDepartment = new JButton("Remove Department");
+		btnRemoveDepartment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				DeleteDepartmentWindow.setVisible(SQLConnect, departmentNames);
+				
+			}
+		});
+		btnRemoveDepartment.setBounds(261, 360, 131, 23);
+		layeredPane_4.add(btnRemoveDepartment);
+		btnAddDepartment.setBounds(428, 360, 115, 23);
+		layeredPane_4.add(btnAddDepartment);
 
 		JLayeredPane layeredPane_5 = new JLayeredPane();
 		tabbedPane.addTab("Your Payment Orders", null, layeredPane_5, null);
