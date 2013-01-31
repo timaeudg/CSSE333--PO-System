@@ -49,7 +49,7 @@ public class AdminMainWindow {
 
 	private JTextField EditRemoveLookupField;
 
-	private JTextField editRemoveLookupField;
+	
 
 	private JTextField newEmailField;
 	private JTextField newPasswordField;
@@ -377,6 +377,45 @@ public class AdminMainWindow {
 		JLabel lblNewUsername = new JLabel("New Username: ");
 		lblNewUsername.setBounds(487, 262, 86, 14);
 		layeredPane_2.add(lblNewUsername);
+		
+		JButton removeFromDepartment = new JButton("Remove From Department");
+		removeFromDepartment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				RemoveUserFromDepartment.setVisible(SQLConnect, departmentNames);
+			}
+		});
+		removeFromDepartment.setBounds(57, 110, 189, 23);
+		layeredPane_2.add(removeFromDepartment);
+		
+		JButton btnNewButton_6 = new JButton("Remove From Chair Position");
+		btnNewButton_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				RemoveUserFromChairperson.setVisible(SQLConnect, departmentNames);
+			}
+		});
+		btnNewButton_6.setBounds(57, 144, 189, 23);
+		layeredPane_2.add(btnNewButton_6);
+		
+		JButton addToDeparment = new JButton("Add To Department");
+		addToDeparment.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AddUserToDeparment.setVisible(SQLConnect, departmentNames, EditRemoveLookupField.getText());
+			}
+		});
+		addToDeparment.setBounds(388, 110, 185, 23);
+		layeredPane_2.add(addToDeparment);
+		
+		JButton addAsChairperson = new JButton("Add as Chairperson");
+		addAsChairperson.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String user = EditRemoveLookupField.getText();
+				AddUserAsChairperson.setVisible(SQLConnect, departmentNames, user);
+			}
+		});
+		addAsChairperson.setBounds(388, 144, 185, 23);
+		layeredPane_2.add(addAsChairperson);
 
 		//===================================================================
 		// User LookUp

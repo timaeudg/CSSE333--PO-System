@@ -11,6 +11,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLayeredPane;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
+import connection.ExecuteSqlQuery;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -18,16 +21,17 @@ import java.awt.event.ActionEvent;
 public class AddUserToDeparment extends JFrame {
 
 	private JPanel contentPane;
-	private static AddUserAsChairperson window;
+	private static AddUserToDeparment window;
 	private static Connection SQLConnect;
 	private static ArrayList<String> departments;
 	private static JComboBox<String> dSelector;
-	
+	private static String username;
 
-	public static void setVisible(Connection SQLConnection, ArrayList<String> chairDeparts){
+	public static void setVisible(Connection SQLConnection, ArrayList<String> chairDeparts, String user){
 		departments = chairDeparts;
 		SQLConnect=SQLConnection;
-		window = new AddUserAsChairperson();
+		username = user;
+		window = new AddUserToDeparment();
 		window.setVisible(true);
 	}
 	/**
@@ -56,7 +60,11 @@ public class AddUserToDeparment extends JFrame {
 		JButton submitButton = new JButton("Submit");
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String department = (String)dSelector.getSelectedItem();
+				String department = (String)dSelector.getSelectedItem(); 
+				ArrayList<String> d = new ArrayList<String>();
+				d.add(department);
+				ExecuteSqlQuery.addUserToDepartment(SQLConnect, username, d);
+				window.dispose();
 			}
 		});
 		submitButton.setBounds(10, 96, 126, 23);

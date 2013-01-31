@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class RemoveUserFromDeparment extends JFrame {
+public class RemoveUserFromDepartment extends JFrame {
 
 	private JPanel contentPane;
 	private static AddUserAsChairperson window;
@@ -33,7 +33,7 @@ public class RemoveUserFromDeparment extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public RemoveUserFromDeparment() {
+	public RemoveUserFromDepartment() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

@@ -65,6 +65,11 @@ public class DeleteDepartmentWindow extends JFrame {
 				String deleted = (String) departmentCombo.getSelectedItem();
 				
 				ExecuteSqlQuery.deleteDepartment(SQLConnect, deleted);
+				String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
+				ArrayList<String>departmentNames = new ArrayList<String>();
+				for(int i = 0; i<depart.length;i++){
+					departmentNames.add(depart[i][1]);
+				}
 				window.dispose();
 			}
 		});
