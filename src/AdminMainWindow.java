@@ -344,8 +344,8 @@ public class AdminMainWindow {
 		JButton removeFromDepartment = new JButton("Remove From Department");
 		removeFromDepartment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				RemoveUserFromDepartment.setVisible(SQLConnect, departmentNames);
+				String user = EditRemoveLookupField.getText();
+				RemoveUserFromDepartment.setVisible(SQLConnect, departmentNames,user);
 			}
 		});
 		removeFromDepartment.setBounds(57, 110, 189, 23);
@@ -354,8 +354,8 @@ public class AdminMainWindow {
 		JButton btnNewButton_6 = new JButton("Remove From Chair Position");
 		btnNewButton_6.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				RemoveUserFromChairperson.setVisible(SQLConnect, departmentNames);
+				String user = EditRemoveLookupField.getText();
+				RemoveUserFromChairperson.setVisible(SQLConnect, departmentNames,user);
 			}
 		});
 		btnNewButton_6.setBounds(57, 144, 189, 23);
@@ -553,9 +553,9 @@ public class AdminMainWindow {
 		String[] departColumns = new String[] { "Department ID",
 				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };
 		
-		JTable updateTable = new JTable(depart, departColumns);
-		departmentOverviewTable.setModel(updateTable.getModel());
-		departmentOverviewTable.repaint();
+//		JTable updateTable = new JTable(depart, departColumns);
+//		departmentOverviewTable.setModel(updateTable.getModel());
+//		departmentOverviewTable.repaint();
 		
 		JButton btnEditDepartments = new JButton("Edit Departments");
 		btnEditDepartments.addActionListener(new ActionListener() {

@@ -26,6 +26,8 @@ import com.sun.org.apache.bcel.internal.generic.LLOAD;
 
 import connection.ExecuteSqlQuery;
 import connection.LoggedInUserWrapper;
+import extras.AlternatingColorTable;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -85,7 +87,7 @@ public class NormalUserWindow extends JFrame {
 		JLayeredPane layeredPane = new JLayeredPane();
 		tabbedPane.addTab("User Lookup", null, layeredPane, null);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
+		final JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(10, 11, 468, 178);
 		layeredPane.add(scrollPane_1);
 		
@@ -164,9 +166,10 @@ public class NormalUserWindow extends JFrame {
 						String[] columns = new String[] { "Username",
 								"First Name", "Last Name", "E-mail" };
 
-						JTable updateTable = new JTable(data, columns);
-						lookupTable.setModel(updateTable.getModel());
-						lookupTable.repaint();
+						JTable updateTable = new AlternatingColorTable(new DefaultTableModel(data, columns));
+//						lookupTable.setModel(updateTable.getModel());
+						scrollPane_1.setViewportView(updateTable);
+//						lookupTable.repaint();
 
 					} else {
 						System.out.println("Herp Derp");
@@ -190,7 +193,8 @@ public class NormalUserWindow extends JFrame {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setBackground(Color.LIGHT_GRAY);
-		table.setModel(new DefaultTableModel(
+		table.setModel(
+				new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null},
 				{null, null, null, null, null, null},
@@ -225,16 +229,17 @@ public class NormalUserWindow extends JFrame {
 		scrollPane_2.setBounds(10, 11, 470, 228);
 		layeredPane_2.add(scrollPane_2);
 		
-		table_2 = new JTable();
-		scrollPane_2.setViewportView(table_2);
+//		table_2 = new JTable();
 		
 		String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
 		String[] departColumns = new String[] { "Department ID",
 				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };
 		
-		JTable updateTable = new JTable(depart, departColumns);
-		table_2.setModel(updateTable.getModel());
-		table_2.repaint();
+		DefaultTableModel updateModel = new DefaultTableModel(depart, departColumns);
+		JTable updateTable = new AlternatingColorTable(updateModel);
+		scrollPane_2.setViewportView(updateTable);
+//		table_2 = updateTable;
+//		table_2.repaint();
 		
 	}
 

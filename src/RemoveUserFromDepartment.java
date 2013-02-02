@@ -5,12 +5,17 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLayeredPane;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
+import connection.ExecuteSqlQuery;
+import connection.LoggedInUserWrapper;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -18,16 +23,19 @@ import java.awt.event.ActionEvent;
 public class RemoveUserFromDepartment extends JFrame {
 
 	private JPanel contentPane;
-	private static AddUserAsChairperson window;
+	private static RemoveUserFromDepartment window;
 	private static Connection SQLConnect;
 	private static ArrayList<String> departments;
 	private static JComboBox<String> dSelector;
+	private static String userInfo;
+	private static JLabel invalidLabel;
 	
 
-	public static void setVisible(Connection SQLConnection, ArrayList<String> chairDeparts){
+	public static void setVisible(Connection SQLConnection, ArrayList<String> chairDeparts, String user){
 		departments = chairDeparts;
 		SQLConnect=SQLConnection;
-		window = new AddUserAsChairperson();
+		userInfo = user;
+		window = new RemoveUserFromDepartment();
 		window.setVisible(true);
 	}
 	/**
@@ -48,6 +56,11 @@ public class RemoveUserFromDepartment extends JFrame {
 		JLayeredPane layeredPane = new JLayeredPane();
 		contentPane.add(layeredPane, BorderLayout.CENTER);
 		
+		invalidLabel = new JLabel("Invalid Removal");
+		invalidLabel.setBounds(20, 67, 87, 14);
+		layeredPane.add(invalidLabel);
+		invalidLabel.setVisible(false);
+		
 		dSelector = new JComboBox();
 		dSelector.setBounds(10, 36, 126, 20);
 		dSelector.setModel(new DefaultComboBoxModel(departments.toArray()));
@@ -57,6 +70,12 @@ public class RemoveUserFromDepartment extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String department = (String)dSelector.getSelectedItem();
+				if(!(ExecuteSqlQuery.removeUserFromDepartment(SQLConnect, userInfo, department))){
+					invalidLabel.setVisible(true);
+				}
+				else{
+					window.dispose();
+				}
 			}
 		});
 		submitButton.setBounds(10, 96, 126, 23);
