@@ -65,7 +65,6 @@ public class AdminMainWindow {
 
 	private JRadioButton createUser;
 	private JRadioButton createPO;
-	private JRadioButton createDepartment;
 
 
 	private static Connection SQLConnect;
@@ -148,11 +147,6 @@ public class AdminMainWindow {
 		createPO.setBounds(35, 88, 109, 23);
 		layeredPane.add(createPO);
 
-		createDepartment = new JRadioButton("Department");
-		buttonGroup.add(createDepartment);
-		createDepartment.setBounds(35, 130, 109, 23);
-		layeredPane.add(createDepartment);
-
 		JButton btnNewButton_2 = new JButton("Create!");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -191,8 +185,7 @@ public class AdminMainWindow {
 		scrollPane.setBounds(10, 11, 659, 304);
 		layeredPane_1.add(scrollPane);
 
-		JTable PendingTable = new JTable();
-		PendingTable.setModel(new DefaultTableModel(
+		DefaultTableModel pendingModel = (new DefaultTableModel(
 			new Object[][] {
 				{null, null, null, null, null, null},
 				{null, null, null, null, null, null},
@@ -219,10 +212,12 @@ public class AdminMainWindow {
 				{null, null, null, null, null, null},
 				{null, null, null, null, null, null},
 			},
+		
 			new String[] {
 				"New column", "New column", "New column", "New column", "New column", "New column"
 			}
 		));
+		AlternatingColorTable PendingTable = new AlternatingColorTable(pendingModel);
 		scrollPane.setViewportView(PendingTable);
 		PendingTable.setFont(new Font("Courier New", Font.PLAIN, 12));
 		PendingTable.setBackground(Color.LIGHT_GRAY);
@@ -239,39 +234,7 @@ public class AdminMainWindow {
 		layeredPane_2.add(EditRemoveLookupField);
 		EditRemoveLookupField.setColumns(10);
 
-//		JScrollPane scrollPane_1 = new JScrollPane();
-//		scrollPane_1.setBounds(28, 64, 621, 180);
-//		layeredPane_2.add(scrollPane_1);
-//
-//		JTable EditRemoveTable = new JTable();
-//		EditRemoveTable.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-//		EditRemoveTable.setModel(new DefaultTableModel(
-//			new Object[][] {
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//				{null, null, null, null, null},
-//			},
-//			new String[] {
-//				"New column", "New column", "New column", "New column", "New column"
-//			}
-//		) {
-//			boolean[] columnEditables = new boolean[] {
-//				false, true, true, true, true
-//			};
-//			public boolean isCellEditable(int row, int column) {
-//				return columnEditables[column];
-//			}
-//		});
-//		scrollPane_1.setViewportView(EditRemoveTable);
-//		EditRemoveTable.setBackground(Color.LIGHT_GRAY);
+
 
 		JLabel lblNewLabel = new JLabel("Username:");
 

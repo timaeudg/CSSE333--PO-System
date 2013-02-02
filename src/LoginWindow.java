@@ -18,6 +18,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class LoginWindow extends JFrame {
@@ -86,6 +88,31 @@ public class LoginWindow extends JFrame {
 		textField.setColumns(10);
 		
 		passwordField = new JPasswordField();
+		passwordField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyCode() == KeyEvent.VK_ENTER){
+					String email = textField.getText();
+					String password = new String(passwordField.getPassword());
+					LoggedInUserWrapper user = ExecuteSqlQuery.login(email, password, whaleConnect);			
+					if(user.getLogged()){
+						if(user.getChairs().size()>0){
+							AdminMainWindow.setVisible(whaleConnect, user);
+						}
+						else{
+							NormalUserWindow.setVisible(whaleConnect, user);
+						}
+						login.dispose();
+					}
+					else{
+						lblUsernameOrPassword.setVisible(true);
+					}
+					
+					
+				}
+				
+			}
+		});
 		passwordField.setBounds(95, 160, 86, 20);
 		layeredPane.add(passwordField);
 		

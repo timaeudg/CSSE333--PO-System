@@ -17,11 +17,11 @@ public class ExecuteSqlQuery {
 		
 		try {
 			DatabaseAdapter.registerSQLServerDriver();
-			System.out.println("Driver Registered");
+//			System.out.println("Driver Registered");
 			ConnectionInfo timaeudg = new ConnectionInfo("timaeudg", "KirisuteG0m3n");
 			connection = DatabaseAdapter.getConnection(null, timaeudg);
 			
-			System.out.println("Connection Successful!");
+//			System.out.println("Connection Successful!");
 		} catch (SQLException e) {
 			System.out.println("Connection Error");
 			e.printStackTrace();
@@ -57,7 +57,7 @@ public class ExecuteSqlQuery {
 			rs = secondStatment.executeQuery();
 
 				login = true;
-				System.out.println("Login Successful!");
+//				System.out.println("Login Successful!");
 				while(rs.next()){
 					departments.add(rs.getInt(1));
 				}
@@ -66,10 +66,10 @@ public class ExecuteSqlQuery {
 				
 				user = new LoggedInUserWrapper(email, departments, login);
 				
-				for (Integer id : departments) {
-					System.out.print(id + " ");
-				}
-				System.out.println();
+//				for (Integer id : departments) {
+//					System.out.print(id + " ");
+//				}
+//				System.out.println();
 				
 				
 				
