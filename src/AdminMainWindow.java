@@ -60,7 +60,7 @@ public class AdminMainWindow {
 	private JTextField userLookupLastNameField;
 	private JTextField userLookupEmailField;
 	private JTable lookupTable;
-	private JTable departmentOverviewTable;
+	private static JTable departmentOverviewTable;
 	private JTable table_2;
 
 	private JRadioButton createUser;
@@ -71,6 +71,7 @@ public class AdminMainWindow {
 	private static LoggedInUserWrapper user;
 	private JTextField newUsernameField;
 	private static ArrayList<String> departmentNames;
+	private static String[][] departmentTableArray;
 
 //	/**
 //	 * Launch the application.
@@ -113,11 +114,7 @@ public class AdminMainWindow {
 		} catch (Exception e) {
 		}
 		
-		String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
-		departmentNames = new ArrayList<String>();
-		for(int i = 0; i<depart.length;i++){
-			departmentNames.add(depart[i][1]);
-		}
+		
 		
 		POFrame = new JFrame();
 		POFrame.getContentPane().setBackground(Color.WHITE);
@@ -550,12 +547,8 @@ public class AdminMainWindow {
 		
 		scrollPane_3.setViewportView(departmentOverviewTable);
 		
-		String[] departColumns = new String[] { "Department ID",
-				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };
-		
-//		JTable updateTable = new JTable(depart, departColumns);
-//		departmentOverviewTable.setModel(updateTable.getModel());
-//		departmentOverviewTable.repaint();
+		AdminMainWindow.refreshDepartments();
+				
 		
 		JButton btnEditDepartments = new JButton("Edit Departments");
 		btnEditDepartments.addActionListener(new ActionListener() {
@@ -613,6 +606,22 @@ public class AdminMainWindow {
 				"Cost", "Status", "New column", "New column" }));
 		scrollPane_4.setViewportView(table_2);
 		
+		
+	}
+	
+	public static void refreshDepartments(){
+		String[] departColumns = new String[] { "Department ID",
+				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };
+		
+		departmentTableArray = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
+		departmentNames = new ArrayList<String>();
+		for(int i = 0; i<departmentTableArray.length;i++){
+			departmentNames.add(departmentTableArray[i][1]);
+		}
+		
+		JTable updateTable = new JTable(departmentTableArray, departColumns);
+		departmentOverviewTable.setModel(updateTable.getModel());
+		departmentOverviewTable.repaint();
 		
 	}
 }

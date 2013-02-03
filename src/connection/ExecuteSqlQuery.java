@@ -348,9 +348,33 @@ public class ExecuteSqlQuery {
 	}
 
 	public static void editDepartment(Connection sQLConnect,
-			String departToEdit, String parentDepart, String budget,
+			String departToEdit, String parentDepart, double budget,
 			String newName) {
-		String query = "{ ? call ";
+		String query = "{ ? = call editdepartment (?,?,?,?) }";
+		CallableStatement statement = null;
+		try{
+			statement = sQLConnect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, departToEdit);
+			if(newName.isEmpty()||newName==null){
+				statement.setString(3, null);
+			}
+			else{
+			statement.setString(3, newName);
+			}
+			if(parentDepart.equals("Don't Change")){
+				statement.setString(4, null);
+			}
+			else{
+			statement.setString(4, parentDepart);
+			}
+			statement.setDouble(5, budget);
+			statement.execute();
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 
 	}
 

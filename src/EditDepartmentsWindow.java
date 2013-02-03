@@ -17,6 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.UIManager;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
+
 import connection.ExecuteSqlQuery;
 
 import java.awt.event.ActionListener;
@@ -33,12 +35,13 @@ public class EditDepartmentsWindow extends JFrame {
 	private static Connection SQLConnect;
 	private static ArrayList<String> departmentsAvailable;
 	private static JLabel parentInvalidLabel;
+	private static EditDepartmentsWindow window;
 	
 	public static void setVisible(Connection SQLConnection, ArrayList<String> departments){
 		
 		SQLConnect = SQLConnection;
 		departmentsAvailable=departments;
-		EditDepartmentsWindow window = new EditDepartmentsWindow();
+		window = new EditDepartmentsWindow();
 		window.setVisible(true);
 		
 	}
@@ -62,6 +65,8 @@ public class EditDepartmentsWindow extends JFrame {
 		contentPane.add(layeredPane, BorderLayout.CENTER);
 		
 		editComboBox = new JComboBox();
+		ArrayList<String> departments = new ArrayList<String>(departmentsAvailable);
+		departments.add(0, "Don't Change");
 		editComboBox.setModel(new DefaultComboBoxModel(departmentsAvailable.toArray()));
 		editComboBox.setBounds(205, 35, 122, 20);
 		layeredPane.add(editComboBox);
@@ -82,7 +87,7 @@ public class EditDepartmentsWindow extends JFrame {
 		
 		parentComboBox = new JComboBox();
 		parentComboBox.setBounds(205, 132, 122, 20);
-		parentComboBox.setModel(new DefaultComboBoxModel(departmentsAvailable.toArray()));
+		parentComboBox.setModel(new DefaultComboBoxModel(departments.toArray()));
 		layeredPane.add(parentComboBox);
 		
 		newBudgetField = new JTextField();
@@ -107,13 +112,22 @@ public class EditDepartmentsWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				String departToEdit = (String) editComboBox.getSelectedItem();
 				String parentDepart = (String) parentComboBox.getSelectedItem();
-				String budget = newBudgetField.getText();
+				String budgetString = newBudgetField.getText();
+				double budget;
+				if(budgetString.isEmpty()){
+					budget = -1;
+				}
+				else{
+					 budget= Double.parseDouble(budgetString);
+				}
 				String newName = newNameField.getText();
 				if(parentDepart.equals(departToEdit)){
 					parentInvalidLabel.setVisible(true);
 				}
 				else{
-					ExecuteSqlQuery.editDepartment(SQLConnect, departToEdit, parentDepart, budget, newName);
+					ExecuteSqlQuery.editDepartment(SQLConnect, departToEdit, parentDepart,budget, newName);
+					AdminMainWindow.refreshDepartments();
+					window.dispose();
 				}
 			}
 		});
