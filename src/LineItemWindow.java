@@ -3,6 +3,7 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -11,17 +12,21 @@ import javax.swing.JLayeredPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class LineItemWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private static JTextField nameField;
+	private static JTextField costField;
+	private static JTextField urlField;
+	private static JTextField storeNameField;
+	private static JTextField timeStampField;
 	private static Connection SQLConnect;
+	private static ArrayList<LineItemWrapper> paymentLines;
+	private static LineItemWindow window;
 	/**
 	 * Launch the application.
 	 */
@@ -38,10 +43,11 @@ public class LineItemWindow extends JFrame {
 		});
 	}
 
-	public static void setVisible(Connection connect) {
-		LineItemWindow window = new LineItemWindow();
+	public static void setVisible(Connection connect,ArrayList<LineItemWrapper> payments) {
+		window = new LineItemWindow();
 		window.setVisible(true);
 		SQLConnect = connect;
+		paymentLines=payments;
 	}
 	
 	
@@ -59,15 +65,15 @@ public class LineItemWindow extends JFrame {
 		JLayeredPane layeredPane = new JLayeredPane();
 		contentPane.add(layeredPane, BorderLayout.CENTER);
 		
-		textField = new JTextField();
-		textField.setBounds(34, 62, 86, 20);
-		layeredPane.add(textField);
-		textField.setColumns(10);
+		nameField = new JTextField();
+		nameField.setBounds(34, 62, 86, 20);
+		layeredPane.add(nameField);
+		nameField.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(34, 118, 86, 20);
-		layeredPane.add(textField_1);
-		textField_1.setColumns(10);
+		costField = new JTextField();
+		costField.setBounds(34, 118, 86, 20);
+		layeredPane.add(costField);
+		costField.setColumns(10);
 		
 		JLabel lblName = new JLabel("Name:");
 		lblName.setBounds(55, 37, 46, 14);
@@ -78,13 +84,19 @@ public class LineItemWindow extends JFrame {
 		layeredPane.add(lblCost);
 		
 		JButton btnSubmit = new JButton("Submit");
+		btnSubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				paymentLines.add(new LineItemWrapper(nameField.getText(), Double.parseDouble(costField.getText())));
+				window.dispose();
+			}
+		});
 		btnSubmit.setBounds(34, 177, 89, 23);
 		layeredPane.add(btnSubmit);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(165, 178, 86, 20);
-		layeredPane.add(textField_2);
-		textField_2.setColumns(10);
+		urlField = new JTextField();
+		urlField.setBounds(165, 178, 86, 20);
+		layeredPane.add(urlField);
+		urlField.setColumns(10);
 		
 		JLabel lblLocationUrl = new JLabel("Location URL:");
 		lblLocationUrl.setBounds(165, 153, 86, 14);
@@ -94,15 +106,15 @@ public class LineItemWindow extends JFrame {
 		lblReceiptInformation.setBounds(161, 12, 103, 14);
 		layeredPane.add(lblReceiptInformation);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(165, 62, 86, 20);
-		layeredPane.add(textField_3);
-		textField_3.setColumns(10);
+		storeNameField = new JTextField();
+		storeNameField.setBounds(165, 62, 86, 20);
+		layeredPane.add(storeNameField);
+		storeNameField.setColumns(10);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(165, 118, 86, 20);
-		layeredPane.add(textField_4);
-		textField_4.setColumns(10);
+		timeStampField = new JTextField();
+		timeStampField.setBounds(165, 118, 86, 20);
+		layeredPane.add(timeStampField);
+		timeStampField.setColumns(10);
 		
 		JLabel lblStoreName = new JLabel("Store Name: ");
 		lblStoreName.setBounds(165, 37, 86, 14);

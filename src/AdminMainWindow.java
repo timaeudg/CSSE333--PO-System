@@ -151,7 +151,7 @@ public class AdminMainWindow {
 					CreateUserWindow.newCreateUserWindow(SQLConnect, departmentNames);
 				}
 				else if(createPO.isSelected()){
-					CreatePaymentOrder.setVisible(SQLConnect);
+					CreatePaymentOrder.setVisible(SQLConnect,departmentNames, user.getUsername());
 				}
 				else{
 					

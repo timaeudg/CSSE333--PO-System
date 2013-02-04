@@ -66,6 +66,7 @@ public class DeleteDepartmentWindow extends JFrame {
 				
 				ExecuteSqlQuery.deleteDepartment(SQLConnect, deleted);
 				AdminMainWindow.refreshDepartments();
+				window.dispose();
 			}
 		});
 		deleteButton.setBounds(20, 131, 137, 23);

@@ -19,5 +19,7 @@ public class Util {
 		System.out.printf("Testing: %s\t%s\n", email, isValidEmailAddress(email));
 		email = "crikket.007@gmail.com";
 		System.out.printf("Testing: %s\t%s\n", email, isValidEmailAddress(email));
+		email = "D@D.d";
+		System.out.printf("Testing: %s\t%s\n", email, isValidEmailAddress(email));
 	}
 }

@@ -430,4 +430,28 @@ public class ExecuteSqlQuery {
 		}
 		return removed;
 	}
+	
+	public static boolean addPaymentOrder(Connection connect, String username, String depart, double amount, String description, String date){
+		String query = "{ ? = call addpaymentorder (?,?,?,?,?) }";
+		CallableStatement statement = null;	
+		boolean added =false;
+		try{
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, username);
+			statement.setString(3, depart);
+			statement.setString(4, description);
+			statement.setDouble(5, amount);
+			statement.setString(6, date);
+			
+			statement.execute();
+			added=true;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return added;
+		
+	}
 }
