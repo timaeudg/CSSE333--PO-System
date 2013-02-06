@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.Format;
 import java.text.NumberFormat;
@@ -28,6 +29,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JFormattedTextField;
 
 import connection.ExecuteSqlQuery;
+import connection.LineItemWrapper;
+import connection.ReceiptBundles;
 
 
 public class CreatePaymentOrder extends JFrame {
@@ -44,6 +47,7 @@ public class CreatePaymentOrder extends JFrame {
 	private static JLabel invalidLabel;
 	private static ArrayList<LineItemWrapper> lineItems;
 	private static JLabel lineSum;
+	private static ArrayList<ReceiptBundles> receipts;
 	/**
 	 * Launch the application.
 	 */
@@ -64,6 +68,7 @@ public class CreatePaymentOrder extends JFrame {
 		SQLConnect = connect;
 		departList=departs;
 		username=user;
+		receipts = new ArrayList<ReceiptBundles>();
 		lineItems = new ArrayList<LineItemWrapper>();
 		window = new CreatePaymentOrder();
 		window.setVisible(true);
@@ -137,14 +142,14 @@ public class CreatePaymentOrder extends JFrame {
 		lblReimbursmentAmountdont.setBounds(47, 190, 178, 14);
 		layeredPane.add(lblReimbursmentAmountdont);
 		
-		JButton btnAddItem = new JButton("Add Item");
+		JButton btnAddItem = new JButton("Add Receipt");
 		btnAddItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				LineItemWindow.setVisible(SQLConnect, lineItems);
+				CreateReceiptWindow.setVisible(receipts);
 			}
 		});
-		btnAddItem.setBounds(57, 310, 89, 23);
+		btnAddItem.setBounds(57, 310, 100, 23);
 		layeredPane.add(btnAddItem);
 		
 		JButton btnSubmit = new JButton("Submit");
@@ -167,7 +172,7 @@ public class CreatePaymentOrder extends JFrame {
 				}
 				if(sum == money){
 				if(money>0&&!descript.isEmpty()&& !department.isEmpty() && !date.isEmpty()){
-					ExecuteSqlQuery.addPaymentOrder(SQLConnect, username, department, money, descript,date);
+					ResultSet id = ExecuteSqlQuery.addPaymentOrder(SQLConnect, username, department, money, descript,date);
 					window.dispose();
 				}
 				else{
