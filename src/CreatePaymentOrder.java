@@ -122,6 +122,7 @@ public class CreatePaymentOrder extends JFrame {
 		NumberFormat money = NumberFormat.getCurrencyInstance();
 		textField = new JFormattedTextField(money);
 		textField.setBounds(235, 187, 86, 20);
+		textField.setText("$");
 		layeredPane.add(textField);
 		textField.setColumns(10);
 		

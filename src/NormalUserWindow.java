@@ -46,6 +46,8 @@ public class NormalUserWindow extends JFrame {
 	
 	private static Connection SQLConnect;
 	private static LoggedInUserWrapper user;
+	private static ArrayList<String> departmentNames;
+	private static String[][] departmentTableArray;
 
 	/**
 	 * Launch the application.
@@ -83,6 +85,8 @@ public class NormalUserWindow extends JFrame {
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
+		
+		/////User Lookup//////////////////////////////////////////////////////
 		
 		JLayeredPane layeredPane = new JLayeredPane();
 		tabbedPane.addTab("User Lookup", null, layeredPane, null);
@@ -183,6 +187,8 @@ public class NormalUserWindow extends JFrame {
 		button.setBounds(389, 226, 89, 23);
 		layeredPane.add(button);
 		
+		///////Payment Orders////////////////////////////////////////////////////
+		
 		JLayeredPane layeredPane_1 = new JLayeredPane();
 		tabbedPane.addTab("Your Payment Orders", null, layeredPane_1, null);
 		
@@ -220,6 +226,14 @@ public class NormalUserWindow extends JFrame {
 		
 		JButton btnCreateNewPayment = new JButton("Create New Payment Order");
 		btnCreateNewPayment.setBounds(158, 249, 165, 23);
+		btnCreateNewPayment.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				CreatePaymentOrder.setVisible(SQLConnect,departmentNames, user.getUsername());
+				
+			}
+		});
 		layeredPane_1.add(btnCreateNewPayment);
 		
 		JLayeredPane layeredPane_2 = new JLayeredPane();
@@ -230,6 +244,8 @@ public class NormalUserWindow extends JFrame {
 		layeredPane_2.add(scrollPane_2);
 		
 //		table_2 = new JTable();
+		
+		NormalUserWindow.refreshDepartments();
 		
 		String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
 		String[] departColumns = new String[] { "Department ID",
@@ -250,5 +266,18 @@ public class NormalUserWindow extends JFrame {
 		NormalUserWindow window = new NormalUserWindow();
 		window.setVisible(true);
 		
+	}
+	
+	public static void refreshDepartments() {
+		String[] departColumns = new String[] { "Department ID",
+				"Department Name", "Total Budget", "Current Budget",
+				"Parent Department ID" };
+
+		departmentTableArray = ExecuteSqlQuery
+				.getDepartmentOverview(SQLConnect);
+		departmentNames = new ArrayList<String>();
+		for (int i = 0; i < departmentTableArray.length; i++) {
+			departmentNames.add(departmentTableArray[i][1]);
+		}
 	}
 }
