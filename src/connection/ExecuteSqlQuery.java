@@ -1,6 +1,5 @@
 package connection;
 
-
 /**
  * Execute sql queries with java application.
  */
@@ -11,23 +10,35 @@ import com.sun.xml.internal.ws.org.objectweb.asm.Type;
 
 import extras.Util;
 
+/**
+ * Class for executing SQL Queries in our
+ * 
+ * @author moorejm, timaeudg
+ * 
+ */
 public class ExecuteSqlQuery {
 
+	/**
+	 * Registers the SQL Server driver and returns the connection to the
+	 * database
+	 * 
+	 * @return The SQL Server Database connection
+	 */
 	public static Connection connectToWhale() {
 		Connection connection = null;
 
 		try {
 			DatabaseAdapter.registerSQLServerDriver();
 
-			ConnectionInfo timaeudg = new ConnectionInfo("timaeudg", "KirisuteG0m3n");
-			connection = DatabaseAdapter.getConnection(null, timaeudg);
+			ConnectionInfo info = DatabaseAdapter.getConnectionInfo();
+			connection = DatabaseAdapter.getConnection(null, info);
 
-//			System.out.println("Driver Registered");
+			// System.out.println("Driver Registered");
 
-			connection = DatabaseAdapter.getConnection(null, timaeudg);
+			connection = DatabaseAdapter.getConnection(null, info);
 
-//			System.out.println("Connection Successful!");
-        	} catch (SQLException e) {
+			// System.out.println("Connection Successful!");
+		} catch (SQLException e) {
 			System.out.println("Connection Error");
 			e.printStackTrace();
 		}
@@ -35,6 +46,14 @@ public class ExecuteSqlQuery {
 		return connection;
 	}
 
+	/**
+	 * Constructs and returns a wrapper class for a logged-in user
+	 * 
+	 * @param email
+	 * @param password
+	 * @param connection
+	 * @return a wrapper for a logged-in user
+	 */
 	public static LoggedInUserWrapper login(String email, String password,
 			Connection connection) {
 
@@ -59,25 +78,22 @@ public class ExecuteSqlQuery {
 			statement.execute();
 			rs = secondStatment.executeQuery();
 
+			login = true;
+			// System.out.println("Login Successful!");
+			while (rs.next()) {
+				departments.add(rs.getInt(1));
+			}
 
-				login = true;
-//				System.out.println("Login Successful!");
-				while(rs.next()){
-					departments.add(rs.getInt(1));
-				}
-				
-//				departmentIDs=departments.toArray(departmentIDs);
-				
-				user = new LoggedInUserWrapper(email, departments, login);
-				
-//				for (Integer id : departments) {
-//					System.out.print(id + " ");
-//				}
-//				System.out.println();
-				
-				
-				
-				statement.close();
+			// departmentIDs=departments.toArray(departmentIDs);
+
+			user = new LoggedInUserWrapper(email, departments, login);
+
+			// for (Integer id : departments) {
+			// System.out.print(id + " ");
+			// }
+			// System.out.println();
+
+			statement.close();
 
 		} catch (SQLException e) {
 			login = false;
@@ -356,27 +372,24 @@ public class ExecuteSqlQuery {
 			String newName) {
 		String query = "{ ? = call editdepartment (?,?,?,?) }";
 		CallableStatement statement = null;
-		try{
+		try {
 			statement = sQLConnect.prepareCall(query);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, departToEdit);
-			if(newName.isEmpty()||newName==null){
+			if (newName.isEmpty() || newName == null) {
 				statement.setString(3, null);
+			} else {
+				statement.setString(3, newName);
 			}
-			else{
-			statement.setString(3, newName);
-			}
-			if(parentDepart.equals("Don't Change")){
+			if (parentDepart.equals("Don't Change")) {
 				statement.setString(4, null);
-			}
-			else{
-			statement.setString(4, parentDepart);
+			} else {
+				statement.setString(4, parentDepart);
 			}
 			statement.setDouble(5, budget);
 			statement.execute();
-			
-		}
-		catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -395,52 +408,52 @@ public class ExecuteSqlQuery {
 		}
 	}
 
-
-
-	public static boolean removeUserFromDepartment(Connection connect, String username, String department){
+	public static boolean removeUserFromDepartment(Connection connect,
+			String username, String department) {
 		String query = "{ ? = call removeuserfromdepartment (?,?) }";
 		CallableStatement statement = null;
-		boolean removed =false;
-		try{
+		boolean removed = false;
+		try {
 			statement = connect.prepareCall(query);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, username);
 			statement.setString(3, department);
-			
+
 			statement.execute();
 			removed = true;
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return removed;
 	}
-	
-	public static boolean removeChairFromDepartment(Connection connect, String username, String department){
+
+	public static boolean removeChairFromDepartment(Connection connect,
+			String username, String department) {
 		String query = "{ ? = call removechairfromdepartment (?,?) }";
 		CallableStatement statement = null;
 		boolean removed = false;
-		try{
+		try {
 			statement = connect.prepareCall(query);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, username);
 			statement.setString(3, department);
-			
+
 			statement.execute();
-			removed=true;
-		}
-		catch(Exception e){
+			removed = true;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return removed;
 	}
-	
-	public static ResultSet addPaymentOrder(Connection connect, String username, String depart, double amount, String description, String date){
+
+	public static ResultSet addPaymentOrder(Connection connect,
+			String username, String depart, double amount, String description,
+			String date) {
 		String query = "{ ? = call addpaymentorder (?,?,?,?,?) }";
-		CallableStatement statement = null;	
-		boolean added =false;
+		CallableStatement statement = null;
+		boolean added = false;
 		ResultSet rs = null;
-		try{
+		try {
 			statement = connect.prepareCall(query);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, username);
@@ -448,48 +461,47 @@ public class ExecuteSqlQuery {
 			statement.setString(4, description);
 			statement.setDouble(5, amount);
 			statement.setString(6, date);
-			
+
 			rs = statement.executeQuery();
-			added=true;
-		}
-		catch(Exception e){
+			added = true;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return rs;
-		
+
 	}
-	
-	public static ResultSet addReceipts(Connection connect, int paymentOrder, ArrayList<ReceiptBundles> receipts){
+
+	public static ResultSet addReceipts(Connection connect, int paymentOrder,
+			ArrayList<ReceiptBundles> receipts) {
 		ResultSet rs = null;
 		String receipQuery = "{ ? = call addreceipt (?,?,?,?)}";
 		String lineQuery = "{? = call addlineitem (?,?,?)}";
 		CallableStatement statement = null;
 		int receiptID = -1;
-		try{
-			for(ReceiptBundles receipt : receipts){
-			statement = connect.prepareCall(receipQuery);
-			statement.registerOutParameter(1, Types.INTEGER);
-			statement.setInt(2, paymentOrder);
-			statement.setString(3, receipt.getPictureLocation());
-			statement.setString(4, receipt.getStore());
-			statement.setString(5, receipt.getTimeStamp());
-			rs = statement.executeQuery();
-			rs.next();
-			receiptID=rs.getInt(1);
-			for(LineItemWrapper item: receipt.getLineItems()){
-				statement = connect.prepareCall(lineQuery);
+		try {
+			for (ReceiptBundles receipt : receipts) {
+				statement = connect.prepareCall(receipQuery);
 				statement.registerOutParameter(1, Types.INTEGER);
-				statement.setString(2, item.getItemName());
-				statement.setDouble(3,item.getCostForItem());
-				statement.setInt(4, receiptID);
+				statement.setInt(2, paymentOrder);
+				statement.setString(3, receipt.getPictureLocation().toString());
+				statement.setString(4, receipt.getStore());
+				statement.setString(5, receipt.getTimeStamp().toString());
+				rs = statement.executeQuery();
+				rs.next();
+				receiptID = rs.getInt(1);
+				for (LineItemWrapper item : receipt.getLineItems()) {
+					statement = connect.prepareCall(lineQuery);
+					statement.registerOutParameter(1, Types.INTEGER);
+					statement.setString(2, item.getItemName());
+					statement.setDouble(3, item.getCostForItem());
+					statement.setInt(4, receiptID);
+				}
 			}
-			}
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return rs;
 	}
 }
