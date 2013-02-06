@@ -36,7 +36,6 @@ import connection.ReceiptBundles;
 public class CreatePaymentOrder extends JFrame {
 
 	private JPanel contentPane;
-	private JFormattedTextField textField;
 	private static Connection SQLConnect;
 	private static JComboBox<String> departmentSelect;
 	private static ArrayList<String> departList;
@@ -48,6 +47,7 @@ public class CreatePaymentOrder extends JFrame {
 	private static ArrayList<LineItemWrapper> lineItems;
 	private static JLabel lineSum;
 	private static ArrayList<ReceiptBundles> receipts;
+	private static JComboBox<String> methodOfRepayment;
 	/**
 	 * Launch the application.
 	 */
@@ -99,7 +99,7 @@ public class CreatePaymentOrder extends JFrame {
 		departmentSelect.setModel(new DefaultComboBoxModel(departList.toArray()));
 		layeredPane.add(departmentSelect);
 		
-		lineSum = new JLabel("The line items must add up to the cost of the payment order.");
+		lineSum = new JLabel("Receipts must be present to be a valid payment order");
 		lineSum.setBounds(57, 249, 331, 50);
 		layeredPane.add(lineSum);
 		lineSum.setVisible(false);
@@ -119,11 +119,15 @@ public class CreatePaymentOrder extends JFrame {
 		dateField.setBounds(235, 218, 86, 20);
 		layeredPane.add(dateField);
 		
-		NumberFormat money = NumberFormat.getCurrencyInstance();
-		textField = new JFormattedTextField(money);
-		textField.setBounds(235, 187, 86, 20);
-		layeredPane.add(textField);
-		textField.setColumns(10);
+		
+		JLabel lblReimbursmentMethod = new JLabel("Reimbursment Method:");
+		lblReimbursmentMethod.setBounds(47, 196, 171, 14);
+		layeredPane.add(lblReimbursmentMethod);
+		
+		methodOfRepayment = new JComboBox();
+		methodOfRepayment.setModel(new DefaultComboBoxModel(new String[] {"Credit", "Check"}));
+		methodOfRepayment.setBounds(192, 190, 129, 20);
+		layeredPane.add(methodOfRepayment);
 		
 		JLabel lblDateOfSubmission = new JLabel("Date of Submission (MM/DD/YYYY): ");
 		lblDateOfSubmission.setBounds(47, 221, 171, 14);
@@ -136,11 +140,6 @@ public class CreatePaymentOrder extends JFrame {
 		descriptionField = new JTextArea();
 		descriptionField.setLineWrap(true);
 		scrollPane.setViewportView(descriptionField);
-		
-		
-		JLabel lblReimbursmentAmountdont = new JLabel("Reimbursment Amount (lead with $): ");
-		lblReimbursmentAmountdont.setBounds(47, 190, 178, 14);
-		layeredPane.add(lblReimbursmentAmountdont);
 		
 		JButton btnAddItem = new JButton("Add Receipt");
 		btnAddItem.addActionListener(new ActionListener() {
@@ -155,24 +154,23 @@ public class CreatePaymentOrder extends JFrame {
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if(!receipts.isEmpty()){
 				String descript = descriptionField.getText();
-				double money = -1;
 				System.out.println(lineItems);
-				try {
-					money = (Double) NumberFormat.getCurrencyInstance().parse(textField.getText());
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+				
 				String department = (String) departmentSelect.getSelectedItem();
 				String date = dateField.getText();
 				
-				double sum = -1;
-				for( LineItemWrapper item : lineItems){
-					sum += item.getCostForItem();
-				}
-				if(sum == money){
-				if(money>0&&!descript.isEmpty()&& !department.isEmpty() && !date.isEmpty()){
-					ResultSet id = ExecuteSqlQuery.addPaymentOrder(SQLConnect, username, department, money, descript,date);
+				String method = (String)methodOfRepayment.getSelectedItem();
+				if(!method.isEmpty()&&!descript.isEmpty()&& !department.isEmpty() && !date.isEmpty()){
+					int id = ExecuteSqlQuery.addPaymentOrder(SQLConnect, username, department, method, descript,date);
+					try{
+						
+						ExecuteSqlQuery.addReceipts(SQLConnect, id, receipts);
+					}
+					catch(Exception e){
+						e.printStackTrace();
+					}
 					window.dispose();
 				}
 				else{
@@ -182,7 +180,6 @@ public class CreatePaymentOrder extends JFrame {
 				else{
 					lineSum.setVisible(true);
 				}
-				
 				
 			}
 		});

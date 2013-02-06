@@ -435,28 +435,32 @@ public class ExecuteSqlQuery {
 		return removed;
 	}
 	
-	public static ResultSet addPaymentOrder(Connection connect, String username, String depart, double amount, String description, String date){
-		String query = "{ ? = call addpaymentorder (?,?,?,?,?) }";
+	public static int addPaymentOrder(Connection connect, String username, String depart, String method, String description, String date){
+		String query = "{ ? = call addpaymentorder (?,?,?, ?,?,?) }";
 		CallableStatement statement = null;	
 		boolean added =false;
 		ResultSet rs = null;
+		int id = -1;
 		try{
 			statement = connect.prepareCall(query);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, username);
 			statement.setString(3, depart);
-			statement.setString(4, description);
-			statement.setDouble(5, amount);
+			statement.setString(4,method);
+			statement.setString(5, description);
 			statement.setString(6, date);
+			statement.registerOutParameter(7, Types.INTEGER);
 			
-			rs = statement.executeQuery();
+			statement.execute();
+			id = statement.getInt(7);
+			System.out.println(id);
 			added=true;
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		return rs;
+		return id;
 		
 	}
 	
@@ -470,19 +474,20 @@ public class ExecuteSqlQuery {
 			for(ReceiptBundles receipt : receipts){
 			statement = connect.prepareCall(receipQuery);
 			statement.registerOutParameter(1, Types.INTEGER);
-			statement.setInt(2, paymentOrder);
-			statement.setString(3, receipt.getPictureLocation());
-			statement.setString(4, receipt.getStore());
-			statement.setString(5, receipt.getTimeStamp());
+			statement.setString(2, receipt.getTimeStamp());
+			statement.setString(3, receipt.getStore());
+			statement.setString(4, receipt.getPictureLocation());
+			statement.setInt(5, paymentOrder);
 			rs = statement.executeQuery();
 			rs.next();
 			receiptID=rs.getInt(1);
 			for(LineItemWrapper item: receipt.getLineItems()){
 				statement = connect.prepareCall(lineQuery);
 				statement.registerOutParameter(1, Types.INTEGER);
-				statement.setString(2, item.getItemName());
-				statement.setDouble(3,item.getCostForItem());
+				statement.setDouble(2,item.getCostForItem());
+				statement.setString(3, item.getItemName());
 				statement.setInt(4, receiptID);
+				statement.execute();
 			}
 			}
 		}

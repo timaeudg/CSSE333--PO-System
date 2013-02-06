@@ -10,6 +10,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.UIManager;
 
 import connection.LineItemWrapper;
 import connection.ReceiptBundles;
@@ -27,7 +28,8 @@ public class CreateReceiptWindow extends JFrame {
 	private static CreateReceiptWindow window;
 	private static ArrayList<ReceiptBundles> receipts;
 	private static ArrayList<LineItemWrapper> lineItems;
-
+	private static JLabel needLines;
+	private static JLabel fieldsInvalid;
 	/**
 	 * Launch the application.
 	 */
@@ -58,7 +60,14 @@ public class CreateReceiptWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public CreateReceiptWindow() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+		
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 197, 373);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -75,6 +84,16 @@ public class CreateReceiptWindow extends JFrame {
 		JLabel label = new JLabel("Store Name: ");
 		label.setBounds(39, 45, 86, 14);
 		layeredPane.add(label);
+		
+		needLines = new JLabel("Line Items are Required");
+		needLines.setBounds(10, 218, 151, 14);
+		layeredPane.add(needLines);
+		needLines.setVisible(false);
+		
+		fieldsInvalid = new JLabel("Fields cannot be empty");
+		fieldsInvalid.setBounds(9, 235, 119, 14);
+		layeredPane.add(fieldsInvalid);
+		fieldsInvalid.setVisible(false);
 		
 		nameField = new JTextField();
 		nameField.setColumns(10);
@@ -102,16 +121,28 @@ public class CreateReceiptWindow extends JFrame {
 		JButton btnNewButton = new JButton("Submit");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(lineItems.isEmpty()){
+					needLines.setVisible(true);
+				}
+				else{
 				String storeName = nameField.getText();
 				String time = timeField.getText();
 				String place = locationField.getText();
-				ReceiptBundles current = new ReceiptBundles(storeName, place, time);
-				current.setLineItems(lineItems);
-				receipts.add(current);
-				window.dispose();
+				if(time.isEmpty()||place.isEmpty()||storeName.isEmpty()){
+					fieldsInvalid.setVisible(false);
+				}
+				else 
+				{
+					ReceiptBundles current = new ReceiptBundles(storeName, place, time);
+					current.setLineItems(lineItems);
+					receipts.add(current);
+					System.out.println(lineItems);
+					window.dispose();
+				}
+			}
 			}
 		});
-		btnNewButton.setBounds(34, 277, 89, 23);
+		btnNewButton.setBounds(34, 293, 89, 23);
 		layeredPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Add Line Item");
@@ -120,7 +151,7 @@ public class CreateReceiptWindow extends JFrame {
 				LineItemWindow.setVisible(lineItems);
 			}
 		});
-		btnNewButton_1.setBounds(29, 243, 99, 23);
+		btnNewButton_1.setBounds(29, 259, 99, 23);
 		layeredPane.add(btnNewButton_1);
 	}
 }
