@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class LoggedInUserWrapper {
 	private String username;
-	private ArrayList<Integer> chairs;
+	private ArrayList<String> chairs;
 	private boolean loggedIn;
 
 	/**
@@ -20,7 +20,7 @@ public class LoggedInUserWrapper {
 	 * @param chairs
 	 * @param logged
 	 */
-	public LoggedInUserWrapper(String username, ArrayList<Integer> chairs,
+	public LoggedInUserWrapper(String username, ArrayList<String> chairs,
 			boolean logged) {
 		this.username = username;
 		this.chairs = chairs;
@@ -39,7 +39,7 @@ public class LoggedInUserWrapper {
 	 * Gets a list of LoggedInUserWrapper
 	 * @return a list of ChairIDs for the departments this user is a chair ofF
 	 */
-	public ArrayList<Integer> getChairs() {
+	public ArrayList<String> getChairs() {
 		return this.chairs;
 	}
 

@@ -79,14 +79,14 @@ public class ReceiptBundles {
 	 * 
 	 * @return
 	 */
-	public URL getPictureLocation() {
-		URL url = null;
-		try {
-			url = new URL(pictureLocation);
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return url;
+	public String getPictureLocation() {
+//		URL url = null;
+//		try {
+//			url = new URL(pictureLocation);
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		}
+		return this.pictureLocation;
 	}
 
 	/**
@@ -103,16 +103,16 @@ public class ReceiptBundles {
 	 * 
 	 * @return the time stamp for this receipt
 	 */
-	public Date getTimeStamp() {
-		SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
-		Date convertedDate = null;
-		try {
-			convertedDate = fmt.parse(timeStamp);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	public String getTimeStamp() {
+//		SimpleDateFormat fmt = new SimpleDateFormat("MM/dd/yyyy");
+//		Date convertedDate = null;
+//		try {
+//			convertedDate = fmt.parse(timeStamp);
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
 
-		return convertedDate;
+		return this.timeStamp;
 	}
 
 	/**

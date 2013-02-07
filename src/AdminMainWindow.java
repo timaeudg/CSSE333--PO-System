@@ -11,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
@@ -40,11 +41,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JComboBox;
 
 public class AdminMainWindow {
 
 	private JFrame POFrame;
-	private JTextField PONumberField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 
 	private JTextField EditRemoveLookupField;
@@ -62,33 +63,19 @@ public class AdminMainWindow {
 	private JTable lookupTable;
 	private static JTable departmentOverviewTable;
 	private static JTable userPaymentOrdersTable;
-
+	private static AlternatingColorTable pendingTable;
 	private JRadioButton createUser;
 	private JRadioButton createPO;
 
-
+	private static JComboBox<String> departmentSelect;
 	private static Connection SQLConnect;
 	private static LoggedInUserWrapper user;
 	private JTextField newUsernameField;
 	private static ArrayList<String> departmentNames;
 	private static String[][] departmentTableArray;
 	private static String[][] userPaymentArray;
+	private static String[][] pendingPaymentArray;
 
-//	/**
-//	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					AdminMainWindow window = new AdminMainWindow();
-//					window.POFrame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 
 	public static void setVisible(Connection connect, LoggedInUserWrapper userInfo) {
 		user = userInfo;
@@ -162,67 +149,121 @@ public class AdminMainWindow {
 		btnNewButton_2.setBounds(263, 334, 141, 49);
 		layeredPane.add(btnNewButton_2);
 
+		DefaultTableModel pendingModel = (new DefaultTableModel(
+				new Object[][] {
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+						{null, null, null, null, null, null},
+				},
+				
+				new String[] {
+						"ID", "Reason", "Reimbursement Method", "", "New column", "New column"
+				}
+				));
+		
 		JLayeredPane layeredPane_1 = new JLayeredPane();
 		layeredPane_1.setBackground(Color.WHITE);
 		tabbedPane.addTab("Pending Reimbursements", null, layeredPane_1, null);
-
-		PONumberField = new JTextField();
-		PONumberField.setBounds(10, 347, 168, 20);
-		layeredPane_1.add(PONumberField);
-		PONumberField.setColumns(10);
+		
+				JScrollPane scrollPane = new JScrollPane();
+				scrollPane.setBounds(10, 11, 659, 304);
+				layeredPane_1.add(scrollPane);
+				pendingTable = new AlternatingColorTable(pendingModel);
+				pendingTable.setModel(new DefaultTableModel(
+					new Object[][] {
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+						{null, null, null, null, null},
+					},
+					new String[] {
+						"ID", "Reason", "Reimbursement Method", "Date", "Creator Username"
+					}
+				));
+				pendingTable.getColumnModel().getColumn(0).setResizable(false);
+				scrollPane.setViewportView(pendingTable);
+				pendingTable.setFont(new Font("Courier New", Font.PLAIN, 12));
+				pendingTable.setBackground(Color.LIGHT_GRAY);
+		
+		departmentSelect = new JComboBox();
+		departmentSelect.setBounds(10, 347, 159, 20);
+		layeredPane_1.add(departmentSelect);
 
 		JButton btnNewButton = new JButton("Accept Reimbursement");
-		btnNewButton.setBounds(219, 346, 159, 23);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = pendingTable.getSelectedRow();
+				int id = Integer.parseInt((String) pendingTable.getValueAt(row, 0));
+				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id, user.getUsername());
+				
+				System.out.println(id);
+			}
+		});
+		btnNewButton.setBounds(365, 346, 159, 23);
 		layeredPane_1.add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("Deny Reimbursement");
-		btnNewButton_1.setBounds(388, 346, 135, 23);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = pendingTable.getSelectedRow();
+				int id = Integer.parseInt((String) pendingTable.getValueAt(row, 0));
+				String username = (String)pendingTable.getValueAt(row, 4);
+				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id, username);
+				System.out.println(id);
+			}
+		});
+		btnNewButton_1.setBounds(534, 346, 135, 23);
 		layeredPane_1.add(btnNewButton_1);
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 659, 304);
-		layeredPane_1.add(scrollPane);
-
-		DefaultTableModel pendingModel = (new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-			},
-		
-			new String[] {
-				"New column", "New column", "New column", "New column", "New column", "New column"
+		JButton btnRefreshTable = new JButton("Refresh Table");
+		btnRefreshTable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AdminMainWindow.refreshPending();
 			}
-		));
-		AlternatingColorTable PendingTable = new AlternatingColorTable(pendingModel);
-		scrollPane.setViewportView(PendingTable);
-		PendingTable.setFont(new Font("Courier New", Font.PLAIN, 12));
-		PendingTable.setBackground(Color.LIGHT_GRAY);
-
-		JLabel lblPaymentOrderNumbers = new JLabel("Payment Order Numbers:");
-		lblPaymentOrderNumbers.setBounds(10, 322, 122, 14);
-		layeredPane_1.add(lblPaymentOrderNumbers);
+		});
+		btnRefreshTable.setBounds(179, 346, 120, 23);
+		layeredPane_1.add(btnRefreshTable);
 
 		JLayeredPane layeredPane_2 = new JLayeredPane();
 		tabbedPane.addTab("Edit/Remove User", null, layeredPane_2, null);
@@ -594,7 +635,7 @@ public class AdminMainWindow {
 		scrollPane_4.setViewportView(userPaymentOrdersTable);
 		AdminMainWindow.refreshPaymentOrders();
 		
-	}
+}
 	
 	public static void refreshDepartments(){
 		String[] departColumns = new String[] { "Department ID",
@@ -605,6 +646,8 @@ public class AdminMainWindow {
 		for(int i = 0; i<departmentTableArray.length;i++){
 			departmentNames.add(departmentTableArray[i][1]);
 		}
+		
+		departmentSelect.setModel(new DefaultComboBoxModel(user.getChairs().toArray()));
 		
 		JTable updateTable = new JTable(departmentTableArray, departColumns);
 		departmentOverviewTable.setModel(updateTable.getModel());
@@ -622,6 +665,20 @@ public class AdminMainWindow {
 		JTable updateTable = new JTable(userPaymentArray, departColumns);
 		userPaymentOrdersTable.setModel(updateTable.getModel());
 		userPaymentOrdersTable.repaint();
+		
+	}
+	
+	public static void refreshPending(){
+		String[] departColumns = new String[] { "ID","Reason","Reimbursement Method","Date", "Creator Username" };
+		
+		String currentDept = (String)departmentSelect.getSelectedItem();
+		
+		pendingPaymentArray = ExecuteSqlQuery.getPendingOrders(SQLConnect,currentDept);
+		
+		
+		JTable updateTable = new JTable(pendingPaymentArray, departColumns);
+		pendingTable.setModel(updateTable.getModel());
+		pendingTable.repaint();
 		
 	}
 }

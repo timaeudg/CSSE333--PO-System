@@ -65,7 +65,7 @@ public class ExecuteSqlQuery {
 		boolean login = false;
 		Integer[] departmentIDs = new Integer[10];
 		LoggedInUserWrapper user;
-		ArrayList<Integer> departments = new ArrayList<Integer>();
+		ArrayList<String> departments = new ArrayList<String>();
 		try {
 			statement = connection.prepareCall(piecedString);
 			secondStatment = connection.prepareCall(chairsString);
@@ -81,7 +81,7 @@ public class ExecuteSqlQuery {
 			login = true;
 			// System.out.println("Login Successful!");
 			while (rs.next()) {
-				departments.add(rs.getInt(1));
+				departments.add(rs.getString(1));
 			}
 
 			// departmentIDs=departments.toArray(departmentIDs);
@@ -487,10 +487,11 @@ public class ExecuteSqlQuery {
 			for (ReceiptBundles receipt : receipts) {
 				statement = connect.prepareCall(receipQuery);
 				statement.registerOutParameter(1, Types.INTEGER);
-				statement.setInt(2, paymentOrder);
-				statement.setString(3, receipt.getPictureLocation().toString());
-				statement.setString(4, receipt.getStore());
-				statement.setString(5, receipt.getTimeStamp().toString());
+				System.out.println(receipt.getTimeStamp().toString());
+				statement.setString(2, receipt.getTimeStamp());
+				statement.setString(3, receipt.getStore());
+				statement.setString(4, receipt.getPictureLocation().toString());
+				statement.setInt(5, paymentOrder);
 				rs = statement.executeQuery();
 				rs.next();
 				receiptID = rs.getInt(1);
@@ -545,5 +546,78 @@ public class ExecuteSqlQuery {
 		}
 
 		return data;
+	}
+	
+	public static String[][] getPendingOrders(Connection connect, String department){
+		String query = "{ ? = call getdepartmentpaymentorders (?)}";
+		CallableStatement statement = null;
+		ResultSet rs = null;
+		String[][] data = null;
+		try {
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, department);
+			rs = statement.executeQuery();
+
+			ArrayList<String[]> rows = new ArrayList<String[]>();
+			String[] row = new String[5];
+			while (rs.next()) {
+				for (int j = 1; j < 6; j++) {
+					row[j - 1] = rs.getString(j);
+				}
+				rows.add(row);
+				row = new String[5];
+			}
+
+			int numberOfRows = rows.size();
+			data = new String[numberOfRows][5];
+
+			// System.out.println(rows.toString());
+
+			for (int k = 0; k < numberOfRows; k++) {
+				data[k] = rows.get(k);
+			}
+			rs.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return data;
+		
+	}
+	
+	public static void acceptPaymentOrder(Connection connect, int orderID, String username){
+		String query = "{ ? = call acceptpaymentorder (?,?) }";
+		CallableStatement statement = null;
+		try{
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setInt(2,orderID);
+			statement.setString(3, username);
+			statement.execute();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return;
+		
+	}
+	
+	public static void rejectPaymentOrder(Connection connect, int orderID, String username){
+		String query = "{ ? = call rejectpaymentorder (?,?) }";
+		CallableStatement statement = null;
+		try{
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setInt(2,orderID);
+			statement.setString(3, username);
+			statement.execute();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return;
+		
 	}
 }
