@@ -61,7 +61,7 @@ public class AdminMainWindow {
 	private JTextField userLookupEmailField;
 	private JTable lookupTable;
 	private static JTable departmentOverviewTable;
-	private JTable table_2;
+	private static JTable userPaymentOrdersTable;
 
 	private JRadioButton createUser;
 	private JRadioButton createPO;
@@ -72,6 +72,7 @@ public class AdminMainWindow {
 	private JTextField newUsernameField;
 	private static ArrayList<String> departmentNames;
 	private static String[][] departmentTableArray;
+	private static String[][] userPaymentArray;
 
 //	/**
 //	 * Launch the application.
@@ -90,10 +91,10 @@ public class AdminMainWindow {
 //	}
 
 	public static void setVisible(Connection connect, LoggedInUserWrapper userInfo) {
+		user = userInfo;
 		AdminMainWindow window = new AdminMainWindow(connect);
 		window.POFrame.setVisible(true);
 //		SQLConnect = connect;
-		user = userInfo;
 	}
 
 
@@ -589,23 +590,9 @@ public class AdminMainWindow {
 		scrollPane_4.setBounds(10, 11, 659, 372);
 		layeredPane_5.add(scrollPane_4);
 
-		table_2 = new JTable();
-		table_2.setModel(new DefaultTableModel(new Object[][] {
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null },
-				{ null, null, null, null, null }, }, new String[] { "Reason",
-				"Cost", "Status", "New column", "New column" }));
-		scrollPane_4.setViewportView(table_2);
-		
+		userPaymentOrdersTable = new AlternatingColorTable(model);
+		scrollPane_4.setViewportView(userPaymentOrdersTable);
+		AdminMainWindow.refreshPaymentOrders();
 		
 	}
 	
@@ -622,6 +609,22 @@ public class AdminMainWindow {
 		JTable updateTable = new JTable(departmentTableArray, departColumns);
 		departmentOverviewTable.setModel(updateTable.getModel());
 		departmentOverviewTable.repaint();
+		
+	}
+	
+	public static void refreshPaymentOrders(){
+		String[] departColumns = new String[] { "Reason",
+				"Reimbursement Method","Date", "Origin Department", "Status", "Department of Current Status" };
+		
+		userPaymentArray = ExecuteSqlQuery.getUserPaymentOrders(SQLConnect, user.getUsername());
+		departmentNames = new ArrayList<String>();
+//		for(int i = 0; i<departmentTableArray.length;i++){
+//			departmentNames.add(departmentTableArray[i][1]);
+//		}
+		
+		JTable updateTable = new JTable(userPaymentArray, departColumns);
+		userPaymentOrdersTable.setModel(updateTable.getModel());
+		userPaymentOrdersTable.repaint();
 		
 	}
 }

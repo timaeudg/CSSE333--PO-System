@@ -497,4 +497,42 @@ public class ExecuteSqlQuery {
 		
 		return rs;
 	}
+	
+	public static String[][] getUserPaymentOrders(Connection connect, String username){
+		String query = "{ ? = call getuserpaymentorders (?)}";
+		CallableStatement statement = null;
+		ResultSet rs = null;
+		String[][] data = null;
+		try {
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, username);
+			rs = statement.executeQuery();
+
+			ArrayList<String[]> rows = new ArrayList<String[]>();
+			String[] row = new String[6];
+			while (rs.next()) {
+				for (int j = 1; j < 7; j++) {
+					row[j - 1] = rs.getString(j);
+				}
+				rows.add(row);
+				row = new String[6];
+			}
+
+			int numberOfRows = rows.size();
+			data = new String[numberOfRows][6];
+
+			// System.out.println(rows.toString());
+
+			for (int k = 0; k < numberOfRows; k++) {
+				data[k] = rows.get(k);
+			}
+			rs.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return data;
+	}
 }
