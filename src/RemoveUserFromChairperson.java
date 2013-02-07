@@ -25,13 +25,13 @@ public class RemoveUserFromChairperson extends JFrame {
 	private JPanel contentPane;
 	private static RemoveUserFromChairperson window;
 	private static Connection SQLConnect;
-	private static ArrayList<String> departments;
+	private static ArrayList<Object> departments;
 	private static JComboBox<String> dSelector;
 	private static String userInfo;
 	private static JLabel invalidLabel;
 	
 	
-	public static void setVisible(Connection SQLConnection, ArrayList<String> chairDeparts, String user){
+	public static void setVisible(Connection SQLConnection, ArrayList<Object> chairDeparts, String user){
 		departments = chairDeparts;
 		SQLConnect=SQLConnection;
 		userInfo = user;

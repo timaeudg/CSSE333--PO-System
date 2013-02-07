@@ -35,7 +35,7 @@ public class CreateUserWindow extends JFrame {
 	private static ArrayList<String> userChairs = new ArrayList<String>();
 	private static ArrayList<String> userDepartments = new ArrayList<String>();
 	
-	private static ArrayList<String> availableDepartments;
+	private static ArrayList<Object> availableDepartments;
 	
 	private JLabel userInfoLabel;
 	private static JLabel departmentLabel;
@@ -56,7 +56,7 @@ public class CreateUserWindow extends JFrame {
 	}
 	
 	
-	public static void newCreateUserWindow(Connection connect, ArrayList<String> departments){
+	public static void newCreateUserWindow(Connection connect, ArrayList<Object> departments){
 		SQLConnect = connect;
 		availableDepartments = departments;
 		createWindow = new CreateUserWindow();

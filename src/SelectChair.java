@@ -24,10 +24,10 @@ public class SelectChair extends JFrame {
 	private static JComboBox<String> departments;
 	private static SelectChair window;
 	private static Connection SQLConnect;
-	private static ArrayList<String> departmentList;
+	private static ArrayList<Object> departmentList;
 	private static ArrayList<String> userChairsSelected;
 	
-	public static void setVisible(Connection SQLConnection, ArrayList<String> depart, ArrayList<String> userChairs){
+	public static void setVisible(Connection SQLConnection, ArrayList<Object> depart, ArrayList<String> userChairs){
 		SQLConnect = SQLConnection;
 		departmentList = depart;
 		userChairsSelected = userChairs;
