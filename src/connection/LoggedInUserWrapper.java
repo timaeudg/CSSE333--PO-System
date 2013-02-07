@@ -2,27 +2,53 @@ package connection;
 
 import java.util.ArrayList;
 
+/**
+ * A wrapper for a logged-in user. Holds the username, the chairs the user is a
+ * department of, and a boolean field for the status of the user.
+ * 
+ * @author timaeudg
+ * 
+ */
 public class LoggedInUserWrapper {
 	private String username;
 	private ArrayList<Integer> chairs;
 	private boolean loggedIn;
-	
-	public LoggedInUserWrapper (String username, ArrayList<Integer> chairs, boolean logged){
-		this.username=username;
+
+	/**
+	 *LoggedInUserWrapper Constructor 
+	 * @param username
+	 * @param chairs
+	 * @param logged
+	 */
+	public LoggedInUserWrapper(String username, ArrayList<Integer> chairs,
+			boolean logged) {
+		this.username = username;
 		this.chairs = chairs;
 		this.loggedIn = logged;
 	}
-	
-	public String getUsername(){
+
+	/**
+	 * Get the username of this LoggedInUserWrapper
+	 * @return the username of this LoggedInUserWrapper
+	 */
+	public String getUsername() {
 		return this.username;
 	}
 	
-	public ArrayList<Integer> getChairs(){
+	/**
+	 * Gets a list of LoggedInUserWrapper
+	 * @return a list of ChairIDs for the departments this user is a chair ofF
+	 */
+	public ArrayList<Integer> getChairs() {
 		return this.chairs;
 	}
-	
-	public boolean getLogged(){
+
+	/**
+	 * Return the status of this LoggedInUserWrapper
+	 * @return true if this user is logged in
+	 */
+	public boolean getLogged() {
 		return this.loggedIn;
 	}
-	
+
 }

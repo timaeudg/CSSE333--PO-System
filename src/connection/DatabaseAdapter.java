@@ -6,7 +6,7 @@ import java.sql.*;
  * This test class opens a connection to the server and sends some simply
  * queries.
  * 
- * @author Curt Clifton and Bryan Musial and Jordan Moore based partly on code
+ * @author Jordan Moore, Curt Clifton, and Bryan Musial based partly on code
  *         examples by Rene Steiner,
  *         http://www.akadia.com/services/sqlsrv_jdbc.html and Carb Simien,
  *         http://www.mcse.ms/message1260690.html

@@ -8,13 +8,30 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+/**
+ *  A JTable with alternating row colors, single cell selection, column sorting, and unedittable cells.
+ * @author moorejm
+ *
+ */
 public class AlternatingColorTable extends JTable {
 
+	/**
+	 * Auto-generated SerialUID
+	 */
+	private static final long serialVersionUID = -7348599852475034545L;
+
+	/**
+	 * Default constructor
+	 */
 	public AlternatingColorTable() {
 		super();
 		init();
 	}
 	
+	/**
+	 * Default constructor given a data model 
+	 * @param model
+	 */
 	public AlternatingColorTable(DefaultTableModel model) {
 		super(model);
 		init();

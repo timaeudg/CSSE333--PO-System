@@ -617,10 +617,7 @@ public class AdminMainWindow {
 				"Reimbursement Method","Date", "Origin Department", "Status", "Department of Current Status" };
 		
 		userPaymentArray = ExecuteSqlQuery.getUserPaymentOrders(SQLConnect, user.getUsername());
-		departmentNames = new ArrayList<String>();
-//		for(int i = 0; i<departmentTableArray.length;i++){
-//			departmentNames.add(departmentTableArray[i][1]);
-//		}
+		
 		
 		JTable updateTable = new JTable(userPaymentArray, departColumns);
 		userPaymentOrdersTable.setModel(updateTable.getModel());
