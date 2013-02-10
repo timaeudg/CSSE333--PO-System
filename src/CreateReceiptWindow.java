@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -17,13 +19,14 @@ import connection.ReceiptBundles;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JFormattedTextField;
 
 
 public class CreateReceiptWindow extends JFrame {
 
 	private JPanel contentPane;
 	private static JTextField nameField;
-	private static JTextField timeField;
+	private static JFormattedTextField timeField;
 	private static JTextField locationField;
 	private static CreateReceiptWindow window;
 	private static ArrayList<ReceiptBundles> receipts;
@@ -104,7 +107,9 @@ public class CreateReceiptWindow extends JFrame {
 		label_1.setBounds(39, 101, 86, 14);
 		layeredPane.add(label_1);
 		
-		timeField = new JTextField();
+		
+		DateFormat dt = new SimpleDateFormat("MM/dd/yyyy");
+		timeField = new JFormattedTextField(dt);
 		timeField.setColumns(10);
 		timeField.setBounds(39, 126, 86, 20);
 		layeredPane.add(timeField);

@@ -479,9 +479,10 @@ public class ExecuteSqlQuery {
 				for (LineItemWrapper item : receipt.getLineItems()) {
 					statement = connect.prepareCall(lineQuery);
 					statement.registerOutParameter(1, Types.INTEGER);
-					statement.setString(2, item.getItemName());
-					statement.setDouble(3, item.getCostForItem());
+					statement.setString(3, item.getItemName());
+					statement.setDouble(2, item.getCostForItem());
 					statement.setInt(4, receiptID);
+					statement.execute();
 				}
 			}
 		} catch (Exception e) {

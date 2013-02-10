@@ -3,6 +3,7 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -17,13 +18,14 @@ import connection.LineItemWrapper;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JFormattedTextField;
 
 
 public class LineItemWindow extends JFrame {
 
 	private JPanel contentPane;
 	private static JTextField nameField;
-	private static JTextField costField;
+	private static JFormattedTextField costField;
 	private static JLabel invalidLabel;
 	private static ArrayList<LineItemWrapper> paymentLines;
 	private static LineItemWindow window;
@@ -69,7 +71,8 @@ public class LineItemWindow extends JFrame {
 		layeredPane.add(nameField);
 		nameField.setColumns(10);
 		
-		costField = new JTextField();
+		NumberFormat currency = NumberFormat.getCurrencyInstance();
+		costField = new JFormattedTextField(currency);
 		costField.setBounds(34, 118, 86, 20);
 		layeredPane.add(costField);
 		costField.setColumns(10);
@@ -93,11 +96,11 @@ public class LineItemWindow extends JFrame {
 				String name = nameField.getText();
 				String cost = costField.getText();
 				try{
-					double parsed = Double.parseDouble(cost);
 					if(cost.isEmpty()||name.isEmpty()){
 						invalidLabel.setVisible(true);
 					}
 					else{
+						double parsed = (Double) NumberFormat.getCurrencyInstance().parse(cost);
 						paymentLines.add(new LineItemWrapper(name, parsed));
 						window.dispose();
 						
