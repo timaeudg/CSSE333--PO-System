@@ -33,11 +33,11 @@ public class EditDepartmentsWindow extends JFrame {
 	private JComboBox editComboBox;
 	private JTextField newBudgetField;
 	private static Connection SQLConnect;
-	private static ArrayList<String> departmentsAvailable;
+	private static ArrayList<Object> departmentsAvailable;
 	private static JLabel parentInvalidLabel;
 	private static EditDepartmentsWindow window;
 	
-	public static void setVisible(Connection SQLConnection, ArrayList<String> departments){
+	public static void setVisible(Connection SQLConnection, ArrayList<Object> departments){
 		
 		SQLConnect = SQLConnection;
 		departmentsAvailable=departments;
@@ -65,7 +65,7 @@ public class EditDepartmentsWindow extends JFrame {
 		contentPane.add(layeredPane, BorderLayout.CENTER);
 		
 		editComboBox = new JComboBox();
-		ArrayList<String> departments = new ArrayList<String>(departmentsAvailable);
+		ArrayList<Object> departments = new ArrayList<Object>(departmentsAvailable);
 		departments.add(0, "Don't Change");
 		editComboBox.setModel(new DefaultComboBoxModel(departmentsAvailable.toArray()));
 		editComboBox.setBounds(205, 35, 122, 20);

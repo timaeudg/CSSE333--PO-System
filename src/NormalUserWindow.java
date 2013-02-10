@@ -1,262 +1,212 @@
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTabbedPane;
-import javax.swing.JLayeredPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+
 import java.awt.Color;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JRadioButton;
-
-import com.sun.org.apache.bcel.internal.generic.LLOAD;
+import actions.userLookupAction;
 
 import connection.ExecuteSqlQuery;
 import connection.LoggedInUserWrapper;
 import extras.AlternatingColorTable;
+import extras.NumberRenderer;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
+/**
+ * @author moorejm, timaeudg
+ *
+ */
 public class NormalUserWindow extends JFrame {
 
-	
 	private JPanel contentPane;
-	private JTable table;
+	private JTable poTable;
 	private JTable lookupTable;
+	private static JTable departmentOverviewTable;
 	private JTextField lookupFirstField;
 	private JTextField lookupUserLastField;
 	private JTextField lookupEmailField;
 	private JTextField lookupUsernameField;
-	private JTable table_2;
-	
+	private static JScrollPane userScrollPane;
+	private static JScrollPane deptScrollPane;
+	private static JScrollPane poSrollPane;
+
 	private static Connection SQLConnect;
 	private static LoggedInUserWrapper user;
-	private static ArrayList<String> departmentNames;
-	private static String[][] departmentTableArray;
+	private static ArrayList<Object> departmentNames;
+	private static Object[][] departmentTableArray;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					NormalUserWindow frame = new NormalUserWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	// /**
+	// * Launch the application.
+	// */
+	// public static void main(String[] args) {
+	// EventQueue.invokeLater(new Runnable() {
+	// public void run() {
+	// try {
+	// NormalUserWindow frame = new NormalUserWindow();
+	// frame.setVisible(true);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// });
+	// }
 
 	/**
 	 * Create the frame.
 	 */
 	public NormalUserWindow() {
-		
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
-		
+		}
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 521, 377);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
-		
-		/////User Lookup//////////////////////////////////////////////////////
-		
-		JLayeredPane layeredPane = new JLayeredPane();
-		tabbedPane.addTab("User Lookup", null, layeredPane, null);
-		
-		final JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 11, 468, 178);
-		layeredPane.add(scrollPane_1);
-		
+
+		// ///User Lookup//////////////////////////////////////////////////////
+
+		JPanel tab_userLookup = new JPanel();
+		tabbedPane.addTab("User Lookup", null, tab_userLookup, null);
+		tab_userLookup.setLayout(null);
+
+		userScrollPane = new JScrollPane();
+		userScrollPane.setBounds(10, 11, 468, 178);
+		tab_userLookup.add(userScrollPane);
+
 		lookupTable = new JTable();
-		scrollPane_1.setViewportView(lookupTable);
-		
-		JLabel label = new JLabel("First Name:");
-		label.setBounds(10, 210, 61, 14);
-		layeredPane.add(label);
-		
+		userScrollPane.setViewportView(lookupTable);
+
+		JLabel lblFname = new JLabel("First Name:");
+		lblFname.setBounds(10, 210, 61, 14);
+		tab_userLookup.add(lblFname);
+
 		lookupFirstField = new JTextField();
 		lookupFirstField.setColumns(10);
 		lookupFirstField.setBounds(85, 207, 86, 20);
-		layeredPane.add(lookupFirstField);
-		
-		JLabel label_1 = new JLabel("Last Name:");
-		label_1.setBounds(181, 210, 61, 14);
-		layeredPane.add(label_1);
-		
+		tab_userLookup.add(lookupFirstField);
+
+		JLabel lblLname = new JLabel("Last Name:");
+		lblLname.setBounds(181, 210, 61, 14);
+		tab_userLookup.add(lblLname);
+
 		lookupUserLastField = new JTextField();
 		lookupUserLastField.setColumns(10);
 		lookupUserLastField.setBounds(252, 207, 86, 20);
-		layeredPane.add(lookupUserLastField);
-		
+		tab_userLookup.add(lookupUserLastField);
+
 		lookupEmailField = new JTextField();
 		lookupEmailField.setColumns(10);
 		lookupEmailField.setBounds(252, 245, 86, 20);
-		layeredPane.add(lookupEmailField);
-		
-		JLabel label_2 = new JLabel("E-mail:");
-		label_2.setBounds(181, 248, 43, 14);
-		layeredPane.add(label_2);
-		
+		tab_userLookup.add(lookupEmailField);
+
+		JLabel lblEmail = new JLabel("E-mail:");
+		lblEmail.setBounds(181, 248, 43, 14);
+		tab_userLookup.add(lblEmail);
+
 		lookupUsernameField = new JTextField();
 		lookupUsernameField.setColumns(10);
 		lookupUsernameField.setBounds(85, 245, 86, 20);
-		layeredPane.add(lookupUsernameField);
-		
-		JLabel label_3 = new JLabel("Username:");
-		label_3.setBounds(10, 248, 61, 14);
-		layeredPane.add(label_3);
-		
+		tab_userLookup.add(lookupUsernameField);
+
+		JLabel lblUsername = new JLabel("Username:");
+		lblUsername.setBounds(10, 248, 61, 14);
+		tab_userLookup.add(lblUsername);
+
 		JButton button = new JButton("Search");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String firstName = lookupFirstField.getText().replaceAll("\\*", "%");
-				String lastName = lookupUserLastField.getText().replaceAll("\\*", "%");
-				String email = lookupEmailField.getText().replaceAll("\\*", "%");
-				String username = lookupUsernameField.getText().replaceAll("\\*", "%");
-				ResultSet rs = null;
-
-				try {
-					rs = ExecuteSqlQuery.lookupUsers(firstName, lastName,
-							email, username, SQLConnect);
-					if (rs != null) {
-
-						ArrayList<String[]> rows = new ArrayList<String[]>();
-						String[] row = new String[4];
-						while (rs.next()) {
-							for (int j = 1; j < 5; j++) {
-								row[j - 1] = rs.getString(j);
-							}
-							rows.add(row);
-							row = new String[4];
-						}
-
-						int numberOfRows = rows.size();
-						String[][] data = new String[numberOfRows][4];
-
-						// System.out.println(rows.toString());
-
-						for (int k = 0; k < numberOfRows; k++) {
-							data[k] = rows.get(k);
-						}
-						rs.close();
-						String[] columns = new String[] { "Username",
-								"First Name", "Last Name", "E-mail" };
-
-						JTable updateTable = new AlternatingColorTable(new DefaultTableModel(data, columns));
-//						lookupTable.setModel(updateTable.getModel());
-						scrollPane_1.setViewportView(updateTable);
-//						lookupTable.repaint();
-
-					} else {
-						System.out.println("Herp Derp");
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-				
-		});
+		userLookupAction userLookup = new userLookupAction(userScrollPane,
+				lookupFirstField, lookupUserLastField, lookupEmailField,
+				lookupUsernameField, SQLConnect);
+		button.addActionListener(userLookup);
 		button.setBounds(389, 226, 89, 23);
-		layeredPane.add(button);
-		
-		///////Payment Orders////////////////////////////////////////////////////
-		
-		JLayeredPane layeredPane_1 = new JLayeredPane();
-		tabbedPane.addTab("Your Payment Orders", null, layeredPane_1, null);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 468, 227);
-		layeredPane_1.add(scrollPane);
-		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setBackground(Color.LIGHT_GRAY);
-		table.setModel(
-				new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-				{null, null, null, null, null, null},
-			},
-			new String[] {
-				"New column", "New column", "New column", "New column", "New column", "New column"
-			}
-		));
-		
+		tab_userLookup.add(button);
+
+		// /////Payment
+		// Orders////////////////////////////////////////////////////
+
+		JPanel tab_PO = new JPanel();
+		tabbedPane.addTab("Your Payment Orders", null, tab_PO, null);
+		tab_PO.setLayout(null);
+
+		poSrollPane = new JScrollPane();
+		poSrollPane.setBounds(10, 11, 468, 227);
+		tab_PO.add(poSrollPane);
+
+		poTable = new AlternatingColorTable(new DefaultTableModel(
+				new Object[][] { { null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null },
+						{ null, null, null, null, null, null }, },
+				new String[] { "New column", "New column", "New column",
+						"New column", "New column", "New column" }));
+		poSrollPane.setViewportView(poTable);
+		poTable.setBackground(Color.LIGHT_GRAY);
+
 		JButton btnCreateNewPayment = new JButton("Create New Payment Order");
 		btnCreateNewPayment.setBounds(158, 249, 165, 23);
 		btnCreateNewPayment.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				CreatePaymentOrder.setVisible(SQLConnect,departmentNames, user.getUsername());
-				
+				getDeptNames();
+				CreatePaymentOrder.setVisible(SQLConnect, departmentNames,
+						user.getUsername());
+
 			}
 		});
-		layeredPane_1.add(btnCreateNewPayment);
-		
-		JLayeredPane layeredPane_2 = new JLayeredPane();
-		tabbedPane.addTab("Department Overview", null, layeredPane_2, null);
-		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 11, 470, 228);
-		layeredPane_2.add(scrollPane_2);
-		
-//		table_2 = new JTable();
-		
-		NormalUserWindow.refreshDepartments();
-		
-		String [][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
-		String[] departColumns = new String[] { "Department ID",
-				"Department Name", "Total Budget", "Current Budget", "Parent Department ID" };
-		
-		DefaultTableModel updateModel = new DefaultTableModel(depart, departColumns);
-		JTable updateTable = new AlternatingColorTable(updateModel);
-		scrollPane_2.setViewportView(updateTable);
-//		table_2 = updateTable;
-//		table_2.repaint();
-		
+		tab_PO.add(btnCreateNewPayment);
+
+		JPanel tab_DeptView = new JPanel();
+		tabbedPane.addTab("Department Overview", null, tab_DeptView, null);
+		tab_DeptView.setLayout(null);
+
+		deptScrollPane = new JScrollPane();
+		deptScrollPane.setBounds(10, 11, 470, 228);
+		tab_DeptView.add(deptScrollPane);
+
+//		Object[][] depart = ExecuteSqlQuery.getDepartmentOverview(SQLConnect);
+//		String[] departColumns = new String[] { "Department ID",
+//				"Department Name", "Total Budget", "Current Budget",
+//				"Parent Department ID" };
+
+//		DefaultTableModel updateModel = new DefaultTableModel(depart,
+//				departColumns);
+//		departmentOverviewTable = new AlternatingColorTable(updateModel);
+		refreshDepartments();
 	}
 
 	public static void setVisible(Connection whaleConnect,
@@ -265,19 +215,40 @@ public class NormalUserWindow extends JFrame {
 		SQLConnect = whaleConnect;
 		NormalUserWindow window = new NormalUserWindow();
 		window.setVisible(true);
-		
+
 	}
-	
+
 	public static void refreshDepartments() {
 		String[] departColumns = new String[] { "Department ID",
 				"Department Name", "Total Budget", "Current Budget",
 				"Parent Department ID" };
 
+		getDeptNames();
+
+		// JTable updateTable = new JTable(departmentTableArray, departColumns);
+		departmentOverviewTable = new AlternatingColorTable(new DefaultTableModel(
+				departmentTableArray, departColumns));
+//		departmentOverviewTable.setModel(new DefaultTableModel(
+//				departmentTableArray, departColumns));
+
+		formatDeptTable();
+		deptScrollPane.setViewportView(departmentOverviewTable);
+	}
+
+	public static void getDeptNames() {
 		departmentTableArray = ExecuteSqlQuery
 				.getDepartmentOverview(SQLConnect);
-		departmentNames = new ArrayList<String>();
+
+		departmentNames = new ArrayList<Object>();
 		for (int i = 0; i < departmentTableArray.length; i++) {
 			departmentNames.add(departmentTableArray[i][1]);
 		}
+	}
+
+	public static void formatDeptTable() {
+		TableColumnModel m = departmentOverviewTable.getColumnModel();
+		m.getColumn(0).setCellRenderer(NumberRenderer.getIntegerRenderer());
+		m.getColumn(2).setCellRenderer(NumberRenderer.getCurrencyRenderer());
+		m.getColumn(3).setCellRenderer(NumberRenderer.getCurrencyRenderer());
 	}
 }

@@ -22,12 +22,12 @@ public class DeleteDepartmentWindow extends JFrame {
 
 	private JPanel contentPane;
 	private static Connection SQLConnect;
-	private static ArrayList<String> departments;
+	private static ArrayList<Object> departments;
 	private static DeleteDepartmentWindow window;
 	private static JComboBox<String> departmentCombo;
 
 	
-	public static void setVisible(Connection connect,ArrayList<String> availableDepartments){
+	public static void setVisible(Connection connect,ArrayList<Object> availableDepartments){
 		departments=availableDepartments;
 		SQLConnect= connect;
 		window = new DeleteDepartmentWindow();

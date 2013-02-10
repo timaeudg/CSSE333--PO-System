@@ -26,7 +26,7 @@ public class CreateDepartment extends JFrame {
 	private JTextField departmentTextField;
 	private JTextField budgetTextField;
 	private static Connection SQLConnect;
-	private static ArrayList<String> availableDepartments = new ArrayList<String>();
+	private static ArrayList<Object> availableDepartments = new ArrayList<Object>();
 	private static JComboBox comboBox;
 	private static JLabel invalidLabel;
 	private static CreateDepartment window;
@@ -34,7 +34,7 @@ public class CreateDepartment extends JFrame {
 
 
 	
-	public static void setVisible(Connection connect, ArrayList<String> depart) {
+	public static void setVisible(Connection connect, ArrayList<Object> depart) {
 		availableDepartments= depart;
 		window = new CreateDepartment();
 		window.setVisible(true);

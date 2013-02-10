@@ -18,12 +18,12 @@ public class SelectDepartments extends JFrame {
 
 	private JPanel contentPane;
 	private static Connection SQLConnect;
-	private static ArrayList<String> availableDepart;
+	private static ArrayList<Object> availableDepart;
 	private static ArrayList<String> userDepart;
 	private static SelectDepartments window;
 	private static JComboBox<String> dList;
 
-	public static void setVisible(Connection connect, ArrayList<String> available, ArrayList<String> departments){
+	public static void setVisible(Connection connect, ArrayList<Object> available, ArrayList<String> departments){
 		SQLConnect=connect;
 		availableDepart=available;
 		userDepart=departments;

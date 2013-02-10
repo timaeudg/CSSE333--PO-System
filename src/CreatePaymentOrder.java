@@ -39,7 +39,7 @@ public class CreatePaymentOrder extends JFrame {
 	private JPanel contentPane;
 	private static Connection SQLConnect;
 	private static JComboBox<String> departmentSelect;
-	private static ArrayList<String> departList;
+	private static ArrayList<Object> departList;
 	private static String username;
 	private static JTextArea descriptionField;
 	private static CreatePaymentOrder window;
@@ -65,7 +65,7 @@ public class CreatePaymentOrder extends JFrame {
 		});
 	}
 	
-	public static void setVisible(Connection connect, ArrayList<String> departs, String user) {
+	public static void setVisible(Connection connect, ArrayList<Object> departs, String user) {
 		SQLConnect = connect;
 		departList=departs;
 		username=user;
@@ -166,12 +166,14 @@ public class CreatePaymentOrder extends JFrame {
 				if(!method.isEmpty()&&!descript.isEmpty()&& !department.isEmpty() && !date.isEmpty()){
 					int id = ExecuteSqlQuery.addPaymentOrder(SQLConnect, username, department, method, descript,date);
 					try{
-						
 						ExecuteSqlQuery.addReceipts(SQLConnect, id, receipts);
 					}
 					catch(Exception e){
 						e.printStackTrace();
 					}
+					AdminMainWindow.refreshPaymentOrders();
+					AdminMainWindow.refreshPending();
+					
 					window.dispose();
 				}
 				else{
