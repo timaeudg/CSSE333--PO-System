@@ -235,8 +235,8 @@ public class AdminMainWindow {
 			public void actionPerformed(ActionEvent e) {
 				int row = pendingTable.getSelectedRow();
 				int id = Integer.parseInt((String) pendingTable.getValueAt(row, 0));
-				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id, user.getUsername());
-				
+				ExecuteSqlQuery.acceptPaymentOrder(SQLConnect, id, user.getUsername());
+				AdminMainWindow.refreshPending();
 				System.out.println(id);
 			}
 		});
@@ -248,8 +248,8 @@ public class AdminMainWindow {
 			public void actionPerformed(ActionEvent e) {
 				int row = pendingTable.getSelectedRow();
 				int id = Integer.parseInt((String) pendingTable.getValueAt(row, 0));
-				String username = (String)pendingTable.getValueAt(row, 4);
-				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id, username);
+				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id, user.getUsername());
+				AdminMainWindow.refreshPending();
 				System.out.println(id);
 			}
 		});

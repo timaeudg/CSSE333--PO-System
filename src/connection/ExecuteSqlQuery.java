@@ -396,12 +396,13 @@ public class ExecuteSqlQuery {
 	}
 
 	public static void deleteDepartment(Connection sQLConnect, String deleted) {
-		String query = "{ ? = call deletedepartment (?)}";
+		String query = "{ ? = call DeleteDepartment (?)}";
 		CallableStatement statement = null;
 		try {
 			statement = sQLConnect.prepareCall(query);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, deleted);
+			System.out.println(deleted);
 			statement.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
