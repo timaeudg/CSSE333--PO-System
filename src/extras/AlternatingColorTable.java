@@ -53,8 +53,8 @@ public class AlternatingColorTable extends JTable {
 		Component comp = super.prepareRenderer(renderer, index_row, index_col);
 		// even index, selected or not selected
 
-		if (index_row % 2 == 0) {
-			comp.setBackground(Color.LIGHT_GRAY);
+		if (index_row % 2 != 0) {
+			comp.setBackground(new Color(220, 220, 220));
 		} else {
 			comp.setBackground(Color.white);
 		}

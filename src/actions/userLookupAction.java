@@ -15,6 +15,10 @@ import javax.swing.table.DefaultTableModel;
 import connection.ExecuteSqlQuery;
 import extras.AlternatingColorTable;
 
+/**
+ * @author moorejm
+ *
+ */
 public class userLookupAction implements ActionListener {
 
 	private JTextField fNameField;
@@ -54,11 +58,9 @@ public class userLookupAction implements ActionListener {
 					rows.add(row);
 					row = new String[4];
 				}
-
+				
 				int numberOfRows = rows.size();
 				String[][] data = new String[numberOfRows][4];
-
-				// System.out.println(rows.toString());
 
 				for (int k = 0; k < numberOfRows; k++) {
 					data[k] = rows.get(k);

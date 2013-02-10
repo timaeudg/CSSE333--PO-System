@@ -180,6 +180,29 @@ public class ExecuteSqlQuery {
 		return added;
 	}
 
+	public static boolean addUserToDepartment(Connection connect,
+			String username, ArrayList<String> departs) {
+		boolean added = false;
+		String query = "{ ? = call addusertodepartment (?, ?)}";
+		CallableStatement statement = null;
+		try {
+
+			for (String department : departs) {
+				statement = connect.prepareCall(query);
+				statement.registerOutParameter(1, Types.INTEGER);
+				statement.setString(2, username);
+				statement.setString(3, department);
+				statement.execute();
+			}
+
+			added = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return added;
+	}
+
 	public static boolean removeUser(String deleter, String deletee,
 			Connection connection) {
 		boolean removed = false;
@@ -204,10 +227,29 @@ public class ExecuteSqlQuery {
 		return removed;
 	}
 
+	public static boolean removeUserFromDepartment(Connection connect,
+			String username, String department) {
+		String query = "{ ? = call removeuserfromdepartment (?,?) }";
+		CallableStatement statement = null;
+		boolean removed = false;
+		try {
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, username);
+			statement.setString(3, department);
+
+			statement.execute();
+			removed = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return removed;
+	}
+
 	public static boolean editUser(String oldUsername, String newUsername,
 			String newFirstName, String newLastName, String newEmail,
 			String newPassword, Connection connection) {
-		boolean removed = false;
+		boolean editted = false;
 
 		String query = "{ ? = call modifyuser (?, ?, ?, ?, ?, ?)}";
 		CallableStatement statement = null;
@@ -251,76 +293,13 @@ public class ExecuteSqlQuery {
 
 			statement.execute();
 			statement.close();
-			removed = true;
+			editted = true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			removed = false;
+			return false;
 		}
 
-		return removed;
-	}
-
-	public static Object[][] getDepartmentOverview(Connection connection) {
-
-		String query = "{ ? = call alldepartmentinfo}";
-		CallableStatement statement = null;
-		ResultSet rs = null;
-		Object[][] data = null;
-		try {
-			statement = connection.prepareCall(query);
-			statement.registerOutParameter(1, Types.INTEGER);
-			rs = statement.executeQuery();
-//			DecimalFormat fmt = new DecimalFormat("$ ###,###.00");
-			ArrayList<Object[]> rows = new ArrayList<Object[]>();
-			Object[] row = new Object[5];
-			while (rs.next()) {
-				for (int j = 1; j < 6; j++) {
-					if (j == 1 || j == 5) row[j - 1] = rs.getInt(j);
-					else if (j == 3 || j == 4) row[j - 1] = rs.getDouble(j);
-					else row[j - 1] = rs.getString(j);
-				}
-				rows.add(row);
-				row = new Object[5];
-			}
-
-			int numberOfRows = rows.size();
-			data = new Object[numberOfRows][5];
-
-			// System.out.println(rows.toString());
-
-			for (int k = 0; k < numberOfRows; k++) {
-				data[k] = rows.get(k);
-			}
-			rs.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return data;
-	}
-
-	public static boolean addUserToDepartment(Connection connect,
-			String username, ArrayList<String> departs) {
-		boolean added = false;
-		String query = "{ ? = call addusertodepartment (?, ?)}";
-		CallableStatement statement = null;
-		try {
-
-			for (String department : departs) {
-				statement = connect.prepareCall(query);
-				statement.registerOutParameter(1, Types.INTEGER);
-				statement.setString(2, username);
-				statement.setString(3, department);
-				statement.execute();
-			}
-
-			added = true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return added;
+		return editted;
 	}
 
 	public static boolean addChairToDepartment(Connection connect,
@@ -335,10 +314,10 @@ public class ExecuteSqlQuery {
 				statement.registerOutParameter(1, Types.INTEGER);
 				statement.setString(2, username);
 				statement.setString(3, department);
-				statement.execute();
+				added = statement.execute();
 			}
 
-			added = true;
+//			added = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -411,23 +390,50 @@ public class ExecuteSqlQuery {
 		}
 	}
 
-	public static boolean removeUserFromDepartment(Connection connect,
-			String username, String department) {
-		String query = "{ ? = call removeuserfromdepartment (?,?) }";
-		CallableStatement statement = null;
-		boolean removed = false;
-		try {
-			statement = connect.prepareCall(query);
-			statement.registerOutParameter(1, Types.INTEGER);
-			statement.setString(2, username);
-			statement.setString(3, department);
+	public static Object[][] getDepartmentOverview(Connection connection) {
 
-			statement.execute();
-			removed = true;
+		String query = "{ ? = call alldepartmentinfo}";
+		CallableStatement statement = null;
+		ResultSet rs = null;
+		Object[][] data = null;
+		try {
+			statement = connection.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			rs = statement.executeQuery();
+			// DecimalFormat fmt = new DecimalFormat("$ ###,###.00");
+			ArrayList<Object[]> rows = new ArrayList<Object[]>();
+			Object[] row = new Object[5];
+			while (rs.next()) {
+				for (int j = 1; j < 6; j++) {
+					if (j == 1 || j == 5) {
+						int id = rs.getInt(j);
+						row[j - 1] = id == 0 ? "" : id;
+					}
+						
+					else if (j == 3 || j == 4)
+						row[j - 1] = rs.getDouble(j);
+					else
+						row[j - 1] = rs.getString(j);
+				}
+				rows.add(row);
+				row = new Object[5];
+			}
+
+			int numberOfRows = rows.size();
+			data = new Object[numberOfRows][5];
+
+			// System.out.println(rows.toString());
+
+			for (int k = 0; k < numberOfRows; k++) {
+				data[k] = rows.get(k);
+			}
+			rs.close();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return removed;
+
+		return data;
 	}
 
 	public static boolean removeChairFromDepartment(Connection connect,
@@ -447,33 +453,6 @@ public class ExecuteSqlQuery {
 			e.printStackTrace();
 		}
 		return removed;
-	}
-
-	public static int addPaymentOrder(Connection connect, String username,
-			String depart, String method, String description, String date) {
-		String query = "{ ? = call addpaymentorder (?,?,?, ?,?,?) }";
-		CallableStatement statement = null;
-		int id = -1;
-		try {
-
-			statement = connect.prepareCall(query);
-			statement.registerOutParameter(1, Types.INTEGER);
-			statement.setString(2, username);
-			statement.setString(3, depart);
-			statement.setString(4, method);
-			statement.setString(5, description);
-			statement.setString(6, date);
-			statement.registerOutParameter(7, Types.INTEGER);
-
-			statement.execute();
-			id = statement.getInt(7);
-			System.out.println(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return id;
-
 	}
 
 	public static ResultSet addReceipts(Connection connect, int paymentOrder,
@@ -511,6 +490,33 @@ public class ExecuteSqlQuery {
 		return rs;
 	}
 
+	public static int addPaymentOrder(Connection connect, String username,
+			String depart, String method, String description, String date) {
+		String query = "{ ? = call addpaymentorder (?,?,?, ?,?,?) }";
+		CallableStatement statement = null;
+		int id = -1;
+		try {
+
+			statement = connect.prepareCall(query);
+			statement.registerOutParameter(1, Types.INTEGER);
+			statement.setString(2, username);
+			statement.setString(3, depart);
+			statement.setString(4, method);
+			statement.setString(5, description);
+			statement.setString(6, date);
+			statement.registerOutParameter(7, Types.INTEGER);
+
+			statement.execute();
+			id = statement.getInt(7);
+			System.out.println(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return id;
+
+	}
+
 	public static String[][] getUserPaymentOrders(Connection connect,
 			String username) {
 		String query = "{ ? = call getuserpaymentorders (?)}";
@@ -536,7 +542,7 @@ public class ExecuteSqlQuery {
 			int numberOfRows = rows.size();
 			data = new String[numberOfRows][6];
 
-			// System.out.println(rows.toString());
+			 System.out.println(rows.toString());
 
 			for (int k = 0; k < numberOfRows; k++) {
 				data[k] = rows.get(k);
@@ -566,12 +572,7 @@ public class ExecuteSqlQuery {
 			Object[] row = new Object[5];
 			while (rs.next()) {
 				for (int j = 1; j < 6; j++) {
-					if (j == 1)
-						row[j - 1] = rs.getInt(j);
-					else if (j == 4)
-						row[j - 1] = rs.getDate(j);
-					else
-						row[j - 1] = rs.getString(j);
+					row[j - 1] = rs.getString(j);
 				}
 				rows.add(row);
 				row = new Object[5];

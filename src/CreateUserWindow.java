@@ -15,6 +15,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
+import org.omg.CORBA.INITIALIZE;
+
 import connection.ExecuteSqlQuery;
 
 import java.awt.event.ActionListener;
@@ -38,38 +40,24 @@ public class CreateUserWindow extends JFrame {
 	private static ArrayList<Object> availableDepartments;
 	
 	private JLabel userInfoLabel;
-	private static JLabel departmentLabel;
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CreateUserWindow frame = new CreateUserWindow();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
+	private static JLabel departmentLabel;	
 	
 	public static void newCreateUserWindow(Connection connect, ArrayList<Object> departments){
-		SQLConnect = connect;
-		availableDepartments = departments;
-		createWindow = new CreateUserWindow();
+		createWindow = new CreateUserWindow(connect, departments);
 		createWindow.setVisible(true);
 	}
+	
+	public CreateUserWindow(Connection sql, ArrayList<Object> depts) {
+		SQLConnect = sql;
+		availableDepartments = depts;
+		initialize();
+	}
 
-	/**
-	 * Create the frame.
-	 */
-	public CreateUserWindow() {
+	private void initialize() {
 		setTitle("Create New User");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 271, 390);
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
