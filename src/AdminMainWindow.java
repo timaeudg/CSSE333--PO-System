@@ -110,7 +110,7 @@ public class AdminMainWindow {
 			public void actionPerformed(ActionEvent arg0) {
 				 if (createPO.isSelected()) {
 					CreatePaymentOrder.setVisible(SQLConnect, departmentNames,
-							user.getUsername());
+							user.getUsername(),true);
 				} else {
 
 				}

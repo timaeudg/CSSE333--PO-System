@@ -33,8 +33,8 @@ import java.awt.event.ActionEvent;
 public class NormalUserWindow extends JFrame {
 
 	private JPanel contentPane;
-	private JTable poTable;
-	private JTable lookupTable;
+	private static JTable poTable;
+	private static JTable lookupTable;
 	private static JTable departmentOverviewTable;
 	private JTextField lookupFirstField;
 	private JTextField lookupUserLastField;
@@ -48,6 +48,7 @@ public class NormalUserWindow extends JFrame {
 	private static LoggedInUserWrapper user;
 	private static ArrayList<Object> departmentNames;
 	private static Object[][] departmentTableArray;
+	private static String[][] userPaymentArray;
 
 	// /**
 	// * Launch the application.
@@ -175,6 +176,7 @@ public class NormalUserWindow extends JFrame {
 						"New column", "New column", "New column" }));
 		poSrollPane.setViewportView(poTable);
 		poTable.setBackground(Color.LIGHT_GRAY);
+		NormalUserWindow.refreshPaymentOrders();
 
 		JButton btnCreateNewPayment = new JButton("Create New Payment Order");
 		btnCreateNewPayment.setBounds(158, 249, 165, 23);
@@ -184,7 +186,7 @@ public class NormalUserWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				getDeptNames();
 				CreatePaymentOrder.setVisible(SQLConnect, departmentNames,
-						user.getUsername());
+						user.getUsername(),false);
 
 			}
 		});
@@ -250,5 +252,22 @@ public class NormalUserWindow extends JFrame {
 		m.getColumn(0).setCellRenderer(NumberRenderer.getIntegerRenderer());
 		m.getColumn(2).setCellRenderer(NumberRenderer.getCurrencyRenderer());
 		m.getColumn(3).setCellRenderer(NumberRenderer.getCurrencyRenderer());
+	}
+	
+	public static void refreshPaymentOrders() {
+		String[] poColumns = new String[] { "Reason", "Reimbursement Method",
+				"Date", "Origin Department", "Status",
+				"Department of Current Status" };
+
+		userPaymentArray = ExecuteSqlQuery.getUserPaymentOrders(SQLConnect,
+				user.getUsername());
+
+		DefaultTableModel model = new DefaultTableModel(userPaymentArray,
+				poColumns);
+		poTable.setModel(model);
+
+		poSrollPane.setViewportView(poTable);
+		poTable.repaint();
+
 	}
 }

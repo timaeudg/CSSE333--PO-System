@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.sql.Connection;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -100,13 +101,14 @@ public class LineItemWindow extends JFrame {
 						invalidLabel.setVisible(true);
 					}
 					else{
-						double parsed = (Double) NumberFormat.getCurrencyInstance().parse(cost);
+						double parsed = (Double)NumberFormat.getCurrencyInstance(Locale.US).parse(cost).doubleValue();
 						paymentLines.add(new LineItemWrapper(name, parsed));
 						window.dispose();
 						
 					}
 				}
 				catch(Exception e){
+					e.printStackTrace();
 					invalidLabel.setVisible(true);
 				}
 			}

@@ -49,6 +49,7 @@ public class CreatePaymentOrder extends JFrame {
 	private static JLabel lineSum;
 	private static ArrayList<ReceiptBundles> receipts;
 	private static JComboBox<String> methodOfRepayment;
+	private static boolean admin;
 	/**
 	 * Launch the application.
 	 */
@@ -65,10 +66,11 @@ public class CreatePaymentOrder extends JFrame {
 		});
 	}
 	
-	public static void setVisible(Connection connect, ArrayList<Object> departs, String user) {
+	public static void setVisible(Connection connect, ArrayList<Object> departs, String user, boolean adminWin) {
 		SQLConnect = connect;
 		departList=departs;
 		username=user;
+		admin = adminWin;
 		receipts = new ArrayList<ReceiptBundles>();
 		lineItems = new ArrayList<LineItemWrapper>();
 		window = new CreatePaymentOrder();
@@ -171,8 +173,13 @@ public class CreatePaymentOrder extends JFrame {
 					catch(Exception e){
 						e.printStackTrace();
 					}
+					if(admin){
 					AdminMainWindow.refreshPaymentOrders();
 					AdminMainWindow.refreshPending();
+					}
+					else{
+						NormalUserWindow.refreshPaymentOrders();
+					}
 					
 					window.dispose();
 				}
