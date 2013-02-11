@@ -9,6 +9,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -121,6 +122,8 @@ public class CreatePaymentOrder extends JFrame {
 	    dateField = new JFormattedTextField(dt);
 		dateField.setBounds(235, 218, 86, 20);
 		layeredPane.add(dateField);
+		dateField.setText(dt.format(Calendar.getInstance().getTime()));
+		dateField.setEditable(false);
 		
 		
 		JLabel lblReimbursmentMethod = new JLabel("Reimbursment Method:");
