@@ -243,7 +243,7 @@ public class AdminMainWindow {
 				String username = (String) pendingTable.getValueAt(row, 4);
 				System.out.println(id + " " + username);
 
-				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id, username);
+				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id, user.getUsername());
 				refreshPending();
 				refreshPaymentOrders();
 			}

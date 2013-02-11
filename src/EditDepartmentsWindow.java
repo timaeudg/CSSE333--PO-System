@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -23,6 +25,7 @@ import connection.ExecuteSqlQuery;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JFormattedTextField;
 
 
 public class EditDepartmentsWindow extends JFrame {
@@ -31,7 +34,7 @@ public class EditDepartmentsWindow extends JFrame {
 	private JTextField newNameField;
 	private JComboBox parentComboBox;
 	private JComboBox editComboBox;
-	private JTextField newBudgetField;
+	private JFormattedTextField newBudgetField;
 	private static Connection SQLConnect;
 	private static ArrayList<Object> departmentsAvailable;
 	private static JLabel parentInvalidLabel;
@@ -90,7 +93,8 @@ public class EditDepartmentsWindow extends JFrame {
 		parentComboBox.setModel(new DefaultComboBoxModel(departments.toArray()));
 		layeredPane.add(parentComboBox);
 		
-		newBudgetField = new JTextField();
+		NumberFormat currency = NumberFormat.getCurrencyInstance();
+		newBudgetField = new JFormattedTextField(currency);
 		newBudgetField.setBounds(205, 179, 122, 20);
 		layeredPane.add(newBudgetField);
 		newBudgetField.setColumns(10);
@@ -118,10 +122,15 @@ public class EditDepartmentsWindow extends JFrame {
 					budget = -1;
 				}
 				else{
-					 budget= Double.parseDouble(budgetString);
+					 try {
+						budget= NumberFormat.getCurrencyInstance().parse(budgetString).doubleValue();
+					} catch (ParseException e){
+						e.printStackTrace();
+						budget=-1;
+					}
 				}
 				String newName = newNameField.getText();
-				if(parentDepart.equals(departToEdit)){
+				if(parentDepart.equals(departToEdit) || budget ==-1){
 					parentInvalidLabel.setVisible(true);
 				}
 				else{
