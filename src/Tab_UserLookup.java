@@ -140,9 +140,7 @@ public class Tab_UserLookup extends JPanel {
 		
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				CreateUserWindow newUser = new CreateUserWindow(SQLConnect,
-						departmentNames);
-				newUser.setVisible(true);
+				CreateUserWindow.newCreateUserWindow(SQLConnect, departmentNames);
 			}
 
 		});

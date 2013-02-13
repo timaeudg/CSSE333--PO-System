@@ -130,7 +130,7 @@ public class EditDepartmentsWindow extends JFrame {
 					}
 				}
 				String newName = newNameField.getText();
-				if(parentDepart.equals(departToEdit) || budget ==-1){
+				if(parentDepart.equals(departToEdit)){
 					parentInvalidLabel.setVisible(true);
 				}
 				else{
