@@ -326,7 +326,7 @@ public class ExecuteSqlQuery {
 	}
 
 	public static boolean addDepartment(Connection connect,
-			String departmentName, String parent, String budget) {
+			String departmentName, String parent, double budget) {
 		boolean added = false;
 
 		String query = "{ ? = call newdepartment (?, ?, ?, ?)}";
@@ -335,8 +335,8 @@ public class ExecuteSqlQuery {
 			statement = connect.prepareCall(query);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, departmentName);
-			statement.setDouble(3, Double.parseDouble(budget));
-			statement.setDouble(4, Double.parseDouble(budget));
+			statement.setDouble(3, budget);
+			statement.setDouble(4,budget);
 			statement.setString(5, parent);
 
 			statement.execute();

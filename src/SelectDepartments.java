@@ -49,7 +49,7 @@ public class SelectDepartments extends JFrame {
 		dList.setBounds(40, 58, 113, 20);
 		layeredPane.add(dList);
 		
-		JButton btnNewButton = new JButton("New button");
+		JButton btnNewButton = new JButton("Submit");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String selectedDepartment = (String) dList.getSelectedItem();

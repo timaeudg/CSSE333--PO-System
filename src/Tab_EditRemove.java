@@ -241,11 +241,12 @@ public class Tab_EditRemove extends JPanel {
 				String newLastName = newLastNameField.getText();
 				String newEmail = newEmailField.getText();
 				String newPassword = newPasswordField.getText();
+				String verified = verifyTextField.getText();
 
 				// Check for edits
 				// If something is not empty, true
 				boolean edits = (!newUsername.isEmpty() || !newEmail.isEmpty()
-						|| !newFirstName.isEmpty() || !newLastName.isEmpty());
+						|| !newFirstName.isEmpty() || !newLastName.isEmpty()||(!newPassword.isEmpty()&&!verified.isEmpty()));
 
 				// if new email is given and valid, true
 				boolean validEmail = !newEmail.isEmpty() ? Util
@@ -261,7 +262,7 @@ public class Tab_EditRemove extends JPanel {
 				// (userNameEditField.getText().equals(verifyTextField.getText()));
 				// noEdits = noEdits || newPassword.isEmpty();
 
-				System.out.printf("%s, %s, %s, %s\n", newUsername.isEmpty(),
+				System.out.printf("%s, %s, %s, %s %s\n", newUsername.isEmpty(),
 						newFirstName.isEmpty(), newLastName.isEmpty(),
 						newEmail.isEmpty() || validEmail, newPassword.isEmpty());
 				System.out.println("Make Changes: " + edits);

@@ -59,7 +59,7 @@ public class DatabaseAdapter {
 	 * @return an object containing user login information
 	 */
 	public static ConnectionInfo getConnectionInfo() {
-		return new ConnectionInfo("timaeudg", "KirisuteG0m3n");
+		return new ConnectionInfo("333POS", "memering");
 	}
 
 	/**

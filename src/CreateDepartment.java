@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -18,13 +20,14 @@ import connection.ExecuteSqlQuery;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JFormattedTextField;
 
 
 public class CreateDepartment extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField departmentTextField;
-	private JTextField budgetTextField;
+	private JFormattedTextField budgetTextField;
 	private static Connection SQLConnect;
 	private static ArrayList<Object> availableDepartments = new ArrayList<Object>();
 	private static JComboBox comboBox;
@@ -67,7 +70,8 @@ public class CreateDepartment extends JFrame {
 		layeredPane.add(departmentTextField);
 		departmentTextField.setColumns(10);
 		
-		budgetTextField = new JTextField();
+		NumberFormat currency = NumberFormat.getCurrencyInstance();
+		budgetTextField = new JFormattedTextField(currency);
 		budgetTextField.setBounds(227, 95, 129, 20);
 		layeredPane.add(budgetTextField);
 		budgetTextField.setColumns(10);
@@ -99,9 +103,14 @@ public class CreateDepartment extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String parent = (String) comboBox.getSelectedItem();
 				String name = departmentTextField.getText();
-				String budget = budgetTextField.getText();
+				double budget=-1;
+				try {
+					budget = NumberFormat.getCurrencyInstance().parse(budgetTextField.getText()).doubleValue();
+				} catch (ParseException e1) {
+					e1.printStackTrace();
+				}
 				
-				if(parent.isEmpty()|| name.isEmpty() || budget.isEmpty()||parent==null){
+				if(parent.isEmpty()|| name.isEmpty()||parent==null||budget==-1){
 					invalidLabel.setVisible(true);
 				}
 				else{
