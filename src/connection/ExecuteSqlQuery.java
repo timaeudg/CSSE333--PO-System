@@ -97,6 +97,7 @@ public class ExecuteSqlQuery {
 			statement.close();
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			login = false;
 			System.err.println("Invalid username or password.");
 			user = new LoggedInUserWrapper(email, departments, login);
