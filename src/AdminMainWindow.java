@@ -404,7 +404,7 @@ public class AdminMainWindow {
 		// System.out.println(currentDept);
 
 		pendingPaymentArray = ExecuteSqlQuery.getPendingOrders(SQLConnect,
-				currentDept);
+				currentDept, user.getUsername());
 
 		pendingTable.setModel(new DefaultTableModel(pendingPaymentArray,
 				poColumns));

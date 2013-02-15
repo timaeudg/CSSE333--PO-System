@@ -560,8 +560,8 @@ public class ExecuteSqlQuery {
 	}
 
 	public static Object[][] getPendingOrders(Connection connect,
-			String department) {
-		String query = "{ ? = call getdepartmentpaymentorders (?)}";
+			String department, String username) {
+		String query = "{ ? = call getdepartmentpaymentorders (?,?)}";
 		CallableStatement statement = null;
 		ResultSet rs = null;
 		Object[][] data = null;
@@ -569,6 +569,7 @@ public class ExecuteSqlQuery {
 			statement = connect.prepareCall(query);
 			statement.registerOutParameter(1, Types.INTEGER);
 			statement.setString(2, department);
+			statement.setString(3,username);
 			rs = statement.executeQuery();
 
 			ArrayList<Object[]> rows = new ArrayList<Object[]>();

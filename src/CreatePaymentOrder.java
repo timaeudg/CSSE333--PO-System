@@ -51,6 +51,7 @@ public class CreatePaymentOrder extends JFrame {
 	private static ArrayList<ReceiptBundles> receipts;
 	private static JComboBox<String> methodOfRepayment;
 	private static boolean admin;
+	private static JLabel invalidChair;
 	/**
 	 * Launch the application.
 	 */
@@ -130,6 +131,11 @@ public class CreatePaymentOrder extends JFrame {
 		lblReimbursmentMethod.setBounds(47, 196, 171, 14);
 		layeredPane.add(lblReimbursmentMethod);
 		
+		invalidChair = new JLabel("The department that is to be billed must have a chairperson");
+		invalidChair.setBounds(57, 285, 289, 14);
+		layeredPane.add(invalidChair);
+		invalidChair.setVisible(false);
+		
 		methodOfRepayment = new JComboBox();
 		methodOfRepayment.setModel(new DefaultComboBoxModel(new String[] {"Credit", "Check"}));
 		methodOfRepayment.setBounds(192, 190, 129, 20);
@@ -170,6 +176,7 @@ public class CreatePaymentOrder extends JFrame {
 				String method = (String)methodOfRepayment.getSelectedItem();
 				if(!method.isEmpty()&&!descript.isEmpty()&& !department.isEmpty() && !date.isEmpty()){
 					int id = ExecuteSqlQuery.addPaymentOrder(SQLConnect, username, department, method, descript,date);
+					if(id!=-1){
 					try{
 						ExecuteSqlQuery.addReceipts(SQLConnect, id, receipts);
 					}
@@ -185,6 +192,10 @@ public class CreatePaymentOrder extends JFrame {
 					}
 					
 					window.dispose();
+					}
+					else{
+						invalidChair.setVisible(true);
+					}
 				}
 				else{
 					invalidLabel.setVisible(true);
