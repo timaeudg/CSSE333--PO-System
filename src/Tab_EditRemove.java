@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -12,21 +14,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import connection.ExecuteSqlQuery;
 import connection.LoggedInUserWrapper;
-import javax.swing.JPasswordField;
-
 import extras.Util;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Font;
 
 /**
  * @author moorejm
- * 
+ *
  */
 public class Tab_EditRemove extends JPanel {
 
@@ -47,6 +44,7 @@ public class Tab_EditRemove extends JPanel {
 	private JPasswordField passwordField;
 	private JTextField verifyTextField;
 	private String[] userInfo;
+	private JLabel promptLabel;
 
 	/**
 	 * Create the panel.
@@ -180,9 +178,10 @@ public class Tab_EditRemove extends JPanel {
 						&& e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 					verifyTextField.setText("");
 					verifyTextField.setEnabled(false);
-				} else
+				} else {
+					promptLabel.setVisible(false);
 					verifyTextField.setEnabled(true);
-				// }
+				}
 			}
 		});
 		newPasswordField.setBounds(331, 203, 126, 20);
@@ -209,31 +208,21 @@ public class Tab_EditRemove extends JPanel {
 		add(emailTextField);
 		emailTextField.setColumns(10);
 
-		// passwordField = new JPasswordField();
-		// passwordField.addMouseListener(new MouseAdapter() {
-		// @Override
-		// public void mouseEntered(MouseEvent arg0) {
-		// System.out.println(passwordField.getPassword());
-		// passwordField.setText(new String(passwordField.getPassword()));
-		// }
-		//
-		// @Override
-		// public void mouseExited(MouseEvent e) {
-		// if (user)
-		// passwordField.setText(userInfo[0]);
-		// }
-		// });
-		// passwordField.setEditable(false);
-		// passwordField.setBounds(107, 203, 106, 20);
-		// add(passwordField);
-
 		JLabel verifylbl = new JLabel("Verify Password: ");
 		verifylbl.setBounds(242, 234, 215, 14);
 		add(verifylbl);
 
+		promptLabel = new JLabel(
+				"<html>Password must be given<br />if username is changed. </html>");
+		promptLabel.setForeground(Color.RED);
+		promptLabel.setBounds(261, 267, 210, 27);
+		add(promptLabel);
+		promptLabel.setVisible(false);
+
 		JButton btnChange = new JButton("Make Changes");
 		btnChange.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String oldUsername = userNameEditField.getText();
 				String newUsername = newUsernameField.getText();
@@ -246,7 +235,8 @@ public class Tab_EditRemove extends JPanel {
 				// Check for edits
 				// If something is not empty, true
 				boolean edits = (!newUsername.isEmpty() || !newEmail.isEmpty()
-						|| !newFirstName.isEmpty() || !newLastName.isEmpty()||(!newPassword.isEmpty()&&!verified.isEmpty()));
+						|| !newFirstName.isEmpty() || !newLastName.isEmpty() || (!newPassword
+						.isEmpty() && !verified.isEmpty()));
 
 				// if new email is given and valid, true
 				boolean validEmail = !newEmail.isEmpty() ? Util
@@ -254,20 +244,23 @@ public class Tab_EditRemove extends JPanel {
 				edits = edits && validEmail;
 
 				// if new password is not verified, false
-				if (!newPassword.isEmpty()
-						&& !newPassword.equals(verifyTextField.getText())) {
+				if (!newPassword.isEmpty() && !newPassword.equals(verified)) {
 					edits = false;
 				}
-				// edits = edits &&
-				// (userNameEditField.getText().equals(verifyTextField.getText()));
-				// noEdits = noEdits || newPassword.isEmpty();
 
+				if (!newUsername.isEmpty() && newPassword.isEmpty()) {
+					promptLabel.setVisible(true);
+					edits = false;
+				}
+
+				// Logging
 				System.out.printf("%s, %s, %s, %s %s\n", newUsername.isEmpty(),
 						newFirstName.isEmpty(), newLastName.isEmpty(),
 						newEmail.isEmpty() || validEmail, newPassword.isEmpty());
 				System.out.println("Make Changes: " + edits);
+				// End Logging
 
-				if (oldUsername.equals(user.getUsername())) {
+				if (edits && oldUsername.equals(user.getUsername())) {
 
 					if (JOptionPane
 							.showConfirmDialog(
@@ -283,7 +276,6 @@ public class Tab_EditRemove extends JPanel {
 						}
 					}
 				} else {
-
 					if (edits
 							&& ExecuteSqlQuery.editUser(oldUsername,
 									newUsername, newFirstName, newLastName,
@@ -305,6 +297,7 @@ public class Tab_EditRemove extends JPanel {
 
 		JButton addToDeparment = new JButton("Add To Department");
 		addToDeparment.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				AddUserToDeparment.setVisible(SQLConnect, departmentNames,
 						userNameEditField.getText());
@@ -316,6 +309,7 @@ public class Tab_EditRemove extends JPanel {
 		JButton removeFromDepartment = new JButton("Remove From Department");
 		removeFromDepartment.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String user = userNameEditField.getText();
 				RemoveUserFromDepartment.setVisible(SQLConnect,
@@ -327,6 +321,7 @@ public class Tab_EditRemove extends JPanel {
 
 		JButton addAsChairperson = new JButton("Add as Chairperson");
 		addAsChairperson.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String user = userNameEditField.getText();
 				AddUserAsChairperson.setVisible(SQLConnect, departmentNames,
@@ -338,6 +333,7 @@ public class Tab_EditRemove extends JPanel {
 
 		JButton removeFromChair = new JButton("Remove From Chair Position");
 		removeFromChair.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String user = userNameEditField.getText();
 				RemoveUserFromChairperson.setVisible(SQLConnect,
@@ -346,11 +342,12 @@ public class Tab_EditRemove extends JPanel {
 		});
 		removeFromChair.setBounds(487, 200, 182, 23);
 		add(removeFromChair);
-		btnChange.setBounds(10, 334, 322, 50);
+		btnChange.setBounds(10, 332, 322, 60);
 		add(btnChange);
 
 		JButton btnRemove = new JButton("Remove User");
 		btnRemove.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				String deletee = userNameEditField.getText();
 
@@ -378,7 +375,7 @@ public class Tab_EditRemove extends JPanel {
 
 			}
 		});
-		btnRemove.setBounds(347, 334, 322, 50);
+		btnRemove.setBounds(347, 332, 322, 60);
 		add(btnRemove);
 
 		JLabel lblCurrent = new JLabel("Current");

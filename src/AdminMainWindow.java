@@ -1,34 +1,32 @@
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
-import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.util.ArrayList;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.UIManager;
-import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.border.BevelBorder;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+
 import connection.ExecuteSqlQuery;
 import connection.LoggedInUserWrapper;
 import extras.AlternatingColorTable;
 import extras.NumberRenderer;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.sql.Connection;
-import java.util.ArrayList;
-import javax.swing.JComboBox;
-
-import javax.swing.JPanel;
-
 /**
  * @author timaeudg, moorejm
- * 
+ *
  */
 public class AdminMainWindow {
 
@@ -106,20 +104,6 @@ public class AdminMainWindow {
 		createPO.setBounds(239, 100, 99, 23);
 		tab_Create.add(createPO);
 
-		JButton createButton = new JButton("Create!");
-		createButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (createPO.isSelected()) {
-					CreatePaymentOrder.setVisible(SQLConnect, departmentNames,
-							user.getUsername(), true);
-				} else {
-
-				}
-			}
-		});
-		createButton.setBounds(239, 229, 200, 60);
-		tab_Create.add(createButton);
-
 		// ===================================================================
 		// Your Payment Orders
 		// ===================================================================
@@ -128,12 +112,16 @@ public class AdminMainWindow {
 		tab_PO.setLayout(null);
 
 		poScrollPane = new JScrollPane();
-		poScrollPane.setBounds(10, 11, 659, 372);
+		poScrollPane.setBounds(10, 11, 659, 340);
 		poScrollPane.getViewport().setBackground(new Color(190, 190, 190));
 		tab_PO.add(poScrollPane);
 
 		userPaymentOrdersTable = new AlternatingColorTable(
 				tab_Lookup.getModel());
+
+		JButton bthCreatePO = new JButton("Create New Payment Order");
+		bthCreatePO.setBounds(222, 362, 200, 31);
+		tab_PO.add(bthCreatePO);
 		// poScrollPane.setViewportView(userPaymentOrdersTable);
 		AdminMainWindow.refreshPaymentOrders();
 
@@ -218,6 +206,7 @@ public class AdminMainWindow {
 
 		JButton acceptButton = new JButton("Accept Reimbursement");
 		acceptButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				int row = pendingTable.getSelectedRow();
 				int id = Integer.parseInt((String) pendingTable.getValueAt(row,
@@ -235,6 +224,7 @@ public class AdminMainWindow {
 
 		JButton rejectButton = new JButton("Deny Reimbursement");
 		rejectButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				int row = pendingTable.getSelectedRow();
 
@@ -254,6 +244,7 @@ public class AdminMainWindow {
 
 		JButton btnRefreshTable = new JButton("Refresh Table");
 		btnRefreshTable.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				refreshPending();
 				refreshPaymentOrders();
@@ -310,16 +301,18 @@ public class AdminMainWindow {
 
 		JButton btnEditDepartments = new JButton("Edit Departments");
 		btnEditDepartments.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				EditDepartmentsWindow.setVisible(SQLConnect, departmentNames);
 
 			}
 		});
-		btnEditDepartments.setBounds(10, 331, 215, 62);
+		btnEditDepartments.setBounds(9, 332, 215, 60);
 		tab_Dept.add(btnEditDepartments);
 
 		JButton btnAddDepartment = new JButton("Add Department");
 		btnAddDepartment.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				CreateDepartment.setVisible(SQLConnect, departmentNames);
@@ -329,15 +322,16 @@ public class AdminMainWindow {
 
 		JButton btnRemoveDepartment = new JButton("Remove Department");
 		btnRemoveDepartment.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				DeleteDepartmentWindow.setVisible(SQLConnect, departmentNames);
 
 			}
 		});
-		btnRemoveDepartment.setBounds(455, 331, 215, 62);
+		btnRemoveDepartment.setBounds(454, 332, 215, 60);
 		tab_Dept.add(btnRemoveDepartment);
-		btnAddDepartment.setBounds(235, 331, 210, 62);
+		btnAddDepartment.setBounds(234, 332, 210, 60);
 		tab_Dept.add(btnAddDepartment);
 
 	}
@@ -347,8 +341,8 @@ public class AdminMainWindow {
 				.getDepartmentOverview(SQLConnect);
 
 		departmentNames = new ArrayList<Object>();
-		for (int i = 0; i < departmentTableArray.length; i++) {
-			departmentNames.add(departmentTableArray[i][1]);
+		for (Object[] element : departmentTableArray) {
+			departmentNames.add(element[1]);
 		}
 	}
 
@@ -407,78 +401,4 @@ public class AdminMainWindow {
 		pendingScrollPane.setViewportView(pendingTable);
 		pendingTable.repaint();
 	}
-
-	// class Tab_UserLookup extends JPanel {
-	//
-	//
-	//
-	// public Tab_UserLookup() {
-	// super();
-	// setLayout(null);
-	//
-	// // JScrollPane scrollPane_2 = new JScrollPane();
-	// lookupScrollPane.setBounds(10, 11, 660, 224);
-	// add(lookupScrollPane);
-	//
-	// lookupTable = new AlternatingColorTable(model);
-	// lookupTable.setBorder(new BevelBorder(BevelBorder.LOWERED,
-	// Color.LIGHT_GRAY, Color.LIGHT_GRAY, Color.LIGHT_GRAY,
-	// Color.LIGHT_GRAY));
-	// // RowSorter<TableModel> sorter = new
-	// // TableRowSorter<TableModel>(model);
-	// // lookupTable.setRowSorter(sorter);
-	// lookupScrollPane.setViewportView(lookupTable);
-	// lookupTable.setBackground(Color.LIGHT_GRAY);
-	//
-	// userLookupFirstNameField = new JTextField();
-	// userLookupFirstNameField.setBounds(238, 282, 86, 20);
-	// add(userLookupFirstNameField);
-	// userLookupFirstNameField.setColumns(10);
-	//
-	// userLookupLastNameField = new JTextField();
-	// userLookupLastNameField.setBounds(399, 282, 86, 20);
-	// add(userLookupLastNameField);
-	// userLookupLastNameField.setColumns(10);
-	//
-	// userLookupEmailField = new JTextField();
-	// userLookupEmailField.setBounds(551, 282, 86, 20);
-	// add(userLookupEmailField);
-	// userLookupEmailField.setColumns(10);
-	//
-	// userLookupUsernameField = new JTextField();
-	// userLookupUsernameField.setBounds(71, 282, 86, 20);
-	// add(userLookupUsernameField);
-	// userLookupUsernameField.setColumns(10);
-	//
-	// JLabel lblUsername = new JLabel("Username:");
-	// lblUsername.setBounds(10, 285, 61, 14);
-	// add(lblUsername);
-	//
-	// JLabel lblFirstName = new JLabel("First Name:");
-	// lblFirstName.setBounds(167, 285, 61, 14);
-	// add(lblFirstName);
-	//
-	// JLabel lblLastName = new JLabel("Last Name:");
-	// lblLastName.setBounds(338, 285, 61, 14);
-	// add(lblLastName);
-	//
-	// JLabel lblEmail = new JLabel("E-mail:");
-	// lblEmail.setBounds(511, 285, 43, 14);
-	// add(lblEmail);
-	//
-	// JButton btnSearch = new JButton("Search");
-	// userLookupAction userLookup = new userLookupAction(
-	// lookupScrollPane, userLookupFirstNameField,
-	// userLookupLastNameField, userLookupEmailField,
-	// userLookupEmailField, SQLConnect);
-	// btnSearch.addActionListener(userLookup);
-	// btnSearch.setBounds(291, 342, 89, 23);
-	// add(btnSearch);
-	//
-	// }
-	//
-	// public DefaultTableModel getModel() {
-	// return this.model;
-	// }
-	// }
 }
