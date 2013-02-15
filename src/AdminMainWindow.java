@@ -37,7 +37,6 @@ public class AdminMainWindow {
 	private static JTable userPaymentOrdersTable;
 	private static JTable pendingTable;
 	private JRadioButton createUser;
-	private JRadioButton createPO;
 
 	private static JComboBox<String> departmentSelect;
 	private static Connection SQLConnect;
@@ -92,18 +91,6 @@ public class AdminMainWindow {
 				.getChairs().size() > 0);
 		Tab_EditRemove tab_EditRemove;
 
-		// ==================================================================
-		// Create New Objects
-		// ==================================================================
-		JPanel tab_Create = new JPanel();
-		tabbedPane.addTab("Create New Objects", null, tab_Create, null);
-		tab_Create.setLayout(null);
-
-		createPO = new JRadioButton("Payment Order");
-		buttonGroup.add(createPO);
-		createPO.setBounds(239, 100, 99, 23);
-		tab_Create.add(createPO);
-
 		// ===================================================================
 		// Your Payment Orders
 		// ===================================================================
@@ -120,6 +107,11 @@ public class AdminMainWindow {
 				tab_Lookup.getModel());
 
 		JButton bthCreatePO = new JButton("Create New Payment Order");
+		bthCreatePO.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CreatePaymentOrder.setVisible(SQLConnect, departmentNames, user.getUsername(), true);
+			}
+		});
 		bthCreatePO.setBounds(222, 362, 200, 31);
 		tab_PO.add(bthCreatePO);
 		// poScrollPane.setViewportView(userPaymentOrdersTable);
