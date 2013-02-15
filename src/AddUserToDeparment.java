@@ -16,6 +16,7 @@ import connection.ExecuteSqlQuery;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
 
 
 public class AddUserToDeparment extends JFrame {
@@ -26,6 +27,7 @@ public class AddUserToDeparment extends JFrame {
 	private static ArrayList<Object> departments;
 	private static JComboBox<String> dSelector;
 	private static String username;
+	private static JLabel lblCannotAddTo;
 
 	public static void setVisible(Connection SQLConnection, ArrayList<Object> chairDeparts, String user){
 		departments = chairDeparts;
@@ -52,6 +54,11 @@ public class AddUserToDeparment extends JFrame {
 		JLayeredPane layeredPane = new JLayeredPane();
 		contentPane.add(layeredPane, BorderLayout.CENTER);
 		
+		lblCannotAddTo = new JLabel("Cannot add to Root");
+		lblCannotAddTo.setBounds(10, 67, 126, 14);
+		layeredPane.add(lblCannotAddTo);
+		lblCannotAddTo.setVisible(false);
+		
 		dSelector = new JComboBox();
 		dSelector.setBounds(10, 36, 126, 20);
 		dSelector.setModel(new DefaultComboBoxModel(departments.toArray()));
@@ -63,8 +70,13 @@ public class AddUserToDeparment extends JFrame {
 				String department = (String)dSelector.getSelectedItem(); 
 				ArrayList<String> d = new ArrayList<String>();
 				d.add(department);
+				if(department.equals("root")){
+					lblCannotAddTo.setVisible(true);
+				}
+				else{
 				ExecuteSqlQuery.addUserToDepartment(SQLConnect, username, d);
 				window.dispose();
+				}
 			}
 		});
 		submitButton.setBounds(10, 96, 126, 23);
