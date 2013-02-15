@@ -62,7 +62,7 @@ public class AddUserAsChairperson extends JFrame {
 		submitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String department = (String)dSelector.getSelectedItem();
-				ArrayList<String> d = new ArrayList<>();
+				ArrayList<String> d = new ArrayList<String>();
 				d.add(department);
 				ExecuteSqlQuery.addChairToDepartment(SQLConnect, username, d);
 				window.dispose();

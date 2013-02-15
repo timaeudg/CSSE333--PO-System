@@ -28,7 +28,7 @@ import javax.swing.JPanel;
 
 /**
  * @author timaeudg, moorejm
- *
+ * 
  */
 public class AdminMainWindow {
 
@@ -90,7 +90,8 @@ public class AdminMainWindow {
 		// User Function Tabs
 		// ===================================================================
 
-		Tab_UserLookup tab_Lookup = new Tab_UserLookup(SQLConnect, user.getChairs().size() > 0);
+		Tab_UserLookup tab_Lookup = new Tab_UserLookup(SQLConnect, user
+				.getChairs().size() > 0);
 		Tab_EditRemove tab_EditRemove;
 
 		// ==================================================================
@@ -108,9 +109,9 @@ public class AdminMainWindow {
 		JButton createButton = new JButton("Create!");
 		createButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				 if (createPO.isSelected()) {
+				if (createPO.isSelected()) {
 					CreatePaymentOrder.setVisible(SQLConnect, departmentNames,
-							user.getUsername(),true);
+							user.getUsername(), true);
 				} else {
 
 				}
@@ -209,9 +210,9 @@ public class AdminMainWindow {
 		pendingTable.getColumnModel().getColumn(0).setResizable(false);
 		pendingScrollPane.setViewportView(pendingTable);
 		// pendingTable.setFont(new Font("Courier New", Font.PLAIN, 12));
-//		pendingTable.setBackground(Color.LIGHT_GRAY);
+		// pendingTable.setBackground(Color.LIGHT_GRAY);
 
-		departmentSelect = new JComboBox();
+		departmentSelect = new JComboBox<String>();
 		departmentSelect.setBounds(10, 347, 159, 20);
 		tab_Pending.add(departmentSelect);
 
@@ -223,7 +224,6 @@ public class AdminMainWindow {
 						0));
 				ExecuteSqlQuery.acceptPaymentOrder(SQLConnect, id,
 						user.getUsername());
-
 
 				System.out.println(id);
 				refreshPending();
@@ -243,7 +243,8 @@ public class AdminMainWindow {
 				String username = (String) pendingTable.getValueAt(row, 4);
 				System.out.println(id + " " + username);
 
-				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id, user.getUsername());
+				ExecuteSqlQuery.rejectPaymentOrder(SQLConnect, id,
+						user.getUsername());
 				refreshPending();
 				refreshPaymentOrders();
 			}
@@ -265,8 +266,10 @@ public class AdminMainWindow {
 		// Add User Function Tabs
 		// ===================================================================
 
-		tabbedPane.addTab("User Lookup", null, tab_Lookup, null);
 		buildDeptTableArray(); // get department names
+
+		tabbedPane.addTab("User Lookup", null, tab_Lookup, null);
+
 		tab_EditRemove = new Tab_EditRemove(POFrame, SQLConnect, user,
 				departmentNames);
 		tabbedPane.addTab("Edit/Remove User", null, tab_EditRemove, null);
@@ -302,13 +305,6 @@ public class AdminMainWindow {
 				dept_cols);
 
 		departmentOverviewTable = new AlternatingColorTable(dept_model);
-//		departmentOverviewTable.setBackground(Color.LIGHT_GRAY);
-		// DepartmentOverviewTable.setBorder(new
-		// BevelBorder(BevelBorder.LOWERED, null, null,
-		// null, null));
-//		departmentOverviewTable.setBorder(new BevelBorder(BevelBorder.LOWERED,
-//				Color.LIGHT_GRAY, Color.LIGHT_GRAY, Color.LIGHT_GRAY,
-//				Color.LIGHT_GRAY));
 
 		AdminMainWindow.refreshDepartments();
 
@@ -412,77 +408,77 @@ public class AdminMainWindow {
 		pendingTable.repaint();
 	}
 
-//	class Tab_UserLookup extends JPanel {
-//
-//		
-//
-//		public Tab_UserLookup() {
-//			super();
-//			setLayout(null);
-//
-//			// JScrollPane scrollPane_2 = new JScrollPane();
-//			lookupScrollPane.setBounds(10, 11, 660, 224);
-//			add(lookupScrollPane);
-//
-//			lookupTable = new AlternatingColorTable(model);
-//			lookupTable.setBorder(new BevelBorder(BevelBorder.LOWERED,
-//					Color.LIGHT_GRAY, Color.LIGHT_GRAY, Color.LIGHT_GRAY,
-//					Color.LIGHT_GRAY));
-//			// RowSorter<TableModel> sorter = new
-//			// TableRowSorter<TableModel>(model);
-//			// lookupTable.setRowSorter(sorter);
-//			lookupScrollPane.setViewportView(lookupTable);
-//			lookupTable.setBackground(Color.LIGHT_GRAY);
-//
-//			userLookupFirstNameField = new JTextField();
-//			userLookupFirstNameField.setBounds(238, 282, 86, 20);
-//			add(userLookupFirstNameField);
-//			userLookupFirstNameField.setColumns(10);
-//
-//			userLookupLastNameField = new JTextField();
-//			userLookupLastNameField.setBounds(399, 282, 86, 20);
-//			add(userLookupLastNameField);
-//			userLookupLastNameField.setColumns(10);
-//
-//			userLookupEmailField = new JTextField();
-//			userLookupEmailField.setBounds(551, 282, 86, 20);
-//			add(userLookupEmailField);
-//			userLookupEmailField.setColumns(10);
-//
-//			userLookupUsernameField = new JTextField();
-//			userLookupUsernameField.setBounds(71, 282, 86, 20);
-//			add(userLookupUsernameField);
-//			userLookupUsernameField.setColumns(10);
-//
-//			JLabel lblUsername = new JLabel("Username:");
-//			lblUsername.setBounds(10, 285, 61, 14);
-//			add(lblUsername);
-//
-//			JLabel lblFirstName = new JLabel("First Name:");
-//			lblFirstName.setBounds(167, 285, 61, 14);
-//			add(lblFirstName);
-//
-//			JLabel lblLastName = new JLabel("Last Name:");
-//			lblLastName.setBounds(338, 285, 61, 14);
-//			add(lblLastName);
-//
-//			JLabel lblEmail = new JLabel("E-mail:");
-//			lblEmail.setBounds(511, 285, 43, 14);
-//			add(lblEmail);
-//
-//			JButton btnSearch = new JButton("Search");
-//			userLookupAction userLookup = new userLookupAction(
-//					lookupScrollPane, userLookupFirstNameField,
-//					userLookupLastNameField, userLookupEmailField,
-//					userLookupEmailField, SQLConnect);
-//			btnSearch.addActionListener(userLookup);
-//			btnSearch.setBounds(291, 342, 89, 23);
-//			add(btnSearch);
-//
-//		}
-//
-//		public DefaultTableModel getModel() {
-//			return this.model;
-//		}
-//	}
+	// class Tab_UserLookup extends JPanel {
+	//
+	//
+	//
+	// public Tab_UserLookup() {
+	// super();
+	// setLayout(null);
+	//
+	// // JScrollPane scrollPane_2 = new JScrollPane();
+	// lookupScrollPane.setBounds(10, 11, 660, 224);
+	// add(lookupScrollPane);
+	//
+	// lookupTable = new AlternatingColorTable(model);
+	// lookupTable.setBorder(new BevelBorder(BevelBorder.LOWERED,
+	// Color.LIGHT_GRAY, Color.LIGHT_GRAY, Color.LIGHT_GRAY,
+	// Color.LIGHT_GRAY));
+	// // RowSorter<TableModel> sorter = new
+	// // TableRowSorter<TableModel>(model);
+	// // lookupTable.setRowSorter(sorter);
+	// lookupScrollPane.setViewportView(lookupTable);
+	// lookupTable.setBackground(Color.LIGHT_GRAY);
+	//
+	// userLookupFirstNameField = new JTextField();
+	// userLookupFirstNameField.setBounds(238, 282, 86, 20);
+	// add(userLookupFirstNameField);
+	// userLookupFirstNameField.setColumns(10);
+	//
+	// userLookupLastNameField = new JTextField();
+	// userLookupLastNameField.setBounds(399, 282, 86, 20);
+	// add(userLookupLastNameField);
+	// userLookupLastNameField.setColumns(10);
+	//
+	// userLookupEmailField = new JTextField();
+	// userLookupEmailField.setBounds(551, 282, 86, 20);
+	// add(userLookupEmailField);
+	// userLookupEmailField.setColumns(10);
+	//
+	// userLookupUsernameField = new JTextField();
+	// userLookupUsernameField.setBounds(71, 282, 86, 20);
+	// add(userLookupUsernameField);
+	// userLookupUsernameField.setColumns(10);
+	//
+	// JLabel lblUsername = new JLabel("Username:");
+	// lblUsername.setBounds(10, 285, 61, 14);
+	// add(lblUsername);
+	//
+	// JLabel lblFirstName = new JLabel("First Name:");
+	// lblFirstName.setBounds(167, 285, 61, 14);
+	// add(lblFirstName);
+	//
+	// JLabel lblLastName = new JLabel("Last Name:");
+	// lblLastName.setBounds(338, 285, 61, 14);
+	// add(lblLastName);
+	//
+	// JLabel lblEmail = new JLabel("E-mail:");
+	// lblEmail.setBounds(511, 285, 43, 14);
+	// add(lblEmail);
+	//
+	// JButton btnSearch = new JButton("Search");
+	// userLookupAction userLookup = new userLookupAction(
+	// lookupScrollPane, userLookupFirstNameField,
+	// userLookupLastNameField, userLookupEmailField,
+	// userLookupEmailField, SQLConnect);
+	// btnSearch.addActionListener(userLookup);
+	// btnSearch.setBounds(291, 342, 89, 23);
+	// add(btnSearch);
+	//
+	// }
+	//
+	// public DefaultTableModel getModel() {
+	// return this.model;
+	// }
+	// }
 }
