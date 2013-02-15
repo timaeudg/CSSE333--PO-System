@@ -116,6 +116,7 @@ public class CreateDepartment extends JFrame {
 				else{
 					ExecuteSqlQuery.addDepartment(SQLConnect, name, parent, budget);
 					AdminMainWindow.refreshDepartments();
+					Tab_EditRemove.setDepartments();
 					window.dispose();
 				}
 				

@@ -393,4 +393,8 @@ public class AdminMainWindow {
 		pendingScrollPane.setViewportView(pendingTable);
 		pendingTable.repaint();
 	}
+	
+	public static ArrayList<Object> getDepartments(){
+		return departmentNames;
+	}
 }

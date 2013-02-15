@@ -136,6 +136,7 @@ public class EditDepartmentsWindow extends JFrame {
 				else{
 					ExecuteSqlQuery.editDepartment(SQLConnect, departToEdit, parentDepart,budget, newName);
 					AdminMainWindow.refreshDepartments();
+					Tab_EditRemove.setDepartments();
 					window.dispose();
 				}
 			}

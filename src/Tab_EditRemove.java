@@ -398,4 +398,7 @@ public class Tab_EditRemove extends JPanel {
 
 		initialize();
 	}
+	public static void setDepartments(){
+		departmentNames = AdminMainWindow.getDepartments();
+	}
 }
