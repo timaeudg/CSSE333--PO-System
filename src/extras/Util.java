@@ -19,20 +19,4 @@ public class Util {
 		Matcher m = p.matcher(email);
 		return  m.matches();
 	}
-	
-	/**
-	 * Tests valid email addresses
-	 */
-	private static void emailTest() {
-		System.out.println("Email checker: ");
-		String email = "";
-		email = "moorejm@rose-hulman.edu";
-		System.out.printf("Testing: %s\t%s\n", email, isValidEmailAddress(email));
-		email = "cricket.007@live.com";
-		System.out.printf("Testing: %s\t%s\n", email, isValidEmailAddress(email));
-		email = "crikket.007@gmail.com";
-		System.out.printf("Testing: %s\t%s\n", email, isValidEmailAddress(email));
-		email = "test.com";
-		System.out.printf("Testing: %s\t%s\n", email, isValidEmailAddress(email));
-	}
 }
